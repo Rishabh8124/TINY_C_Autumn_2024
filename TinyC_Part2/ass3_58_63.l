@@ -2,12 +2,12 @@
 /*ROLL NUMBER - 22CS10058*/
 
 %{
+    #include <stdio.h>
+    #include <stdlib.h>
     #include "y.tab.h"
-    
 %}
 
-/*REGULAR DEFINITIONS*/ 
-
+/*REGULAR DEFINITIONS*/
 /* REGEX FOR MULTI LINE COMMENT */
 /*     <--[^\*\/]--             */
 /*  -> S ---*---> A --/--> E    */

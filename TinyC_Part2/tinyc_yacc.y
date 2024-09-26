@@ -24,19 +24,164 @@
 
 %type STATEMENT LABELED_STATEMENT COMPOUND_STATEMENT BLOCK_ITEM_LIST BLOCK_ITEM EXPRESSION_STATEMENT SELECTION_STATEMENT ITERATION_STATEMENT JUMP_STATEMENT
 %type EXTERNAL_DECLARATION FUNCTION_DEFINITION DECLARATION_LIST DECLARATION_LIST_OPT
+%type INIT_DECLARATOR_LIST_OPT DECLARATION_SPECIFIERS_OPT SPECIFIER_QUALIFIER_LIST_OPT POINTER_OPT TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION_OPT
+%type IDENTIFIER_LIST_OPT DESIGNATION_OPT
 
 %%
+DECLARATION             : DECLARATION_SPECIFIERS INIT_DECLARATOR_LIST_OPT ';'   { }
+                        ;
+
+INIT_DECLARATOR_LIST_OPT    : INIT_DECLARATOR_LIST      { }
+                            |   { }
+                            ;
+
+DECLARATION_SPECIFIERS      :   STORAGE_CLASS_SPECIFIER DECLARATION_SPECIFIERS_OPT  { }
+                            |   TYPE_SPECIFIER DECLARATION_SPECIFIERS_OPT
+                            |   TYPE_QUALIFIER DECLARATION_SPECIFIERS_OPT
+                            |   FUNCTION_SPECIFIER DECLARATION_SPECIFIERS_OPT
+                            ;
+
+DECLARATION_SPECIFIERS_OPT  :   DECLARATION_SPECIFIERS          { }
+                            |       { }
+                            ;                            
+
+INIT_DECLARATOR_LIST        :   INIT_DECLARATOR             { }
+                            |   INIT_DECLARATOR_LIST ',' INIT_DECLARATOR    { }
+                            ;
+
+INIT_DECLARATOR         :   DECLARATOR      { }
+                        |   DECLARATOR '=' INITIALIZER  { }
+                        ;
+
+STORAGE_CLASS_SPECIFIER :   EXTERN  { }
+                        |   STATIC  { }
+                        |   AUTO    { }
+                        |   REGISTER { }
+                        ;
+
+TYPE_SPECIFIER  :      VOID   { }
+                |      CHAR  { }
+                |      SHORT { }
+                |      INT   { }
+                |      LONG  { }
+                |      FLOAT { }
+                |      DOUBLE    { }
+                |      SIGNED    { }
+                |      UNSIGNED  { }
+                |      BOOL      { }
+                |      COMPLEX   { }
+                |      IMAGINARY { }
+                ;
+
+SPECIFIER_QUALIFIER_LIST    :   TYPE_SPECIFIER SPECIFIER_QUALIFIER_LIST_OPT
+                            |   TYPE_QUALIFIER SPECIFIER_QUALIFIER_LIST_OPT
+                            ;
+
+SPECIFIER_QUALIFIER_LIST_OPT    :   SPECIFIER_QUALIFIER_LIST            { }
+                                |   { }
+                                ;
+
+TYPE_QUALIFIER      :    CONST      { }
+                    | RESTRICT          { }
+                    | VOLATILE          { }
+                    ;
+
+FUNCTION_SPECIFIER  :    INLINE         { }
+                    ;
+
+DECLARATOR  :    POINTER_OPT DIRECT_DECLARATOR  { }
+            ;
+
+POINTER_OPT :   POINTER     { }
+            |   { }
+            ;
+
+DIRECT_DECLARATOR       :   IDENTIFIER                                                                  { }
+                        | '(' DECLARATOR ')'                                                            { }
+                        | DIRECT_DECLARATOR '[' TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION_OPT ']'   { }
+                        | DIRECT_DECLARATOR '[' STATIC TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION ']'{ }
+                        | DIRECT_DECLARATOR '[' TYPE_QUALIFIER_LIST STATIC ASSIGNMENT_EXPRESSION ']'    { }
+                        | DIRECT_DECLARATOR '[' TYPE_QUALIFIER_LIST_OPT '*' ']'                         { }
+                        | DIRECT_DECLARATOR '(' PARAMETER_TYPE_LIST ')'                                 { }
+                        | DIRECT_DECLARATOR '(' IDENTIFIER_LIST_OPT ')'                                 { }
+                        ;
+
+ASSIGNMENT_EXPRESSION_OPT   :   ASSIGNMENT_EXPRESSION           { }
+                            |       { }
+                            ;
+
+POINTER                 :   '*' TYPE_QUALIFIER_LIST_OPT 
+                        |   '*' TYPE_QUALIFIER_LIST_OPT POINTER
+                        ;
+
+TYPE_QUALIFIER_LIST     :   TYPE_QUALIFIER 
+                        |   TYPE_QUALIFIER_LIST TYPE_QUALIFIER 
+                        ;
+
+TYPE_QUALIFIER_LIST_OPT :   TYPE_QUALIFIER_LIST                         { }
+                        |                                               { }
+                        ;
+
+PARAMETER_TYPE_LIST     :   PARAMETER_LIST 
+                        |   PARAMETER_LIST COMMA TRIPLE_DOT             { }
+
+PARAMETER_LIST          :   PARAMETER_DECLARATION 
+                        |   PARAMETER_LIST COMMA PARAMETER_DECLARATION    { }
+
+PARAMETER_DECLARATION   :   DECLARATION_SPECIFIERS DECLARATOR           { } 
+                        |   DECLARATION_SPECIFIERS                      { }
+                        ;
+
+IDENTIFIER_LIST         :   IDENTIFIER                                  { }
+                        |   IDENTIFIER_LIST COMMA IDENTIFIER            { }
+                        ;
+
+IDENTIFIER_LIST_OPT     :   IDENTIFIER_LIST     { }
+                        |   { }
+                        ;
+
+TYPE_NAME               :   SPECIFIER_QUALIFIER_LIST                    { }
+                        ;
+
+INITIALIZER             :   ASSIGNMENT_EXPRESSION                       { }
+                        |   LEFT_CURLY_BRACKET INITIALIZER_LIST RIGHT_CURLY_BRACKET      { }
+                        |   LEFT_CURLY_BRACKET INITIALIZER_LIST COMMA RIGHT_CURLY_BRACKET    { }
+                        ;
+
+INITIALIZER_LIST        :   DESIGNATION_OPT INITIALIZER                 { }
+                        |   INITIALIZER_LIST ',' DESIGNATION_OPT INITIALIZER    { }
+                        ;
+
+DESIGNATION_OPT         :   DESIGNATION                                 { }
+                        |                                               { }
+                        ;
+
+DESIGNATION             :   DESIGNATOR_LIST '='                         { }
+                        ;
+
+DESIGNATOR_LIST         :   DESIGNATOR                                  { }
+                        |   DESIGNATOR_LIST DESIGNATOR                  { }
+                        ;
+                        
+DESIGNATOR              :   LEFT_SQUARE_BRACKET CONSTANT_EXPRESSION RIGHT_SQUARE_BRACKET                { }
+                        |   DOT IDENTIFIER                              { }
+                        ;
+
 TRANSLATIONAL_UNIT      :   EXTERNAL_DECLARATION                        { }
                         |   TRANSLATIONAL_UNIT EXTERNAL_DECLARATION     { }
                         ;
+
 EXTERNAL_DECLARATION    :   FUNCTION_DEFINITION                         { }
                         |   DECLARATION                                 { }
                         ;
+
 FUNCTION_DEFINITION     :   DECLARATION_SPECIFIERS DECLARATOR DECLARATION_LIST_OPT COMPOUND_STATEMENT   { }
                         ;
+
 DECLARATION_LIST        :   DECLARATION                                 { }                                             
                         |   DECLARATION_LIST DECLARATION                { }
                         ;
+
 DECLARATION_LIST_OPT    :   DECLARATION_LIST                            { }
                         |                                               { }
                         ;                        
