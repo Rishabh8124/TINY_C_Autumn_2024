@@ -80,12 +80,44 @@ s_char [^\'\\\n]|{escape_sequence}
 s_char_sequence {s_char}+
 STRING_LITERAL \"{s_char_sequence}?\"
 
-PUNCTUATOR "<"|">"|"\\"|"\["|"\]"|"\("|"\)"|"\{"|"\}"|"."|"\->"|"\+\+"|"\-\-"|"\/"|"%"|"<<"|">>"|"<="|">="|"=="|"!="|"\^"|"\|"|"&&"|"\|\|"|"\?"|":"|";"|"..."|","|"#"
+/*punctuators*/
+LESS_THAN               "<"
+LESS_THAN_EQUAL_TO      "<="
+GREATER_THAN            ">"
+GREATER_THAN_EQUAL_TO   ">="
+ESCAPE_OPERATOR         "\\"
+LEFT_SQUARE_BRACKET     "["
+RIGHT_SQUARE_BRACKET    "]"
+LEFT_PARANTHESIS        "("
+RIGHT_PARANTHESIS       ")"
+LEFT_CURLY_BRACKET      "{"
+RIGHT_CURLY_BRACKET     "}"
+DOT                     "."
+POINTER_ACCESS          "->"
+INCREMENT_OPERATOR      "++"
+DECREMENT_OPERATOR      "--"
+DIVIDE_OPERATOR         "/"
+REMAINDER_OPERATOR      "%"
+SHIFT_LEFT_OPERATOR     "<<"
+SHIFT_RIGHT_OPERATOR    ">>"
+EQUALITY_OPERATOR       "=="
+NON_EQUALITY_OPERATOR   "!="
+XOR_OPERATOR            "^"
+BITWISE_OR_OPERATOR     "|"
+BITWISE_AND_OPERATOR    "&"
+LOGICAL_AND_OPERATOR    "&&"
+LOGICAL_OR_OPERATOR     "||"
+TERNARY_OPERATOR        "?"
+TERNARY_SEPERATOR       ":"
+SEMI_COLON              ";"
+COMMA                   ","
+MACRO_OPERATOR          "#"
+TRIPLE_DOT              "..."
+
 WHITE_SPACE [ \n\t]
 
-unary-operator "&" | "\*" | "\+" | "\-" | "\~" | "\!"
-
-assignment-operator "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | "&=" | "^=" | "|="
+UNARY_OPERATOR "&" | "\*" | "\+" | "\-" | "\~" | "\!"
+ASSIGNMENT_OPERATOR "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | "&=" | "^=" | "|="
 
 %%
 {MULTI_LINE_COMMENT}    { }
@@ -131,11 +163,45 @@ assignment-operator "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | "&=
 
 {IDENTIFIER}            {return IDENTIFIER;}
 {STRING_LITERAL}        {return STRING_LITERAL;}
-{PUNCTUATOR}            {return PUNCTUATOR;}
+{LESS_THAN}             {return LESS_THAN;}
+{LESS_THAN_EQUAL_TO}    {return LESS_THAN_EQUAL_TO;}
+{GREATER_THAN}          {return GREATER_THAN;}
+{GREATER_THAN_EQUAL_TO} {return GREATER_THAN_EQUAL_TO;}
+{ESCAPE_OPERATOR}       {return ESCAPE_OPERATOR;}
+{LEFT_SQUARE_BRACKET}   {return LEFT_SQUARE_BRACKET;}
+{RIGHT_SQUARE_BRACKET}  {return RIGHT_SQUARE_BRACKET;}
+{LEFT_PARANTHESIS}      {return LEFT_PARANTHESIS;}
+{RIGHT_PARANTHESIS}     {return RIGHT_PARANTHESIS;}
+{LEFT_CURLY_BRACKET}    {return LEFT_CURLY_BRACKET;}
+{RIGHT_CURLY_BRACKET}   {return RIGHT_CURLY_BRACKET;}
+{DOT}                   {return DOT;}
+{POINTER_ACCESS}        {return POINTER_ACCESS;}
+{INCREMENT_OPERATOR}    {return INCREMENT_OPERATOR;}
+{DECREMENT_OPERATOR}    {return DECREMENT_OPERATOR;}
+{DIVIDE_OPERATOR}       {return DIVIDE_OPERATOR;}
+{REMAINDER_OPERATOR}    {return REMAINDER_OPERATOR;}
+{SHIFT_LEFT_OPERATOR}   {return SHIFT_LEFT_OPERATOR;}
+{SHIFT_RIGHT_OPERATOR}  {return SHIFT_RIGHT_OPERATOR;}
+{EQUALITY_OPERATOR}     {return EQUALITY_OPERATOR;}
+{NON_EQUALITY_OPERATOR} {return NON_EQUALITY_OPERATOR;}
+{XOR_OPERATOR}          {return XOR_OPERATOR;}
+{BITWISE_OR_OPERATOR}   {return BITWISE_OR_OPERATOR;}
+{BITWISE_AND_OPERATOR}  {return BITWISE_AND_OPERATOR;}
+{LOGICAL_AND_OPERATOR}  {return LOGICAL_AND_OPERATOR;}
+{LOGICAL_OR_OPERATOR}   {return LOGICAL_OR_OPERATOR;}
+{TERNARY_OPERATOR}      {return TERNARY_OPERATOR;}
+{TERNARY_SEPERATOR}     {return TERNARY_SEPERATOR;}
+{SEMI_COLON}            {return SEMI_COLON;}
+{COMMA}                 {return COMMA;}
+{MACRO_OPERATOR}        {return MACRO_OPERATOR;}
+{TRIPLE_DOT}            {return TRIPLE_DOT;}
 
-{INTEGER_CONSTANT}      {return INTEGER_CONSTANT;}
-{FLOATING_CONSTANT}     {return FLOATING_CONSTANT;}
-{CHARACTER_CONSTANT}    {return CHARACTER_CONSTANT;}
+{INTEGER_CONSTANT}      {return CONSTANT;}
+{FLOATING_CONSTANT}     {return CONSTANT;}
+{CHARACTER_CONSTANT}    {return CONSTANT;}
+
+{UNARY_OPERATOR}        {return UNARY_OPERATOR;}
+{ASSIGNMENT_OPERATOR}   {return ASSIGNMENT_OPERATOR;}
 
 {WHITE_SPACE}           { }
 .                       {yyerror("Invalid character found\n");}
