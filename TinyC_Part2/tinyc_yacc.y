@@ -403,7 +403,7 @@ TYPE_QUALIFIER                      :   CONST       {$$ = init_node("TYPE_QUALIF
 FUNCTION_SPECIFIER                  :   INLINE      {$$ = init_node("FUNCTION_SPECIFIER", $1, NULL);}
                                     ;
 
-DECLARATOR                          :   POINTER_OPT DIRECT_DECLARATOR   {$$ = init_node("FUNCTION_SPECIFIER", "", $1); add_next($1, $2);}
+DECLARATOR                          :   POINTER_OPT DIRECT_DECLARATOR   {$$ = init_node("DECLARATOR", "", $1); add_next($1, $2);}
                                     ;
 
 POINTER_OPT                         :   POINTER {$$ = init_node("POINTER_OPT", "", $1);}
@@ -520,7 +520,7 @@ IDENTIFIER_LIST_OPT                 :   IDENTIFIER_LIST     { $$ = init_node("ID
 TYPE_NAME                           :   SPECIFIER_QUALIFIER_LIST                    { $$ = init_node("TYPE_NAME","",$1); }
                                     ;
 
-INITIALIZER                         :   ASSIGNMENT_EXPRESSION                       { $$ = init_node("INITIALIZER_LIST","",$1); }
+INITIALIZER                         :   ASSIGNMENT_EXPRESSION                       { $$ = init_node("INITIALIZER","",$1); }
                                     |   LEFT_CURLY_BRACKET INITIALIZER_LIST RIGHT_CURLY_BRACKET    {    tree_pointer temp = init_node($1,"",NULL);
                                                                                                         $$ = init_node("INITIALIZER","",temp);
                                                                                                         add_node(temp, $2 );
