@@ -560,7 +560,7 @@ DESIGNATOR                          :   LEFT_SQUARE_BRACKET CONSTANT_EXPRESSION 
                                                                 add_node(temp, init_node("IDENTIFIER",$2,NULL) );
                                                             }
                                     ;
-//-------------------------------------------------------------------------------------------------------------------------                
+              
 // statements
 STATEMENT : LABELED_STATEMENT    { $$ = init_node("STATEMENT","",$1); } 
           | COMPOUND_STATEMENT   { $$ = init_node("STATEMENT","",$1); } 
