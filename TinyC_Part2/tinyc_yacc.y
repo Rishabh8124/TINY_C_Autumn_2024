@@ -361,81 +361,145 @@ INIT_DECLARATOR                     :   DECLARATOR                              
                                                                                 }
                                     ;
 
-STORAGE_CLASS_SPECIFIER             :   EXTERN      {$$ = init_node($1, "", NULL);}
-                                    |   STATIC      {$$ = init_node($1, "", NULL);}
-                                    |   AUTO        {$$ = init_node($1, "", NULL);}
-                                    |   REGISTER    {$$ = init_node($1, "", NULL);}
+STORAGE_CLASS_SPECIFIER             :   EXTERN      {$$ = init_node("STORAGE_CLASS_SPECIFIER", $1, NULL);}
+                                    |   STATIC      {$$ = init_node("STORAGE_CLASS_SPECIFIER", $1, NULL);}
+                                    |   AUTO        {$$ = init_node("STORAGE_CLASS_SPECIFIER", $1, NULL);}
+                                    |   REGISTER    {$$ = init_node("STORAGE_CLASS_SPECIFIER", $1, NULL);}
                                     ;
 
-TYPE_SPECIFIER                      :   VOID        {$$ = init_node($1, "", NULL);}
-                                    |   CHAR        {$$ = init_node($1, "", NULL);}
-                                    |   SHORT       {$$ = init_node($1, "", NULL);}
-                                    |   INT         {$$ = init_node($1, "", NULL);}
-                                    |   LONG        {$$ = init_node($1, "", NULL);}
-                                    |   FLOAT       {$$ = init_node($1, "", NULL);}
-                                    |   DOUBLE      {$$ = init_node($1, "", NULL);}
-                                    |   SIGNED      {$$ = init_node($1, "", NULL);}
-                                    |   UNSIGNED    {$$ = init_node($1, "", NULL);}
-                                    |   BOOL        {$$ = init_node($1, "", NULL);}
-                                    |   COMPLEX     {$$ = init_node($1, "", NULL);}
-                                    |   IMAGINARY   {$$ = init_node($1, "", NULL);}
+TYPE_SPECIFIER                      :   VOID        {$$ = init_node("TYPE_SPECIFIER", $1, NULL);}
+                                    |   CHAR        {$$ = init_node("TYPE_SPECIFIER", $1, NULL);}
+                                    |   SHORT       {$$ = init_node("TYPE_SPECIFIER", $1, NULL);}
+                                    |   INT         {$$ = init_node("TYPE_SPECIFIER", $1, NULL);}
+                                    |   LONG        {$$ = init_node("TYPE_SPECIFIER", $1, NULL);}
+                                    |   FLOAT       {$$ = init_node("TYPE_SPECIFIER", $1, NULL);}
+                                    |   DOUBLE      {$$ = init_node("TYPE_SPECIFIER", $1, NULL);}
+                                    |   SIGNED      {$$ = init_node("TYPE_SPECIFIER", $1, NULL);}
+                                    |   UNSIGNED    {$$ = init_node("TYPE_SPECIFIER", $1, NULL);}
+                                    |   BOOL        {$$ = init_node("TYPE_SPECIFIER", $1, NULL);}
+                                    |   COMPLEX     {$$ = init_node("TYPE_SPECIFIER", $1, NULL);}
+                                    |   IMAGINARY   {$$ = init_node("TYPE_SPECIFIER", $1, NULL);}
                                     ;
 
-SPECIFIER_QUALIFIER_LIST            :   TYPE_SPECIFIER SPECIFIER_QUALIFIER_LIST_OPT
-                                    |   TYPE_QUALIFIER SPECIFIER_QUALIFIER_LIST_OPT
+SPECIFIER_QUALIFIER_LIST            :   TYPE_SPECIFIER SPECIFIER_QUALIFIER_LIST_OPT {
+                                                                                        $$ = init_node("TYPE_SPECIFIER", "", $1);
+                                                                                        add_next($1, $2);
+                                                                                    }
+                                    |   TYPE_QUALIFIER SPECIFIER_QUALIFIER_LIST_OPT {
+                                                                                        $$ = init_node("TYPE_SPECIFIER", "", $1);
+                                                                                        add_next($1, $2);
+                                                                                    }
                                     ;
 
-SPECIFIER_QUALIFIER_LIST_OPT        :   SPECIFIER_QUALIFIER_LIST            { }
-                                    |   { }
+SPECIFIER_QUALIFIER_LIST_OPT        :   SPECIFIER_QUALIFIER_LIST    {$$ = init_node("SPECIFIER_QUALIFIER_LIST_OPT", "", $1);}
+                                    |                               {$$ = init_node("SPECIFIER_QUALIFIER_LIST_OPT", "", init_node("<empty>", "", NULL));}
                                     ;
 
-TYPE_QUALIFIER                      :    CONST      { }
-                                    | RESTRICT          { }
-                                    | VOLATILE          { }
+TYPE_QUALIFIER                      :   CONST       {$$ = init_node("TYPE_QUALIFIER", $1, NULL);}
+                                    |   RESTRICT    {$$ = init_node("TYPE_QUALIFIER", $1, NULL);}
+                                    |   VOLATILE    {$$ = init_node("TYPE_QUALIFIER", $1, NULL);}
                                     ;
 
-FUNCTION_SPECIFIER                  :    INLINE         { }
+FUNCTION_SPECIFIER                  :   INLINE      {$$ = init_node("FUNCTION_SPECIFIER", $1, NULL);}
                                     ;
 
-DECLARATOR                          :    POINTER_OPT DIRECT_DECLARATOR  { }
+DECLARATOR                          :   POINTER_OPT DIRECT_DECLARATOR   {$$ = init_node("FUNCTION_SPECIFIER", "", $1); add_next($1, $2);}
                                     ;
 
-POINTER_OPT                         :   POINTER     { }
-                                    |   { }
+POINTER_OPT                         :   POINTER {$$ = init_node("POINTER_OPT", "", $1);}
+                                    |           {$$ = init_node("POINTER_OPT", "", init_node("<empty>", "", NULL));}
                                     ;
 
-DIRECT_DECLARATOR                   :   IDENTIFIER                                                                  { }
-                                    | LEFT_PARANTHESIS DECLARATOR RIGHT_PARANTHESIS                                                            { }
-                                    | DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION_OPT RIGHT_SQUARE_BRACKET   { }
-                                    | DIRECT_DECLARATOR LEFT_SQUARE_BRACKET STATIC TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION RIGHT_SQUARE_BRACKET   { }
-                                    | DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST STATIC ASSIGNMENT_EXPRESSION RIGHT_SQUARE_BRACKET    { }
-                                    | DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST_OPT MULTIPLICATION_OPERATOR RIGHT_SQUARE_BRACKET     { }
-                                    | DIRECT_DECLARATOR LEFT_PARANTHESIS PARAMETER_TYPE_LIST RIGHT_PARANTHESIS                                 { }
-                                    | DIRECT_DECLARATOR LEFT_PARANTHESIS IDENTIFIER_LIST_OPT RIGHT_PARANTHESIS                                 { }
+DIRECT_DECLARATOR                   :   IDENTIFIER                                                                                                      {$$ = init_node("DIRECT_DECLARATOR", "", init_node("IDENTIFIER", $1, NULL));}
+                                    |   LEFT_PARANTHESIS DECLARATOR RIGHT_PARANTHESIS                                                                   {
+                                                                                                                                                            tree_pointer temp = init_node($1, "", NULL);
+                                                                                                                                                            $$ = init_node("DIRECT_DECLARATOR", "", temp);
+                                                                                                                                                            add_next(temp, $2);
+                                                                                                                                                            add_next(temp, init_node($3, "", NULL));
+                                                                                                                                                        }
+                                    |   DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION_OPT RIGHT_SQUARE_BRACKET    {
+                                                                                                                                                            $$ = init_node("DIRECT_DECLARATOR", "", $1);
+                                                                                                                                                            add_next($1, init_node($2, "", NULL));
+                                                                                                                                                            add_next($1, $3);
+                                                                                                                                                            add_next($1, $4);
+                                                                                                                                                            add_next($1, init_node($5, "", NULL));
+                                                                                                                                                        }
+                                    |   DIRECT_DECLARATOR LEFT_SQUARE_BRACKET STATIC TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION RIGHT_SQUARE_BRACKET {
+                                                                                                                                                            $$ = init_node("DIRECT_DECLARATOR", "", $1);
+                                                                                                                                                            add_next($1, init_node($2, "", NULL));
+                                                                                                                                                            add_next($1, init_node($3, "", NULL));
+                                                                                                                                                            add_next($1, $4);
+                                                                                                                                                            add_next($1, $5);
+                                                                                                                                                            add_next($1, init_node($6, "", NULL));
+                                                                                                                                                        }
+                                    |   DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST STATIC ASSIGNMENT_EXPRESSION RIGHT_SQUARE_BRACKET     {
+                                                                                                                                                            $$ = init_node("DIRECT_DECLARATOR", "", $1);
+                                                                                                                                                            add_next($1, init_node($2, "", NULL));
+                                                                                                                                                            add_next($1, init_node($3, "", NULL));
+                                                                                                                                                            add_next($1, $4);
+                                                                                                                                                            add_next($1, $5);
+                                                                                                                                                            add_next($1, init_node($6, "", NULL));
+                                                                                                                                                        }
+                                    |   DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST_OPT MULTIPLICATION_OPERATOR RIGHT_SQUARE_BRACKET      {
+                                                                                                                                                            $$ = init_node("DIRECT_DECLARATOR", "", $1);
+                                                                                                                                                            add_next($1, init_node($2, "", NULL));
+                                                                                                                                                            add_next($1, $3);
+                                                                                                                                                            add_next($1, init_node($4, "", NULL));
+                                                                                                                                                            add_next($1, init_node($5, "", NULL));
+                                                                                                                                                        }
+                                    |   DIRECT_DECLARATOR LEFT_PARANTHESIS PARAMETER_TYPE_LIST RIGHT_PARANTHESIS                                        {
+                                                                                                                                                            $$ = init_node("DIRECT_DECLARATOR", "", $1);
+                                                                                                                                                            add_next($1, init_node($2, "", NULL));
+                                                                                                                                                            add_next($1, $3);
+                                                                                                                                                            add_next($1, init_node($4, "", NULL));
+                                                                                                                                                        }
+                                    |   DIRECT_DECLARATOR LEFT_PARANTHESIS IDENTIFIER_LIST_OPT RIGHT_PARANTHESIS                                        {
+                                                                                                                                                            $$ = init_node("DIRECT_DECLARATOR", "", $1);
+                                                                                                                                                            add_next($1, init_node($2, "", NULL));
+                                                                                                                                                            add_next($1, $3);
+                                                                                                                                                            add_next($1, init_node($4, "", NULL));
+                                                                                                                                                        }
                                     ;
 
-ASSIGNMENT_EXPRESSION_OPT           :   ASSIGNMENT_EXPRESSION           { }
-                                    |       { }
+ASSIGNMENT_EXPRESSION_OPT           :   ASSIGNMENT_EXPRESSION   {$$ = init_node("ASSIGNMENT_EXPRESSION_OPT", "", $1);}
+                                    |                           {$$ = init_node("ASSIGNMENT_EXPRESSION_OPT", "", init_node("<empty>", "", NULL));}
                                     ;
 
-POINTER                             :   MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT 
-                                    |   MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT POINTER
+POINTER                             :   MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT         {
+                                                                                                    tree_pointer temp = init_node($1, "", NULL);
+                                                                                                    $$ = init_node("POINTER", "", temp);
+                                                                                                    add_next(temp, $2);
+                                                                                                }
+                                    |   MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT POINTER {
+                                                                                                    tree_pointer temp = init_node($1, "", NULL);
+                                                                                                    $$ = init_node("POINTER", "", temp);
+                                                                                                    add_next(temp, $2);
+                                                                                                    add_next(temp, $3);
+                                                                                                }
                                     ;
 
-TYPE_QUALIFIER_LIST                 :   TYPE_QUALIFIER 
-                                    |   TYPE_QUALIFIER_LIST TYPE_QUALIFIER 
+TYPE_QUALIFIER_LIST                 :   TYPE_QUALIFIER                      {$$ = init_node("TYPE_QUALIFIER_LIST", "", $1);}            
+                                    |   TYPE_QUALIFIER_LIST TYPE_QUALIFIER  {$$ = init_node("TYPE_QUALIFIER_LIST", "", $1); add_next($1, $2);}
                                     ;
 
-TYPE_QUALIFIER_LIST_OPT             :   TYPE_QUALIFIER_LIST                         { }
-                                    |                                               { }
+TYPE_QUALIFIER_LIST_OPT             :   TYPE_QUALIFIER_LIST                         {$$ = init_node("TYPE_QUALIFIER_LIST_OPT", "", $1);}
+                                    |                                               {$$ = init_node("TYPE_QUALIFIER_LIST_OPT", "", init_node("<empty>", "", NULL));}
                                     ;
 
-PARAMETER_TYPE_LIST                 :   PARAMETER_LIST 
-                                    |   PARAMETER_LIST COMMA TRIPLE_DOT             { }
+PARAMETER_TYPE_LIST                 :   PARAMETER_LIST                  {$$ = init_node("PARAMETER_TYPE_LIST", "", $1);}
+                                    |   PARAMETER_LIST COMMA TRIPLE_DOT {
+                                                                            $$ = init_node("PARAMETER_TYPE_LIST", "", $1);
+                                                                            add_next($1, init_node($2, "", NULL));
+                                                                            add_next($1, init_node($3, "", NULL);)
+                                                                        }
                                     ;
 
-PARAMETER_LIST                      :   PARAMETER_DECLARATION 
-                                    |   PARAMETER_LIST COMMA PARAMETER_DECLARATION    { }
+PARAMETER_LIST                      :   PARAMETER_DECLARATION                       {$$ = init_node("PARAMETER_LIST", "", $1);}
+                                    |   PARAMETER_LIST COMMA PARAMETER_DECLARATION  {
+                                                                                        $$ = init_node("PARAMETER_LIST", "", $1);
+                                                                                        add_next($1, init_node($2, "", NULL));
+                                                                                        add_next($1, $3;)
+                                                                                    }
                                     ;
 
 PARAMETER_DECLARATION               :   DECLARATION_SPECIFIERS DECLARATOR           { $$ = init_node("PARAMETER_DECLARATION","",$1); add_node($1,$2 ); } 
