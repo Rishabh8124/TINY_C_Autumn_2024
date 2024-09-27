@@ -50,7 +50,7 @@ INT "int"
 SWITCH "switch"
 DOUBLE "double"
 LONG "long"
-TYOEDEF "typedef"
+TYPEDEF "typedef"
 ELSE "else"
 REGISTER "register"
 UNION "union"
@@ -116,95 +116,109 @@ TRIPLE_DOT              "..."
 
 WHITE_SPACE [ \n\t]
 
-UNARY_OPERATOR "&" | "\*" | "\+" | "\-" | "\~" | "\!"
-ASSIGNMENT_OPERATOR "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | "&=" | "^=" | "|="
+    // UNARY_OPERATOR "&" | "\*" | "\+" | "\-" | "\~" | "\!"
+ADDITION_OPERATOR "+"
+MULTIPLICATION_OPERATOR "*"
+SUBTRACTION_OPERATOR "-"
+NOT_OPERATOR "!"
+NEGATION_OPERATOR "~"
+
+EQUAL_OPERATOR "="
+ASSIGNMENT_OPERATORS "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | "&=" | "^=" | "|="
 
 %%
 {MULTI_LINE_COMMENT}    { }
 {SINGLE_LINE_COMMENT}   { }
 
-{AUTO}                  {return AUTO}; 
-{ENUM}                  {return ENUM;}
-{RESTRICT}              {return RESTRICT}; 
-{UNSIGNED}              {return UNSIGNED;}
-{BREAK}                 {return BREAK;}
-{EXTERN}                {return EXTERN;}
-{RETURN}                {return RETURN}; 
-{VOID}                  {return VOID;}
-{CASE}                  {return CASE;}
-{FLOAT}                 {return FLOAT;}
-{SHORT}                 {return SHORT;}
-{VOLATILE}              {return VOLATILE;}
-{CHAR}                  {return CHAR;}
-{FOR}                   {return FOR;}
-{SIGNED}                {return SIGNED;}
-{WHILE}                 {return WHILE;}
-{CONST}                 {return CONST;}
-{GOTO}                  {return GOTO;}
-{SIZEOF}                {return SIZEOF;}
-{BOOL}                  {return BOOL;}
-{CONTINUE}              {return CONTINUE;}
-{IF}                    {return IF;}
-{STATIC}                {return STATIC;}
-{COMPLEX}               {return COMPLEX;}
-{DEFAULT}               {return DEFAULT;}
-{INLINE}                {return INLINE;}
-{STRUCT}                {return STRUCT;}
-{IMAGINARY}             {return IMAGINARY;}
-{DO}                    {return DO;}
-{INT}                   {return INT;}
-{SWITCH}                {return SWITCH;}
-{DOUBLE}                {return DOUBLE;}
-{LONG}                  {return LONG;}
-{TYOEDEF}               {return TYOEDEF;}
-{ELSE}                  {return ELSE;}
-{REGISTER}              {return REGISTER;}
-{UNION}                 {return UNION;}
+{AUTO}                    {return AUTO}; 
+{ENUM}                    {return ENUM;}
+{RESTRICT}                {return RESTRICT}; 
+{UNSIGNED}                {return UNSIGNED;}
+{BREAK}                   {return BREAK;}
+{EXTERN}                  {return EXTERN;}
+{RETURN}                  {return RETURN}; 
+{VOID}                    {return VOID;}
+{CASE}                    {return CASE;}
+{FLOAT}                   {return FLOAT;}
+{SHORT}                   {return SHORT;}
+{VOLATILE}                {return VOLATILE;}
+{CHAR}                    {return CHAR;}
+{FOR}                     {return FOR;}
+{SIGNED}                  {return SIGNED;}
+{WHILE}                   {return WHILE;}
+{CONST}                   {return CONST;}
+{GOTO}                    {return GOTO;}
+{SIZEOF}                  {return SIZEOF;}
+{BOOL}                    {return BOOL;}
+{CONTINUE}                {return CONTINUE;}
+{IF}                      {return IF;}
+{STATIC}                  {return STATIC;}
+{COMPLEX}                 {return COMPLEX;}
+{DEFAULT}                 {return DEFAULT;}
+{INLINE}                  {return INLINE;}
+{STRUCT}                  {return STRUCT;}
+{IMAGINARY}               {return IMAGINARY;}
+{DO}                      {return DO;}
+{INT}                     {return INT;}
+{SWITCH}                  {return SWITCH;}
+{DOUBLE}                  {return DOUBLE;}
+{LONG}                    {return LONG;}
+{TYOEDEF}                 {return TYOEDEF;}
+{ELSE}                    {return ELSE;}
+{REGISTER}                {return REGISTER;}
+{UNION}                   {return UNION;}
 
-{IDENTIFIER}            {return IDENTIFIER;}
-{STRING_LITERAL}        {return STRING_LITERAL;}
-{LESS_THAN}             {return LESS_THAN;}
-{LESS_THAN_EQUAL_TO}    {return LESS_THAN_EQUAL_TO;}
-{GREATER_THAN}          {return GREATER_THAN;}
-{GREATER_THAN_EQUAL_TO} {return GREATER_THAN_EQUAL_TO;}
-{ESCAPE_OPERATOR}       {return ESCAPE_OPERATOR;}
-{LEFT_SQUARE_BRACKET}   {return LEFT_SQUARE_BRACKET;}
-{RIGHT_SQUARE_BRACKET}  {return RIGHT_SQUARE_BRACKET;}
-{LEFT_PARANTHESIS}      {return LEFT_PARANTHESIS;}
-{RIGHT_PARANTHESIS}     {return RIGHT_PARANTHESIS;}
-{LEFT_CURLY_BRACKET}    {return LEFT_CURLY_BRACKET;}
-{RIGHT_CURLY_BRACKET}   {return RIGHT_CURLY_BRACKET;}
-{DOT}                   {return DOT;}
-{POINTER_ACCESS}        {return POINTER_ACCESS;}
-{INCREMENT_OPERATOR}    {return INCREMENT_OPERATOR;}
-{DECREMENT_OPERATOR}    {return DECREMENT_OPERATOR;}
-{DIVIDE_OPERATOR}       {return DIVIDE_OPERATOR;}
-{REMAINDER_OPERATOR}    {return REMAINDER_OPERATOR;}
-{SHIFT_LEFT_OPERATOR}   {return SHIFT_LEFT_OPERATOR;}
-{SHIFT_RIGHT_OPERATOR}  {return SHIFT_RIGHT_OPERATOR;}
-{EQUALITY_OPERATOR}     {return EQUALITY_OPERATOR;}
-{NON_EQUALITY_OPERATOR} {return NON_EQUALITY_OPERATOR;}
-{XOR_OPERATOR}          {return XOR_OPERATOR;}
-{BITWISE_OR_OPERATOR}   {return BITWISE_OR_OPERATOR;}
-{BITWISE_AND_OPERATOR}  {return BITWISE_AND_OPERATOR;}
-{LOGICAL_AND_OPERATOR}  {return LOGICAL_AND_OPERATOR;}
-{LOGICAL_OR_OPERATOR}   {return LOGICAL_OR_OPERATOR;}
-{TERNARY_OPERATOR}      {return TERNARY_OPERATOR;}
-{TERNARY_SEPERATOR}     {return TERNARY_SEPERATOR;}
-{SEMI_COLON}            {return SEMI_COLON;}
-{COMMA}                 {return COMMA;}
-{MACRO_OPERATOR}        {return MACRO_OPERATOR;}
-{TRIPLE_DOT}            {return TRIPLE_DOT;}
+{IDENTIFIER}              {return IDENTIFIER;}
+{STRING_LITERAL}          {return STRING_LITERAL;}
+{LESS_THAN}               {return LESS_THAN;}
+{LESS_THAN_EQUAL_TO}      {return LESS_THAN_EQUAL_TO;}
+{GREATER_THAN}            {return GREATER_THAN;}
+{GREATER_THAN_EQUAL_TO}   {return GREATER_THAN_EQUAL_TO;}
+{ESCAPE_OPERATOR}         {return ESCAPE_OPERATOR;}
+{LEFT_SQUARE_BRACKET}     {return LEFT_SQUARE_BRACKET;}
+{RIGHT_SQUARE_BRACKET}    {return RIGHT_SQUARE_BRACKET;}
+{LEFT_PARANTHESIS}        {return LEFT_PARANTHESIS;}
+{RIGHT_PARANTHESIS}       {return RIGHT_PARANTHESIS;}
+{LEFT_CURLY_BRACKET}      {return LEFT_CURLY_BRACKET;}
+{RIGHT_CURLY_BRACKET}     {return RIGHT_CURLY_BRACKET;}
+{DOT}                     {return DOT;}
+{POINTER_ACCESS}          {return POINTER_ACCESS;}
+{INCREMENT_OPERATOR}      {return INCREMENT_OPERATOR;}
+{DECREMENT_OPERATOR}      {return DECREMENT_OPERATOR;}
+{DIVIDE_OPERATOR}         {return DIVIDE_OPERATOR;}
+{REMAINDER_OPERATOR}      {return REMAINDER_OPERATOR;}
+{SHIFT_LEFT_OPERATOR}     {return SHIFT_LEFT_OPERATOR;}
+{SHIFT_RIGHT_OPERATOR}    {return SHIFT_RIGHT_OPERATOR;}
+{EQUALITY_OPERATOR}       {return EQUALITY_OPERATOR;}
+{NON_EQUALITY_OPERATOR}   {return NON_EQUALITY_OPERATOR;}
+{XOR_OPERATOR}            {return XOR_OPERATOR;}
+{BITWISE_OR_OPERATOR}     {return BITWISE_OR_OPERATOR;}
+{BITWISE_AND_OPERATOR}    {return BITWISE_AND_OPERATOR;}
+{LOGICAL_AND_OPERATOR}    {return LOGICAL_AND_OPERATOR;}
+{LOGICAL_OR_OPERATOR}     {return LOGICAL_OR_OPERATOR;}
+{TERNARY_OPERATOR}        {return TERNARY_OPERATOR;}
+{TERNARY_SEPERATOR}       {return TERNARY_SEPERATOR;}
+{SEMI_COLON}              {return SEMI_COLON;}
+{COMMA}                   {return COMMA;}
+{MACRO_OPERATOR}          {return MACRO_OPERATOR;}
+{TRIPLE_DOT}              {return TRIPLE_DOT;}
 
-{INTEGER_CONSTANT}      {return CONSTANT;}
-{FLOATING_CONSTANT}     {return CONSTANT;}
-{CHARACTER_CONSTANT}    {return CONSTANT;}
+{INTEGER_CONSTANT}        {return CONSTANT;}
+{FLOATING_CONSTANT}       {return CONSTANT;}
+{CHARACTER_CONSTANT}      {return CONSTANT;}
 
-{UNARY_OPERATOR}        {return UNARY_OPERATOR;}
-{ASSIGNMENT_OPERATOR}   {return ASSIGNMENT_OPERATOR;}
+    // {UNARY_OPERATOR}        {return UNARY_OPERATOR;}
+{ASSIGNMENT_OPERATORS}    {return ASSIGNMENT_OPERATORS;}
+{ADDITION_OPERATOR}       {return ADDITION_OPERATOR;}
+{MULTIPLICATION_OPERATOR} {return MULTIPLICATION_OPERATOR;}
+{SUBTRACTION_OPERATOR}    {return SUBTRACTION_OPERATOR;}
+{NOT_OPERATOR}            {return NOT_OPERATOR;}    
+{NEGATION_OPERATOR}       {return NEGATION_OPERATOR;} 
 
-{WHITE_SPACE}           { }
-.                       {yyerror("Invalid character found\n");}
+{EQUAL_OPERATOR}          {return EQUAL_OPERATOR;}
+
+{WHITE_SPACE}             { }
+.                         {yyerror("Invalid character found\n");}
 %%
 
 int yywrap(void) {return 1;}
