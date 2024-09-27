@@ -6,12 +6,12 @@ tree_pointer init_node(char * name, char * val, tree_pointer child) {
     new_tree->name = strdup(name);
     new_tree->val = strdup(val);
     new_tree->next = NULL;
-    new_tree->child = NULL;
+    new_tree->child = child;
 
     return new_tree;
 }
 
-tree_pointer add_next(tree_pointer root, tree_pointer next) {
+void add_next(tree_pointer root, tree_pointer next) {
     tree_pointer temp = root;
     while(temp->next != NULL) temp = temp->next;
 
@@ -25,8 +25,8 @@ void print_parse_tree(tree_pointer root, int depth) {
     if (strcmp("", root->val)) printf("-> %s (%s)\n", root->name, root->val);
     else printf("-> %s\n", root->name);
 
-    print_parse_tree(root->next, depth);
     print_parse_tree(root->child, depth+1);
+    print_parse_tree(root->next, depth);
 
     return;
 }
