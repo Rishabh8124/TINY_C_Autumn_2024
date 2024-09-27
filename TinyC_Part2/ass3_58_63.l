@@ -116,7 +116,7 @@ TRIPLE_DOT              "..."
 
 WHITE_SPACE [ \n\t]
 
-    // UNARY_OPERATOR "&" | "\*" | "\+" | "\-" | "\~" | "\!"
+/* UNARY_OPERATOR "&" | "\*" | "\+" | "\-" | "\~" | "\!" */
 ADDITION_OPERATOR "+"
 MULTIPLICATION_OPERATOR "*"
 SUBTRACTION_OPERATOR "-"
@@ -163,7 +163,7 @@ ASSIGNMENT_OPERATORS "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | "&=" | "
 {SWITCH}                  {return SWITCH;}
 {DOUBLE}                  {return DOUBLE;}
 {LONG}                    {return LONG;}
-{TYOEDEF}                 {return TYOEDEF;}
+{TYPEDEF}                 {return TYOEDEF;}
 {ELSE}                    {return ELSE;}
 {REGISTER}                {return REGISTER;}
 {UNION}                   {return UNION;}
