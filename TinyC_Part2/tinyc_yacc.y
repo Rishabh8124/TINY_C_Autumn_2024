@@ -15,7 +15,7 @@
     typedef tree * tree_pointer;
 
     tree_pointer init_node(char * name, char * val, tree_pointer child);
-    tree_pointer add_next(tree_pointer root, tree_pointer next);
+    void add_next(tree_pointer root, tree_pointer next);
     void print_parse_tree(tree_pointer root, int depth);
 
 %}
@@ -43,7 +43,7 @@
 %type <node> STATEMENT LABELED_STATEMENT COMPOUND_STATEMENT BLOCK_ITEM_LIST BLOCK_ITEM EXPRESSION_STATEMENT SELECTION_STATEMENT ITERATION_STATEMENT JUMP_STATEMENT
 %type <node> EXTERNAL_DECLARATION FUNCTION_DEFINITION DECLARATION_LIST DECLARATION_LIST_OPT
 %type <node> INIT_DECLARATOR_LIST_OPT DECLARATION_SPECIFIERS_OPT SPECIFIER_QUALIFIER_LIST_OPT POINTER_OPT TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION_OPT
-%type <node> IDENTIFIER_LIST_OPT DESIGNATION_OPT
+%type <node> IDENTIFIER_LIST_OPT DESIGNATION_OPT EXPRESSION_OPT BLOCK_ITEM_LIST_OPT
 
 %%
 
@@ -244,19 +244,19 @@ ASSIGNMENT_EXPRESSION_OPT   :   ASSIGNMENT_EXPRESSION           { }
                             |       { }
                             ;
 
-POINTER                 :   MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT 
-                        |   MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT POINTER
+POINTER                 :   MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT          {}
+                        |   MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT POINTER  {}
                         ;
 
-TYPE_QUALIFIER_LIST     :   TYPE_QUALIFIER 
-                        |   TYPE_QUALIFIER_LIST TYPE_QUALIFIER 
+TYPE_QUALIFIER_LIST     :   TYPE_QUALIFIER                     {}
+                        |   TYPE_QUALIFIER_LIST TYPE_QUALIFIER {}
                         ;
 
 TYPE_QUALIFIER_LIST_OPT :   TYPE_QUALIFIER_LIST                         { }
                         |                                               { }
                         ;
 
-PARAMETER_TYPE_LIST     :   PARAMETER_LIST 
+PARAMETER_TYPE_LIST     :   PARAMETER_LIST                     {}
                         |   PARAMETER_LIST COMMA TRIPLE_DOT             { }
 
 PARAMETER_LIST          :   PARAMETER_DECLARATION 
@@ -302,78 +302,162 @@ DESIGNATOR              :   LEFT_SQUARE_BRACKET CONSTANT_EXPRESSION RIGHT_SQUARE
                         ;
                 
 // statements
-STATEMENT : LABELED_STATEMENT {} 
-          | COMPOUND_STATEMENT {} 
-          | EXPRESSION_STATEMENT {} 
-          | SELECTION_STATEMENT {} 
-          | ITERATION_STATEMENT {} 
-          | JUMP_STATEMENT {} 
+STATEMENT : LABELED_STATEMENT    { $$ = init_node("STATEMENT","",$1); } 
+          | COMPOUND_STATEMENT   { $$ = init_node("STATEMENT","",$1); } 
+          | EXPRESSION_STATEMENT { $$ = init_node("STATEMENT","",$1); } 
+          | SELECTION_STATEMENT  { $$ = init_node("STATEMENT","",$1); } 
+          | ITERATION_STATEMENT  { $$ = init_node("STATEMENT","",$1); } 
+          | JUMP_STATEMENT       { $$ = init_node("STATEMENT","",$1); } 
           ;
 
-LABELED_STATEMENT : IDENTIFIER TERNARY_SEPERATOR STATEMENT {} 
-                  | CASE CONSTANT_EXPRESSION TERNARY_SEPERATOR STATEMENT {} 
-                  | DEFAULT TERNARY_SEPERATOR STATEMENT {} 
+LABELED_STATEMENT : IDENTIFIER TERNARY_SEPERATOR STATEMENT  {   tree_pointer temp = init_node("IDENTIFIER",$1,NULL); 
+                                                                $$ = init_node("LABELED_STATEMENT","",temp); 
+                                                                add_node(temp, init_node($2,"",NULL) );
+                                                                add_node(temp, $3 );
+                                                            } 
+                  | CASE CONSTANT_EXPRESSION TERNARY_SEPERATOR STATEMENT {  tree_pointer temp = init_node($1,"",NULL); 
+                                                                            $$ = init_node("LABELED_STATEMENT","",temp); 
+                                                                            add_node(temp, $2 );
+                                                                            add_node(temp, init_node($3,"",NULL) );
+                                                                            add_node(temp, $4 );
+                                                                         } 
+                  | DEFAULT TERNARY_SEPERATOR STATEMENT {   tree_pointer temp = init_node($1,"",NULL); 
+                                                            $$ = init_node("LABELED_STATEMENT","",temp); 
+                                                            add_node(temp, init_node($2,"",NULL) );
+                                                            add_node(temp, $3 );
+                                                        } 
                   ;
 
-COMPOUND_STATEMENT : LEFT_CURLY_BRACKET BLOCK_ITEM_LIST_OPT RIGHT_CURLY_BRACKET {} 
+COMPOUND_STATEMENT : LEFT_CURLY_BRACKET BLOCK_ITEM_LIST_OPT RIGHT_CURLY_BRACKET {   tree_pointer temp = init_node($1,"",NULL); 
+                                                                                    $$ = init_node("COMPOUND_STATEMENT","",temp); 
+                                                                                    add_node(temp, $2 );
+                                                                                    add_node(temp, init_node($3,"",NULL) );
+                                                                                } 
                    ;
 
-BLOCK_ITEM_LIST : BLOCK_ITEM {} 
-                | BLOCK_ITEM_LIST BLOCK_ITEM {} 
+BLOCK_ITEM_LIST : BLOCK_ITEM                 { $$ = init_node("BLOCK_ITEM_LIST","",$1);} 
+                | BLOCK_ITEM_LIST BLOCK_ITEM { $$ = init_node("BLOCK_ITEM_LIST","",$1); add_node($1,$2); } 
                 ;
 
-BLOCK_ITEM : DECLARATION {} 
-           | STATEMENT {} 
+BLOCK_ITEM : DECLARATION { $$ = init_node("BLOCK_ITEM","",$1); } 
+           | STATEMENT   { $$ = init_node("BLOCK_ITEM","",$1); } 
            ;
 
-EXPRESSION_STATEMENT : EXPRESSION_OPT SEMI_COLON {} 
+EXPRESSION_STATEMENT : EXPRESSION_OPT SEMI_COLON { $$ = init_node("STATEMENT","",$1); add_node($1,init_node($2,"",NULL)); } 
                      ;
 
-SELECTION_STATEMENT : IF LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT {} 
-                    | IF LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT ELSE STATEMENT {} 
-                    | SWITCH LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT {} 
+SELECTION_STATEMENT : IF LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT {  tree_pointer temp = init_node($1,"",NULL); 
+                                                                                    $$ = init_node("SELECTION_STATEMENT","",temp); 
+                                                                                    add_node(temp, init_node($2,"",NULL) );
+                                                                                    add_node(temp, $3 );
+                                                                                    add_node(temp, init_node($4,"",NULL) );
+                                                                                    add_node(temp, $5 );
+                                                                                 } 
+                    | IF LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT ELSE STATEMENT {   tree_pointer temp = init_node($1,"",NULL); 
+                                                                                                    $$ = init_node("SELECTION_STATEMENT","",temp); 
+                                                                                                    add_node(temp, init_node($2,"",NULL) );
+                                                                                                    add_node(temp, $3 );
+                                                                                                    add_node(temp, init_node($4,"",NULL) );
+                                                                                                    add_node(temp, $5 );
+                                                                                                    add_node(temp, init_node($6,"",NULL) );
+                                                                                                    add_node(temp, $7 );
+                                                                                                } 
+                    | SWITCH LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT {  tree_pointer temp = init_node($1,"",NULL); 
+                                                                                        $$ = init_node("SELECTION_STATEMENT","",temp); 
+                                                                                        add_node(temp, init_node($2,"",NULL) );
+                                                                                        add_node(temp, $3 );
+                                                                                        add_node(temp, init_node($4,"",NULL) );
+                                                                                        add_node(temp, $5 );
+                                                                                     } 
                     ;
 
-ITERATION_STATEMENT : WHILE LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT {} 
-                    | DO STATEMENT WHILE LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS SEMI_COLON {} 
-                    | FOR LEFT_PARANTHESIS EXPRESSION_OPT SEMI_COLON EXPRESSION_OPT ';' EXPRESSION_OPT RIGHT_PARANTHESIS STATEMENT {} 
-                    | FOR LEFT_PARANTHESIS DECLARATION EXPRESSION_OPT ';' EXPRESSION_OPT RIGHT_PARANTHESIS STATEMENT {} 
+ITERATION_STATEMENT : WHILE LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT {  tree_pointer temp = init_node($1,"",NULL); 
+                                                                                        $$ = init_node("ITERATION_STATEMENT","",temp); 
+                                                                                        add_node(temp, init_node($2,"",NULL) );
+                                                                                        add_node(temp, $3 );
+                                                                                        add_node(temp, init_node($4,"",NULL) );
+                                                                                        add_node(temp, $5 );
+                                                                                     } 
+                    | DO STATEMENT WHILE LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS SEMI_COLON {     tree_pointer temp = init_node($1,"",NULL); 
+                                                                                                        $$ = init_node("ITERATION_STATEMENT","",temp); 
+                                                                                                        add_node(temp, $2 );
+                                                                                                        add_node(temp, init_node($3,"",NULL) );
+                                                                                                        add_node(temp, init_node($4,"",NULL) );
+                                                                                                        add_node(temp, $5 );
+                                                                                                        add_node(temp, init_node($6,"",NULL) );
+                                                                                                        add_node(temp, init_node($7,"",NULL) );
+                                                                                                  } 
+                    | FOR LEFT_PARANTHESIS EXPRESSION_OPT SEMI_COLON EXPRESSION_OPT SEMI_COLON EXPRESSION_OPT RIGHT_PARANTHESIS STATEMENT {     tree_pointer temp = init_node($1,"",NULL); 
+                                                                                                                                                $$ = init_node("ITERATION_STATEMENT","",temp); 
+                                                                                                                                                add_node(temp, init_node($2,"",NULL) );
+                                                                                                                                                add_node(temp, $3 );
+                                                                                                                                                add_node(temp, init_node($4,"",NULL) );
+                                                                                                                                                add_node(temp, $5 );
+                                                                                                                                                add_node(temp, init_node($6,"",NULL) );
+                                                                                                                                                add_node(temp, $7 );
+                                                                                                                                                add_node(temp, init_node($8,"",NULL) );
+                                                                                                                                                add_node(temp, $9 );
+                                                                                                                                          } 
+                    | FOR LEFT_PARANTHESIS DECLARATION EXPRESSION_OPT SEMI_COLON EXPRESSION_OPT RIGHT_PARANTHESIS STATEMENT {   tree_pointer temp = init_node($1,"",NULL); 
+                                                                                                                                $$ = init_node("ITERATION_STATEMENT","",temp); 
+                                                                                                                                add_node(temp, init_node($2,"",NULL) );
+                                                                                                                                add_node(temp, $3 );
+                                                                                                                                add_node(temp, $4 );
+                                                                                                                                add_node(temp, init_node($5,"",NULL) );
+                                                                                                                                add_node(temp, $6 );
+                                                                                                                                add_node(temp, init_node($7,"",NULL) );
+                                                                                                                                add_node(temp, $8 );
+                                                                                                                            } 
                     ;
 
-JUMP_STATEMENT : GOTO IDENTIFIER SEMI_COLON {} 
-               | CONTINUE SEMI_COLON {} 
-               | BREAK SEMI_COLON {} 
-               | RETURN EXPRESSION_OPT SEMI_COLON {} 
+JUMP_STATEMENT  : GOTO IDENTIFIER SEMI_COLON {   tree_pointer temp = init_node($1,"",NULL);
+                                                $$ = init_node("JUMP_STATEMENT","",temp) ; 
+                                                add_next(temp,init_node($2,"",NULL)); 
+                                                add_next(temp,init_node($3,"",NULL));  
+                                             } 
+                | CONTINUE SEMI_COLON        {  tree_pointer temp = init_node($1,"",NULL);
+                                                $$ = init_node("JUMP_STATEMENT","",temp) ; 
+                                                add_next(temp,init_node($2,"",NULL));
+                                             } 
+               | BREAK SEMI_COLON            {  tree_pointer temp = init_node($1,"",NULL);
+                                                $$ = init_node("JUMP_STATEMENT","",temp) ; 
+                                                add_next(temp,init_node($2,"",NULL));
+                                             } 
+               | RETURN EXPRESSION_OPT SEMI_COLON {  tree_pointer temp = init_node($1,"",NULL);
+                                                     $$ = init_node("JUMP_STATEMENT","",temp) ; 
+                                                     add_next(temp,$2);
+                                                     add_next(temp,init_node($3,"",NULL));
+                                                  } 
                ;
 
 // Optional non-terminals
-BLOCK_ITEM_LIST_OPT : BLOCK_ITEM_LIST {} 
-                    | /* empty */ {} 
+BLOCK_ITEM_LIST_OPT : BLOCK_ITEM_LIST { $$ = init_node("BLOCK_ITEM_LIST_OPT","",$1); } 
+                    | /* empty */     { $$ = init_node("BLOCK_ITEM_LIST_OPT","",init_node("<empty>","",NULL)); } 
                     ;
 
-EXPRESSION_OPT : EXPRESSION {} 
-               | /* empty */ {} 
+EXPRESSION_OPT : EXPRESSION  { $$ = init_node("EXPRESSION_OPT","",$1); } 
+               | /* empty */ { $$ = init_node("EXPRESSION_OPT","",init_node("<empty>","",NULL)); } 
                ;
 
 /*External definitions*/
 
-TRANSLATIONAL_UNIT      :   EXTERNAL_DECLARATION                        { }
-                        |   TRANSLATIONAL_UNIT EXTERNAL_DECLARATION     { }
+TRANSLATIONAL_UNIT      :   EXTERNAL_DECLARATION                        { print_parse_tree($1,1); }
+                        |   TRANSLATIONAL_UNIT EXTERNAL_DECLARATION     { print_parse_tree($2,1); }
                         ;
 
-EXTERNAL_DECLARATION    :   FUNCTION_DEFINITION                         { }
-                        |   DECLARATION                                 { }
+EXTERNAL_DECLARATION    :   FUNCTION_DEFINITION                         { $$ = init_node("EXTERNAL_DECLARATION","",$1); }
+                        |   DECLARATION                                 { $$ = init_node("EXTERNAL_DECLARATION","",$1); }
                         ;
 
-FUNCTION_DEFINITION     :   DECLARATION_SPECIFIERS DECLARATOR DECLARATION_LIST_OPT COMPOUND_STATEMENT   { }
+FUNCTION_DEFINITION     :   DECLARATION_SPECIFIERS DECLARATOR DECLARATION_LIST_OPT COMPOUND_STATEMENT   { $$ = init_node("FUNCTION_DEFINITION","",$1); add_next($1,$2); add_next($2,$3); add_next($3,$4); }
                         ;
 
-DECLARATION_LIST        :   DECLARATION                                 { }                                             
-                        |   DECLARATION_LIST DECLARATION                { }
+DECLARATION_LIST        :   DECLARATION                                 { $$ = init_node("DECLARATION_LIST","",$1); }                                             
+                        |   DECLARATION_LIST DECLARATION                { $$ = init_node("DECLARATION_LIST","",$1); add_next($$,$2); }
                         ;
 
-DECLARATION_LIST_OPT    :   DECLARATION_LIST                            { }
-                        |                                               { }
+DECLARATION_LIST_OPT    :   DECLARATION_LIST                            { $$ = init_node("DECLARATION_LIST_OPT","",$1); }
+                        |                                               { $$ = init_node("DECLARATION_LIST_OPT","",NULL); }
                         ;                        
 %%
 

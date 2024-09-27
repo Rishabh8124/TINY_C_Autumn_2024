@@ -89,7 +89,7 @@
     void print_parse_tree(tree_pointer root, int depth);
 
 
-#line 93 "y.tab.c"
+#line 93 "tinyc_yacc.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -112,217 +112,7 @@
 #  endif
 # endif
 
-/* Use api.header.include to #include this header
-   instead of duplicating it here.  */
-#ifndef YY_YY_Y_TAB_H_INCLUDED
-# define YY_YY_Y_TAB_H_INCLUDED
-/* Debug traces.  */
-#ifndef YYDEBUG
-# define YYDEBUG 0
-#endif
-#if YYDEBUG
-extern int yydebug;
-#endif
-
-/* Token kinds.  */
-#ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-  enum yytokentype
-  {
-    YYEMPTY = -2,
-    YYEOF = 0,                     /* "end of file"  */
-    YYerror = 256,                 /* error  */
-    YYUNDEF = 257,                 /* "invalid token"  */
-    RIGHT_PARANTHESIS = 258,       /* RIGHT_PARANTHESIS  */
-    ELSE = 259,                    /* ELSE  */
-    AUTO = 260,                    /* AUTO  */
-    ENUM = 261,                    /* ENUM  */
-    RESTRICT = 262,                /* RESTRICT  */
-    UNSIGNED = 263,                /* UNSIGNED  */
-    BREAK = 264,                   /* BREAK  */
-    EXTERN = 265,                  /* EXTERN  */
-    RETURN = 266,                  /* RETURN  */
-    VOID = 267,                    /* VOID  */
-    CASE = 268,                    /* CASE  */
-    FLOAT = 269,                   /* FLOAT  */
-    SHORT = 270,                   /* SHORT  */
-    VOLATILE = 271,                /* VOLATILE  */
-    CHAR = 272,                    /* CHAR  */
-    FOR = 273,                     /* FOR  */
-    SIGNED = 274,                  /* SIGNED  */
-    WHILE = 275,                   /* WHILE  */
-    CONST = 276,                   /* CONST  */
-    GOTO = 277,                    /* GOTO  */
-    SIZEOF = 278,                  /* SIZEOF  */
-    BOOL = 279,                    /* BOOL  */
-    CONTINUE = 280,                /* CONTINUE  */
-    IF = 281,                      /* IF  */
-    STATIC = 282,                  /* STATIC  */
-    COMPLEX = 283,                 /* COMPLEX  */
-    DEFAULT = 284,                 /* DEFAULT  */
-    INLINE = 285,                  /* INLINE  */
-    STRUCT = 286,                  /* STRUCT  */
-    IMAGINARY = 287,               /* IMAGINARY  */
-    DO = 288,                      /* DO  */
-    INT = 289,                     /* INT  */
-    SWITCH = 290,                  /* SWITCH  */
-    DOUBLE = 291,                  /* DOUBLE  */
-    LONG = 292,                    /* LONG  */
-    TYPEDEF = 293,                 /* TYPEDEF  */
-    REGISTER = 294,                /* REGISTER  */
-    UNION = 295,                   /* UNION  */
-    IDENTIFIER = 296,              /* IDENTIFIER  */
-    STRING_LITERAL = 297,          /* STRING_LITERAL  */
-    CONSTANT = 298,                /* CONSTANT  */
-    LESS_THAN = 299,               /* LESS_THAN  */
-    LESS_THAN_EQUAL_TO = 300,      /* LESS_THAN_EQUAL_TO  */
-    GREATER_THAN = 301,            /* GREATER_THAN  */
-    GREATER_THAN_EQUAL_TO = 302,   /* GREATER_THAN_EQUAL_TO  */
-    ESCAPE_OPERATOR = 303,         /* ESCAPE_OPERATOR  */
-    LEFT_SQUARE_BRACKET = 304,     /* LEFT_SQUARE_BRACKET  */
-    RIGHT_SQUARE_BRACKET = 305,    /* RIGHT_SQUARE_BRACKET  */
-    LEFT_PARANTHESIS = 306,        /* LEFT_PARANTHESIS  */
-    LEFT_CURLY_BRACKET = 307,      /* LEFT_CURLY_BRACKET  */
-    RIGHT_CURLY_BRACKET = 308,     /* RIGHT_CURLY_BRACKET  */
-    DOT = 309,                     /* DOT  */
-    POINTER_ACCESS = 310,          /* POINTER_ACCESS  */
-    INCREMENT_OPERATOR = 311,      /* INCREMENT_OPERATOR  */
-    DECREMENT_OPERATOR = 312,      /* DECREMENT_OPERATOR  */
-    DIVIDE_OPERATOR = 313,         /* DIVIDE_OPERATOR  */
-    REMAINDER_OPERATOR = 314,      /* REMAINDER_OPERATOR  */
-    SHIFT_LEFT_OPERATOR = 315,     /* SHIFT_LEFT_OPERATOR  */
-    SHIFT_RIGHT_OPERATOR = 316,    /* SHIFT_RIGHT_OPERATOR  */
-    EQUALITY_OPERATOR = 317,       /* EQUALITY_OPERATOR  */
-    NON_EQUALITY_OPERATOR = 318,   /* NON_EQUALITY_OPERATOR  */
-    XOR_OPERATOR = 319,            /* XOR_OPERATOR  */
-    BITWISE_OR_OPERATOR = 320,     /* BITWISE_OR_OPERATOR  */
-    BITWISE_AND_OPERATOR = 321,    /* BITWISE_AND_OPERATOR  */
-    LOGICAL_AND_OPERATOR = 322,    /* LOGICAL_AND_OPERATOR  */
-    LOGICAL_OR_OPERATOR = 323,     /* LOGICAL_OR_OPERATOR  */
-    TERNARY_OPERATOR = 324,        /* TERNARY_OPERATOR  */
-    TERNARY_SEPERATOR = 325,       /* TERNARY_SEPERATOR  */
-    SEMI_COLON = 326,              /* SEMI_COLON  */
-    COMMA = 327,                   /* COMMA  */
-    MACRO_OPERATOR = 328,          /* MACRO_OPERATOR  */
-    TRIPLE_DOT = 329,              /* TRIPLE_DOT  */
-    ADDITION_OPERATOR = 330,       /* ADDITION_OPERATOR  */
-    MULTIPLICATION_OPERATOR = 331, /* MULTIPLICATION_OPERATOR  */
-    SUBTRACTION_OPERATOR = 332,    /* SUBTRACTION_OPERATOR  */
-    NOT_OPERATOR = 333,            /* NOT_OPERATOR  */
-    NEGATION_OPERATOR = 334,       /* NEGATION_OPERATOR  */
-    EQUAL_OPERATOR = 335,          /* EQUAL_OPERATOR  */
-    ASSIGNMENT_OPERATORS = 336     /* ASSIGNMENT_OPERATORS  */
-  };
-  typedef enum yytokentype yytoken_kind_t;
-#endif
-/* Token kinds.  */
-#define YYEMPTY -2
-#define YYEOF 0
-#define YYerror 256
-#define YYUNDEF 257
-#define RIGHT_PARANTHESIS 258
-#define ELSE 259
-#define AUTO 260
-#define ENUM 261
-#define RESTRICT 262
-#define UNSIGNED 263
-#define BREAK 264
-#define EXTERN 265
-#define RETURN 266
-#define VOID 267
-#define CASE 268
-#define FLOAT 269
-#define SHORT 270
-#define VOLATILE 271
-#define CHAR 272
-#define FOR 273
-#define SIGNED 274
-#define WHILE 275
-#define CONST 276
-#define GOTO 277
-#define SIZEOF 278
-#define BOOL 279
-#define CONTINUE 280
-#define IF 281
-#define STATIC 282
-#define COMPLEX 283
-#define DEFAULT 284
-#define INLINE 285
-#define STRUCT 286
-#define IMAGINARY 287
-#define DO 288
-#define INT 289
-#define SWITCH 290
-#define DOUBLE 291
-#define LONG 292
-#define TYPEDEF 293
-#define REGISTER 294
-#define UNION 295
-#define IDENTIFIER 296
-#define STRING_LITERAL 297
-#define CONSTANT 298
-#define LESS_THAN 299
-#define LESS_THAN_EQUAL_TO 300
-#define GREATER_THAN 301
-#define GREATER_THAN_EQUAL_TO 302
-#define ESCAPE_OPERATOR 303
-#define LEFT_SQUARE_BRACKET 304
-#define RIGHT_SQUARE_BRACKET 305
-#define LEFT_PARANTHESIS 306
-#define LEFT_CURLY_BRACKET 307
-#define RIGHT_CURLY_BRACKET 308
-#define DOT 309
-#define POINTER_ACCESS 310
-#define INCREMENT_OPERATOR 311
-#define DECREMENT_OPERATOR 312
-#define DIVIDE_OPERATOR 313
-#define REMAINDER_OPERATOR 314
-#define SHIFT_LEFT_OPERATOR 315
-#define SHIFT_RIGHT_OPERATOR 316
-#define EQUALITY_OPERATOR 317
-#define NON_EQUALITY_OPERATOR 318
-#define XOR_OPERATOR 319
-#define BITWISE_OR_OPERATOR 320
-#define BITWISE_AND_OPERATOR 321
-#define LOGICAL_AND_OPERATOR 322
-#define LOGICAL_OR_OPERATOR 323
-#define TERNARY_OPERATOR 324
-#define TERNARY_SEPERATOR 325
-#define SEMI_COLON 326
-#define COMMA 327
-#define MACRO_OPERATOR 328
-#define TRIPLE_DOT 329
-#define ADDITION_OPERATOR 330
-#define MULTIPLICATION_OPERATOR 331
-#define SUBTRACTION_OPERATOR 332
-#define NOT_OPERATOR 333
-#define NEGATION_OPERATOR 334
-#define EQUAL_OPERATOR 335
-#define ASSIGNMENT_OPERATORS 336
-
-/* Value type.  */
-#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-union YYSTYPE
-{
-#line 23 "tinyc_yacc.y"
-char * val; 
-
-#line 311 "y.tab.c"
-
-};
-typedef union YYSTYPE YYSTYPE;
-# define YYSTYPE_IS_TRIVIAL 1
-# define YYSTYPE_IS_DECLARED 1
-#endif
-
-
-extern YYSTYPE yylval;
-
-
-int yyparse (void);
-
-
-#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
+#include "tinyc_yacc.tab.h"
 /* Symbol kind.  */
 enum yysymbol_kind_t
 {
@@ -1805,1055 +1595,1085 @@ yyreduce:
   case 2: /* PRIMARY_EXPRESSION: IDENTIFIER  */
 #line 51 "tinyc_yacc.y"
                                         {}
-#line 1809 "y.tab.c"
+#line 1599 "tinyc_yacc.tab.c"
     break;
 
   case 3: /* PRIMARY_EXPRESSION: CONSTANT  */
 #line 52 "tinyc_yacc.y"
                                         {}
-#line 1815 "y.tab.c"
+#line 1605 "tinyc_yacc.tab.c"
     break;
 
   case 4: /* PRIMARY_EXPRESSION: STRING_LITERAL  */
 #line 53 "tinyc_yacc.y"
                                         {}
-#line 1821 "y.tab.c"
+#line 1611 "tinyc_yacc.tab.c"
     break;
 
   case 5: /* PRIMARY_EXPRESSION: LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS  */
 #line 54 "tinyc_yacc.y"
                                                                    {}
-#line 1827 "y.tab.c"
+#line 1617 "tinyc_yacc.tab.c"
     break;
 
   case 6: /* POSTFIX_EXPRESSION: PRIMARY_EXPRESSION  */
 #line 57 "tinyc_yacc.y"
                                                                          {}
-#line 1833 "y.tab.c"
+#line 1623 "tinyc_yacc.tab.c"
     break;
 
   case 7: /* POSTFIX_EXPRESSION: POSTFIX_EXPRESSION LEFT_SQUARE_BRACKET EXPRESSION RIGHT_SQUARE_BRACKET  */
 #line 58 "tinyc_yacc.y"
                                                                                                            {}
-#line 1839 "y.tab.c"
+#line 1629 "tinyc_yacc.tab.c"
     break;
 
   case 8: /* POSTFIX_EXPRESSION: POSTFIX_EXPRESSION LEFT_PARANTHESIS ARGUMENT_EXPRESSION_LIST_OPT RIGHT_PARANTHESIS  */
 #line 59 "tinyc_yacc.y"
                                                                                                         {}
-#line 1845 "y.tab.c"
+#line 1635 "tinyc_yacc.tab.c"
     break;
 
   case 9: /* POSTFIX_EXPRESSION: POSTFIX_EXPRESSION DOT IDENTIFIER  */
 #line 60 "tinyc_yacc.y"
                                                        {}
-#line 1851 "y.tab.c"
+#line 1641 "tinyc_yacc.tab.c"
     break;
 
   case 10: /* POSTFIX_EXPRESSION: POSTFIX_EXPRESSION POINTER_ACCESS IDENTIFIER  */
 #line 61 "tinyc_yacc.y"
                                                                   {}
-#line 1857 "y.tab.c"
+#line 1647 "tinyc_yacc.tab.c"
     break;
 
   case 11: /* POSTFIX_EXPRESSION: POSTFIX_EXPRESSION INCREMENT_OPERATOR  */
 #line 62 "tinyc_yacc.y"
                                                            {}
-#line 1863 "y.tab.c"
+#line 1653 "tinyc_yacc.tab.c"
     break;
 
   case 12: /* POSTFIX_EXPRESSION: POSTFIX_EXPRESSION DECREMENT_OPERATOR  */
 #line 63 "tinyc_yacc.y"
                                                            {}
-#line 1869 "y.tab.c"
+#line 1659 "tinyc_yacc.tab.c"
     break;
 
   case 13: /* POSTFIX_EXPRESSION: LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS LEFT_CURLY_BRACKET INITIALIZER_LIST RIGHT_CURLY_BRACKET  */
 #line 64 "tinyc_yacc.y"
                                                                                                                           {}
-#line 1875 "y.tab.c"
+#line 1665 "tinyc_yacc.tab.c"
     break;
 
   case 14: /* POSTFIX_EXPRESSION: LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS LEFT_CURLY_BRACKET INITIALIZER_LIST COMMA RIGHT_CURLY_BRACKET  */
 #line 65 "tinyc_yacc.y"
                                                                                                                                 {}
-#line 1881 "y.tab.c"
+#line 1671 "tinyc_yacc.tab.c"
     break;
 
   case 15: /* ARGUMENT_EXPRESSION_LIST: ASSIGNMENT_EXPRESSION  */
 #line 68 "tinyc_yacc.y"
                                                  {}
-#line 1887 "y.tab.c"
+#line 1677 "tinyc_yacc.tab.c"
     break;
 
   case 16: /* ARGUMENT_EXPRESSION_LIST: ARGUMENT_EXPRESSION_LIST COMMA ASSIGNMENT_EXPRESSION  */
 #line 69 "tinyc_yacc.y"
                                                                                 {}
-#line 1893 "y.tab.c"
+#line 1683 "tinyc_yacc.tab.c"
     break;
 
   case 17: /* ARGUMENT_EXPRESSION_LIST_OPT: ARGUMENT_EXPRESSION_LIST  */
 #line 72 "tinyc_yacc.y"
                                                         {}
-#line 1899 "y.tab.c"
+#line 1689 "tinyc_yacc.tab.c"
     break;
 
   case 18: /* ARGUMENT_EXPRESSION_LIST_OPT: %empty  */
 #line 73 "tinyc_yacc.y"
                                 {}
-#line 1905 "y.tab.c"
+#line 1695 "tinyc_yacc.tab.c"
     break;
 
   case 19: /* UNARY_EXPRESSION: POSTFIX_EXPRESSION  */
 #line 76 "tinyc_yacc.y"
                                       {}
-#line 1911 "y.tab.c"
+#line 1701 "tinyc_yacc.tab.c"
     break;
 
   case 20: /* UNARY_EXPRESSION: INCREMENT_OPERATOR UNARY_EXPRESSION  */
 #line 77 "tinyc_yacc.y"
                                                        {}
-#line 1917 "y.tab.c"
+#line 1707 "tinyc_yacc.tab.c"
     break;
 
   case 21: /* UNARY_EXPRESSION: DECREMENT_OPERATOR UNARY_EXPRESSION  */
 #line 78 "tinyc_yacc.y"
                                                        {}
-#line 1923 "y.tab.c"
+#line 1713 "tinyc_yacc.tab.c"
     break;
 
   case 22: /* UNARY_EXPRESSION: UNARY_OPEARATOR CAST_EXPRESSION  */
 #line 79 "tinyc_yacc.y"
                                                    {}
-#line 1929 "y.tab.c"
+#line 1719 "tinyc_yacc.tab.c"
     break;
 
   case 23: /* UNARY_EXPRESSION: SIZEOF UNARY_EXPRESSION  */
 #line 80 "tinyc_yacc.y"
                                            {}
-#line 1935 "y.tab.c"
+#line 1725 "tinyc_yacc.tab.c"
     break;
 
   case 24: /* UNARY_EXPRESSION: SIZEOF LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS  */
 #line 81 "tinyc_yacc.y"
                                                                        {}
-#line 1941 "y.tab.c"
+#line 1731 "tinyc_yacc.tab.c"
     break;
 
   case 25: /* UNARY_OPEARATOR: ADDITION_OPERATOR  */
 #line 84 "tinyc_yacc.y"
                                     {}
-#line 1947 "y.tab.c"
+#line 1737 "tinyc_yacc.tab.c"
     break;
 
   case 26: /* UNARY_OPEARATOR: SUBTRACTION_OPERATOR  */
 #line 85 "tinyc_yacc.y"
                                        {}
-#line 1953 "y.tab.c"
+#line 1743 "tinyc_yacc.tab.c"
     break;
 
   case 27: /* UNARY_OPEARATOR: MULTIPLICATION_OPERATOR  */
 #line 86 "tinyc_yacc.y"
                                           {}
-#line 1959 "y.tab.c"
+#line 1749 "tinyc_yacc.tab.c"
     break;
 
   case 28: /* UNARY_OPEARATOR: BITWISE_AND_OPERATOR  */
 #line 87 "tinyc_yacc.y"
                                        {}
-#line 1965 "y.tab.c"
+#line 1755 "tinyc_yacc.tab.c"
     break;
 
   case 29: /* UNARY_OPEARATOR: NEGATION_OPERATOR  */
 #line 88 "tinyc_yacc.y"
                                     {}
-#line 1971 "y.tab.c"
+#line 1761 "tinyc_yacc.tab.c"
     break;
 
   case 30: /* UNARY_OPEARATOR: NOT_OPERATOR  */
 #line 89 "tinyc_yacc.y"
                                {}
-#line 1977 "y.tab.c"
+#line 1767 "tinyc_yacc.tab.c"
     break;
 
   case 31: /* CAST_EXPRESSION: UNARY_EXPRESSION  */
 #line 92 "tinyc_yacc.y"
                                    {}
-#line 1983 "y.tab.c"
+#line 1773 "tinyc_yacc.tab.c"
     break;
 
   case 32: /* CAST_EXPRESSION: LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS CAST_EXPRESSION  */
 #line 93 "tinyc_yacc.y"
                                                                                {}
-#line 1989 "y.tab.c"
+#line 1779 "tinyc_yacc.tab.c"
     break;
 
   case 33: /* MULTIPLICATIVE_EXPRESSION: CAST_EXPRESSION  */
 #line 96 "tinyc_yacc.y"
                                             {}
-#line 1995 "y.tab.c"
+#line 1785 "tinyc_yacc.tab.c"
     break;
 
   case 34: /* MULTIPLICATIVE_EXPRESSION: MULTIPLICATIVE_EXPRESSION MULTIPLICATION_OPERATOR CAST_EXPRESSION  */
 #line 97 "tinyc_yacc.y"
                                                                                               {}
-#line 2001 "y.tab.c"
+#line 1791 "tinyc_yacc.tab.c"
     break;
 
   case 35: /* MULTIPLICATIVE_EXPRESSION: MULTIPLICATIVE_EXPRESSION DIVIDE_OPERATOR CAST_EXPRESSION  */
 #line 98 "tinyc_yacc.y"
                                                                                       {}
-#line 2007 "y.tab.c"
+#line 1797 "tinyc_yacc.tab.c"
     break;
 
   case 36: /* MULTIPLICATIVE_EXPRESSION: MULTIPLICATIVE_EXPRESSION REMAINDER_OPERATOR CAST_EXPRESSION  */
 #line 99 "tinyc_yacc.y"
                                                                                          {}
-#line 2013 "y.tab.c"
+#line 1803 "tinyc_yacc.tab.c"
     break;
 
   case 37: /* ADDITIVE_EXPRESSION: MULTIPLICATIVE_EXPRESSION  */
 #line 102 "tinyc_yacc.y"
                                                 {}
-#line 2019 "y.tab.c"
+#line 1809 "tinyc_yacc.tab.c"
     break;
 
   case 38: /* ADDITIVE_EXPRESSION: ADDITIVE_EXPRESSION ADDITION_OPERATOR MULTIPLICATIVE_EXPRESSION  */
 #line 103 "tinyc_yacc.y"
                                                                                       {}
-#line 2025 "y.tab.c"
+#line 1815 "tinyc_yacc.tab.c"
     break;
 
   case 39: /* ADDITIVE_EXPRESSION: ADDITIVE_EXPRESSION SUBTRACTION_OPERATOR MULTIPLICATIVE_EXPRESSION  */
 #line 104 "tinyc_yacc.y"
                                                                                          {}
-#line 2031 "y.tab.c"
+#line 1821 "tinyc_yacc.tab.c"
     break;
 
   case 40: /* SHIFT_EXPRESSION: ADDITIVE_EXPRESSION  */
 #line 107 "tinyc_yacc.y"
                                        {}
-#line 2037 "y.tab.c"
+#line 1827 "tinyc_yacc.tab.c"
     break;
 
   case 41: /* SHIFT_EXPRESSION: SHIFT_EXPRESSION SHIFT_LEFT_OPERATOR ADDITIVE_EXPRESSION  */
 #line 108 "tinyc_yacc.y"
                                                                             {}
-#line 2043 "y.tab.c"
+#line 1833 "tinyc_yacc.tab.c"
     break;
 
   case 42: /* SHIFT_EXPRESSION: SHIFT_EXPRESSION SHIFT_RIGHT_OPERATOR ADDITIVE_EXPRESSION  */
 #line 109 "tinyc_yacc.y"
                                                                              {}
-#line 2049 "y.tab.c"
+#line 1839 "tinyc_yacc.tab.c"
     break;
 
   case 43: /* RELATIONAL_EXPRESSION: SHIFT_EXPRESSION  */
 #line 112 "tinyc_yacc.y"
                                          {}
-#line 2055 "y.tab.c"
+#line 1845 "tinyc_yacc.tab.c"
     break;
 
   case 44: /* RELATIONAL_EXPRESSION: RELATIONAL_EXPRESSION LESS_THAN SHIFT_EXPRESSION  */
 #line 113 "tinyc_yacc.y"
                                                                          {}
-#line 2061 "y.tab.c"
+#line 1851 "tinyc_yacc.tab.c"
     break;
 
   case 45: /* RELATIONAL_EXPRESSION: RELATIONAL_EXPRESSION GREATER_THAN SHIFT_EXPRESSION  */
 #line 114 "tinyc_yacc.y"
                                                                             {}
-#line 2067 "y.tab.c"
+#line 1857 "tinyc_yacc.tab.c"
     break;
 
   case 46: /* RELATIONAL_EXPRESSION: RELATIONAL_EXPRESSION LESS_THAN_EQUAL_TO SHIFT_EXPRESSION  */
 #line 115 "tinyc_yacc.y"
                                                                                   {}
-#line 2073 "y.tab.c"
+#line 1863 "tinyc_yacc.tab.c"
     break;
 
   case 47: /* RELATIONAL_EXPRESSION: RELATIONAL_EXPRESSION GREATER_THAN_EQUAL_TO SHIFT_EXPRESSION  */
 #line 116 "tinyc_yacc.y"
                                                                                      {}
-#line 2079 "y.tab.c"
+#line 1869 "tinyc_yacc.tab.c"
     break;
 
   case 48: /* EQUALITY_EXPRESSION: RELATIONAL_EXPRESSION  */
 #line 119 "tinyc_yacc.y"
                                             {}
-#line 2085 "y.tab.c"
+#line 1875 "tinyc_yacc.tab.c"
     break;
 
   case 49: /* EQUALITY_EXPRESSION: EQUALITY_EXPRESSION EQUALITY_OPERATOR RELATIONAL_EXPRESSION  */
 #line 120 "tinyc_yacc.y"
                                                                                   {}
-#line 2091 "y.tab.c"
+#line 1881 "tinyc_yacc.tab.c"
     break;
 
   case 50: /* EQUALITY_EXPRESSION: EQUALITY_EXPRESSION NON_EQUALITY_OPERATOR RELATIONAL_EXPRESSION  */
 #line 121 "tinyc_yacc.y"
                                                                                       {}
-#line 2097 "y.tab.c"
+#line 1887 "tinyc_yacc.tab.c"
     break;
 
   case 51: /* AND_EXPRESSION: EQUALITY_EXPRESSION  */
 #line 124 "tinyc_yacc.y"
                                      {}
-#line 2103 "y.tab.c"
+#line 1893 "tinyc_yacc.tab.c"
     break;
 
   case 52: /* AND_EXPRESSION: AND_EXPRESSION BITWISE_AND_OPERATOR EQUALITY_EXPRESSION  */
 #line 125 "tinyc_yacc.y"
                                                                          {}
-#line 2109 "y.tab.c"
+#line 1899 "tinyc_yacc.tab.c"
     break;
 
   case 53: /* EXCLUSIVE_OR_EXPRESSION: AND_EXPRESSION  */
 #line 128 "tinyc_yacc.y"
                                          {}
-#line 2115 "y.tab.c"
+#line 1905 "tinyc_yacc.tab.c"
     break;
 
   case 54: /* EXCLUSIVE_OR_EXPRESSION: EXCLUSIVE_OR_EXPRESSION XOR_OPERATOR AND_EXPRESSION  */
 #line 129 "tinyc_yacc.y"
                                                                               {}
-#line 2121 "y.tab.c"
+#line 1911 "tinyc_yacc.tab.c"
     break;
 
   case 55: /* INCLUSIVE_OR_EXPRESSION: EXCLUSIVE_OR_EXPRESSION  */
 #line 132 "tinyc_yacc.y"
                                                   {}
-#line 2127 "y.tab.c"
+#line 1917 "tinyc_yacc.tab.c"
     break;
 
   case 56: /* INCLUSIVE_OR_EXPRESSION: INCLUSIVE_OR_EXPRESSION BITWISE_OR_OPERATOR EXCLUSIVE_OR_EXPRESSION  */
 #line 133 "tinyc_yacc.y"
                                                                                               {}
-#line 2133 "y.tab.c"
+#line 1923 "tinyc_yacc.tab.c"
     break;
 
   case 57: /* LOGICAL_AND_EXPRESSION: INCLUSIVE_OR_EXPRESSION  */
 #line 136 "tinyc_yacc.y"
                                                  {}
-#line 2139 "y.tab.c"
+#line 1929 "tinyc_yacc.tab.c"
     break;
 
   case 58: /* LOGICAL_AND_EXPRESSION: LOGICAL_AND_EXPRESSION LOGICAL_AND_OPERATOR INCLUSIVE_OR_EXPRESSION  */
 #line 137 "tinyc_yacc.y"
                                                                                              {}
-#line 2145 "y.tab.c"
+#line 1935 "tinyc_yacc.tab.c"
     break;
 
   case 59: /* LOGICAL_OR_EXPRESSION: LOGICAL_AND_EXPRESSION  */
 #line 140 "tinyc_yacc.y"
                                                {}
-#line 2151 "y.tab.c"
+#line 1941 "tinyc_yacc.tab.c"
     break;
 
   case 60: /* LOGICAL_OR_EXPRESSION: LOGICAL_OR_EXPRESSION LOGICAL_OR_OPERATOR LOGICAL_AND_EXPRESSION  */
 #line 141 "tinyc_yacc.y"
                                                                                          {}
-#line 2157 "y.tab.c"
+#line 1947 "tinyc_yacc.tab.c"
     break;
 
   case 61: /* CONDITIONAL_EXPRESSION: LOGICAL_OR_EXPRESSION  */
 #line 144 "tinyc_yacc.y"
                                                {}
-#line 2163 "y.tab.c"
+#line 1953 "tinyc_yacc.tab.c"
     break;
 
   case 62: /* CONDITIONAL_EXPRESSION: LOGICAL_OR_EXPRESSION TERNARY_OPERATOR EXPRESSION TERNARY_SEPERATOR CONDITIONAL_EXPRESSION  */
 #line 145 "tinyc_yacc.y"
                                                                                                                     {}
-#line 2169 "y.tab.c"
+#line 1959 "tinyc_yacc.tab.c"
     break;
 
   case 63: /* ASSIGNMENT_EXPRESSION: CONDITIONAL_EXPRESSION  */
 #line 148 "tinyc_yacc.y"
                                                {}
-#line 2175 "y.tab.c"
+#line 1965 "tinyc_yacc.tab.c"
     break;
 
   case 64: /* ASSIGNMENT_EXPRESSION: UNARY_EXPRESSION ASSIGNMENT_OPERATOR ASSIGNMENT_EXPRESSION  */
 #line 149 "tinyc_yacc.y"
                                                                                    {}
-#line 2181 "y.tab.c"
+#line 1971 "tinyc_yacc.tab.c"
     break;
 
   case 65: /* ASSIGNMENT_OPERATOR: EQUAL_OPERATOR  */
 #line 152 "tinyc_yacc.y"
                                      {}
-#line 2187 "y.tab.c"
+#line 1977 "tinyc_yacc.tab.c"
     break;
 
   case 66: /* ASSIGNMENT_OPERATOR: ASSIGNMENT_OPERATORS  */
 #line 153 "tinyc_yacc.y"
                                            {}
-#line 2193 "y.tab.c"
+#line 1983 "tinyc_yacc.tab.c"
     break;
 
   case 67: /* EXPRESSION: ASSIGNMENT_EXPRESSION  */
 #line 156 "tinyc_yacc.y"
                                    {}
-#line 2199 "y.tab.c"
+#line 1989 "tinyc_yacc.tab.c"
     break;
 
   case 68: /* EXPRESSION: EXPRESSION COMMA ASSIGNMENT_EXPRESSION  */
 #line 157 "tinyc_yacc.y"
                                                     {}
-#line 2205 "y.tab.c"
+#line 1995 "tinyc_yacc.tab.c"
     break;
 
   case 69: /* CONSTANT_EXPRESSION: CONDITIONAL_EXPRESSION  */
 #line 160 "tinyc_yacc.y"
                                              {}
-#line 2211 "y.tab.c"
+#line 2001 "tinyc_yacc.tab.c"
     break;
 
   case 70: /* DECLARATION: DECLARATION_SPECIFIERS INIT_DECLARATOR_LIST_OPT SEMI_COLON  */
 #line 165 "tinyc_yacc.y"
                                                                                        { }
-#line 2217 "y.tab.c"
+#line 2007 "tinyc_yacc.tab.c"
     break;
 
   case 71: /* INIT_DECLARATOR_LIST_OPT: INIT_DECLARATOR_LIST  */
 #line 168 "tinyc_yacc.y"
                                                         { }
-#line 2223 "y.tab.c"
+#line 2013 "tinyc_yacc.tab.c"
     break;
 
   case 72: /* INIT_DECLARATOR_LIST_OPT: %empty  */
 #line 169 "tinyc_yacc.y"
                                 { }
-#line 2229 "y.tab.c"
+#line 2019 "tinyc_yacc.tab.c"
     break;
 
   case 73: /* DECLARATION_SPECIFIERS: STORAGE_CLASS_SPECIFIER DECLARATION_SPECIFIERS_OPT  */
 #line 172 "tinyc_yacc.y"
                                                                                     { }
-#line 2235 "y.tab.c"
+#line 2025 "tinyc_yacc.tab.c"
     break;
 
   case 77: /* DECLARATION_SPECIFIERS_OPT: DECLARATION_SPECIFIERS  */
 #line 178 "tinyc_yacc.y"
                                                                 { }
-#line 2241 "y.tab.c"
+#line 2031 "tinyc_yacc.tab.c"
     break;
 
   case 78: /* DECLARATION_SPECIFIERS_OPT: %empty  */
 #line 179 "tinyc_yacc.y"
                                     { }
-#line 2247 "y.tab.c"
+#line 2037 "tinyc_yacc.tab.c"
     break;
 
   case 79: /* INIT_DECLARATOR_LIST: INIT_DECLARATOR  */
 #line 182 "tinyc_yacc.y"
                                                             { }
-#line 2253 "y.tab.c"
+#line 2043 "tinyc_yacc.tab.c"
     break;
 
   case 80: /* INIT_DECLARATOR_LIST: INIT_DECLARATOR_LIST COMMA INIT_DECLARATOR  */
 #line 183 "tinyc_yacc.y"
                                                                               { }
-#line 2259 "y.tab.c"
+#line 2049 "tinyc_yacc.tab.c"
     break;
 
   case 81: /* INIT_DECLARATOR: DECLARATOR  */
 #line 186 "tinyc_yacc.y"
                                             { }
-#line 2265 "y.tab.c"
+#line 2055 "tinyc_yacc.tab.c"
     break;
 
   case 82: /* INIT_DECLARATOR: DECLARATOR EQUAL_OPERATOR INITIALIZER  */
 #line 187 "tinyc_yacc.y"
                                                                    { }
-#line 2271 "y.tab.c"
+#line 2061 "tinyc_yacc.tab.c"
     break;
 
   case 83: /* STORAGE_CLASS_SPECIFIER: EXTERN  */
 #line 190 "tinyc_yacc.y"
                                     { }
-#line 2277 "y.tab.c"
+#line 2067 "tinyc_yacc.tab.c"
     break;
 
   case 84: /* STORAGE_CLASS_SPECIFIER: STATIC  */
 #line 191 "tinyc_yacc.y"
                                     { }
-#line 2283 "y.tab.c"
+#line 2073 "tinyc_yacc.tab.c"
     break;
 
   case 85: /* STORAGE_CLASS_SPECIFIER: AUTO  */
 #line 192 "tinyc_yacc.y"
                                     { }
-#line 2289 "y.tab.c"
+#line 2079 "tinyc_yacc.tab.c"
     break;
 
   case 86: /* STORAGE_CLASS_SPECIFIER: REGISTER  */
 #line 193 "tinyc_yacc.y"
                                      { }
-#line 2295 "y.tab.c"
+#line 2085 "tinyc_yacc.tab.c"
     break;
 
   case 87: /* TYPE_SPECIFIER: VOID  */
 #line 196 "tinyc_yacc.y"
                               { }
-#line 2301 "y.tab.c"
+#line 2091 "tinyc_yacc.tab.c"
     break;
 
   case 88: /* TYPE_SPECIFIER: CHAR  */
 #line 197 "tinyc_yacc.y"
                              { }
-#line 2307 "y.tab.c"
+#line 2097 "tinyc_yacc.tab.c"
     break;
 
   case 89: /* TYPE_SPECIFIER: SHORT  */
 #line 198 "tinyc_yacc.y"
                              { }
-#line 2313 "y.tab.c"
+#line 2103 "tinyc_yacc.tab.c"
     break;
 
   case 90: /* TYPE_SPECIFIER: INT  */
 #line 199 "tinyc_yacc.y"
                              { }
-#line 2319 "y.tab.c"
+#line 2109 "tinyc_yacc.tab.c"
     break;
 
   case 91: /* TYPE_SPECIFIER: LONG  */
 #line 200 "tinyc_yacc.y"
                              { }
-#line 2325 "y.tab.c"
+#line 2115 "tinyc_yacc.tab.c"
     break;
 
   case 92: /* TYPE_SPECIFIER: FLOAT  */
 #line 201 "tinyc_yacc.y"
                              { }
-#line 2331 "y.tab.c"
+#line 2121 "tinyc_yacc.tab.c"
     break;
 
   case 93: /* TYPE_SPECIFIER: DOUBLE  */
 #line 202 "tinyc_yacc.y"
                                  { }
-#line 2337 "y.tab.c"
+#line 2127 "tinyc_yacc.tab.c"
     break;
 
   case 94: /* TYPE_SPECIFIER: SIGNED  */
 #line 203 "tinyc_yacc.y"
                                  { }
-#line 2343 "y.tab.c"
+#line 2133 "tinyc_yacc.tab.c"
     break;
 
   case 95: /* TYPE_SPECIFIER: UNSIGNED  */
 #line 204 "tinyc_yacc.y"
                                  { }
-#line 2349 "y.tab.c"
+#line 2139 "tinyc_yacc.tab.c"
     break;
 
   case 96: /* TYPE_SPECIFIER: BOOL  */
 #line 205 "tinyc_yacc.y"
                                  { }
-#line 2355 "y.tab.c"
+#line 2145 "tinyc_yacc.tab.c"
     break;
 
   case 97: /* TYPE_SPECIFIER: COMPLEX  */
 #line 206 "tinyc_yacc.y"
                                  { }
-#line 2361 "y.tab.c"
+#line 2151 "tinyc_yacc.tab.c"
     break;
 
   case 98: /* TYPE_SPECIFIER: IMAGINARY  */
 #line 207 "tinyc_yacc.y"
                                  { }
-#line 2367 "y.tab.c"
+#line 2157 "tinyc_yacc.tab.c"
     break;
 
   case 101: /* SPECIFIER_QUALIFIER_LIST_OPT: SPECIFIER_QUALIFIER_LIST  */
 #line 214 "tinyc_yacc.y"
                                                                         { }
-#line 2373 "y.tab.c"
+#line 2163 "tinyc_yacc.tab.c"
     break;
 
   case 102: /* SPECIFIER_QUALIFIER_LIST_OPT: %empty  */
 #line 215 "tinyc_yacc.y"
                                     { }
-#line 2379 "y.tab.c"
+#line 2169 "tinyc_yacc.tab.c"
     break;
 
   case 103: /* TYPE_QUALIFIER: CONST  */
 #line 218 "tinyc_yacc.y"
                                     { }
-#line 2385 "y.tab.c"
+#line 2175 "tinyc_yacc.tab.c"
     break;
 
   case 104: /* TYPE_QUALIFIER: RESTRICT  */
 #line 219 "tinyc_yacc.y"
                                         { }
-#line 2391 "y.tab.c"
+#line 2181 "tinyc_yacc.tab.c"
     break;
 
   case 105: /* TYPE_QUALIFIER: VOLATILE  */
 #line 220 "tinyc_yacc.y"
                                         { }
-#line 2397 "y.tab.c"
+#line 2187 "tinyc_yacc.tab.c"
     break;
 
   case 106: /* FUNCTION_SPECIFIER: INLINE  */
 #line 223 "tinyc_yacc.y"
                                         { }
-#line 2403 "y.tab.c"
+#line 2193 "tinyc_yacc.tab.c"
     break;
 
   case 107: /* DECLARATOR: POINTER_OPT DIRECT_DECLARATOR  */
 #line 226 "tinyc_yacc.y"
                                                 { }
-#line 2409 "y.tab.c"
+#line 2199 "tinyc_yacc.tab.c"
     break;
 
   case 108: /* POINTER_OPT: POINTER  */
 #line 229 "tinyc_yacc.y"
                             { }
-#line 2415 "y.tab.c"
+#line 2205 "tinyc_yacc.tab.c"
     break;
 
   case 109: /* POINTER_OPT: %empty  */
 #line 230 "tinyc_yacc.y"
                 { }
-#line 2421 "y.tab.c"
+#line 2211 "tinyc_yacc.tab.c"
     break;
 
   case 110: /* DIRECT_DECLARATOR: IDENTIFIER  */
 #line 233 "tinyc_yacc.y"
                                                                                                         { }
-#line 2427 "y.tab.c"
+#line 2217 "tinyc_yacc.tab.c"
     break;
 
   case 111: /* DIRECT_DECLARATOR: LEFT_PARANTHESIS DECLARATOR RIGHT_PARANTHESIS  */
 #line 234 "tinyc_yacc.y"
                                                                                                                                    { }
-#line 2433 "y.tab.c"
+#line 2223 "tinyc_yacc.tab.c"
     break;
 
   case 112: /* DIRECT_DECLARATOR: DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION_OPT RIGHT_SQUARE_BRACKET  */
 #line 235 "tinyc_yacc.y"
                                                                                                                                          { }
-#line 2439 "y.tab.c"
+#line 2229 "tinyc_yacc.tab.c"
     break;
 
   case 113: /* DIRECT_DECLARATOR: DIRECT_DECLARATOR LEFT_SQUARE_BRACKET STATIC TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION RIGHT_SQUARE_BRACKET  */
 #line 236 "tinyc_yacc.y"
                                                                                                                                          { }
-#line 2445 "y.tab.c"
+#line 2235 "tinyc_yacc.tab.c"
     break;
 
   case 114: /* DIRECT_DECLARATOR: DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST STATIC ASSIGNMENT_EXPRESSION RIGHT_SQUARE_BRACKET  */
 #line 237 "tinyc_yacc.y"
                                                                                                                                          { }
-#line 2451 "y.tab.c"
+#line 2241 "tinyc_yacc.tab.c"
     break;
 
   case 115: /* DIRECT_DECLARATOR: DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST_OPT MULTIPLICATION_OPERATOR RIGHT_SQUARE_BRACKET  */
 #line 238 "tinyc_yacc.y"
                                                                                                                                          { }
-#line 2457 "y.tab.c"
+#line 2247 "tinyc_yacc.tab.c"
     break;
 
   case 116: /* DIRECT_DECLARATOR: DIRECT_DECLARATOR LEFT_PARANTHESIS PARAMETER_TYPE_LIST RIGHT_PARANTHESIS  */
 #line 239 "tinyc_yacc.y"
                                                                                                                                    { }
-#line 2463 "y.tab.c"
+#line 2253 "tinyc_yacc.tab.c"
     break;
 
   case 117: /* DIRECT_DECLARATOR: DIRECT_DECLARATOR LEFT_PARANTHESIS IDENTIFIER_LIST_OPT RIGHT_PARANTHESIS  */
 #line 240 "tinyc_yacc.y"
                                                                                                                                    { }
-#line 2469 "y.tab.c"
+#line 2259 "tinyc_yacc.tab.c"
     break;
 
   case 118: /* ASSIGNMENT_EXPRESSION_OPT: ASSIGNMENT_EXPRESSION  */
 #line 243 "tinyc_yacc.y"
                                                                 { }
-#line 2475 "y.tab.c"
+#line 2265 "tinyc_yacc.tab.c"
     break;
 
   case 119: /* ASSIGNMENT_EXPRESSION_OPT: %empty  */
 #line 244 "tinyc_yacc.y"
                                     { }
-#line 2481 "y.tab.c"
+#line 2271 "tinyc_yacc.tab.c"
+    break;
+
+  case 120: /* POINTER: MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT  */
+#line 247 "tinyc_yacc.y"
+                                                                                     {}
+#line 2277 "tinyc_yacc.tab.c"
+    break;
+
+  case 121: /* POINTER: MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT POINTER  */
+#line 248 "tinyc_yacc.y"
+                                                                                     {}
+#line 2283 "tinyc_yacc.tab.c"
+    break;
+
+  case 122: /* TYPE_QUALIFIER_LIST: TYPE_QUALIFIER  */
+#line 251 "tinyc_yacc.y"
+                                                               {}
+#line 2289 "tinyc_yacc.tab.c"
+    break;
+
+  case 123: /* TYPE_QUALIFIER_LIST: TYPE_QUALIFIER_LIST TYPE_QUALIFIER  */
+#line 252 "tinyc_yacc.y"
+                                                               {}
+#line 2295 "tinyc_yacc.tab.c"
     break;
 
   case 124: /* TYPE_QUALIFIER_LIST_OPT: TYPE_QUALIFIER_LIST  */
 #line 255 "tinyc_yacc.y"
                                                                         { }
-#line 2487 "y.tab.c"
+#line 2301 "tinyc_yacc.tab.c"
     break;
 
   case 125: /* TYPE_QUALIFIER_LIST_OPT: %empty  */
 #line 256 "tinyc_yacc.y"
                                                                         { }
-#line 2493 "y.tab.c"
+#line 2307 "tinyc_yacc.tab.c"
+    break;
+
+  case 126: /* PARAMETER_TYPE_LIST: PARAMETER_LIST  */
+#line 259 "tinyc_yacc.y"
+                                                               {}
+#line 2313 "tinyc_yacc.tab.c"
     break;
 
   case 127: /* PARAMETER_TYPE_LIST: PARAMETER_LIST COMMA TRIPLE_DOT  */
 #line 260 "tinyc_yacc.y"
                                                                         { }
-#line 2499 "y.tab.c"
+#line 2319 "tinyc_yacc.tab.c"
     break;
 
   case 129: /* PARAMETER_LIST: PARAMETER_LIST COMMA PARAMETER_DECLARATION  */
 #line 263 "tinyc_yacc.y"
                                                                           { }
-#line 2505 "y.tab.c"
+#line 2325 "tinyc_yacc.tab.c"
     break;
 
   case 130: /* PARAMETER_DECLARATION: DECLARATION_SPECIFIERS DECLARATOR  */
 #line 265 "tinyc_yacc.y"
                                                                         { }
-#line 2511 "y.tab.c"
+#line 2331 "tinyc_yacc.tab.c"
     break;
 
   case 131: /* PARAMETER_DECLARATION: DECLARATION_SPECIFIERS  */
 #line 266 "tinyc_yacc.y"
                                                                         { }
-#line 2517 "y.tab.c"
+#line 2337 "tinyc_yacc.tab.c"
     break;
 
   case 132: /* IDENTIFIER_LIST: IDENTIFIER  */
 #line 269 "tinyc_yacc.y"
                                                                         { }
-#line 2523 "y.tab.c"
+#line 2343 "tinyc_yacc.tab.c"
     break;
 
   case 133: /* IDENTIFIER_LIST: IDENTIFIER_LIST COMMA IDENTIFIER  */
 #line 270 "tinyc_yacc.y"
                                                                         { }
-#line 2529 "y.tab.c"
+#line 2349 "tinyc_yacc.tab.c"
     break;
 
   case 134: /* IDENTIFIER_LIST_OPT: IDENTIFIER_LIST  */
 #line 273 "tinyc_yacc.y"
                                                 { }
-#line 2535 "y.tab.c"
+#line 2355 "tinyc_yacc.tab.c"
     break;
 
   case 135: /* IDENTIFIER_LIST_OPT: %empty  */
 #line 274 "tinyc_yacc.y"
                             { }
-#line 2541 "y.tab.c"
+#line 2361 "tinyc_yacc.tab.c"
     break;
 
   case 136: /* TYPE_NAME: SPECIFIER_QUALIFIER_LIST  */
 #line 277 "tinyc_yacc.y"
                                                                         { }
-#line 2547 "y.tab.c"
+#line 2367 "tinyc_yacc.tab.c"
     break;
 
   case 137: /* INITIALIZER: ASSIGNMENT_EXPRESSION  */
 #line 280 "tinyc_yacc.y"
                                                                         { }
-#line 2553 "y.tab.c"
+#line 2373 "tinyc_yacc.tab.c"
     break;
 
   case 138: /* INITIALIZER: LEFT_CURLY_BRACKET INITIALIZER_LIST RIGHT_CURLY_BRACKET  */
 #line 281 "tinyc_yacc.y"
                                                                                          { }
-#line 2559 "y.tab.c"
+#line 2379 "tinyc_yacc.tab.c"
     break;
 
   case 139: /* INITIALIZER: LEFT_CURLY_BRACKET INITIALIZER_LIST COMMA RIGHT_CURLY_BRACKET  */
 #line 282 "tinyc_yacc.y"
                                                                                              { }
-#line 2565 "y.tab.c"
+#line 2385 "tinyc_yacc.tab.c"
     break;
 
   case 140: /* INITIALIZER_LIST: DESIGNATION_OPT INITIALIZER  */
 #line 285 "tinyc_yacc.y"
                                                                         { }
-#line 2571 "y.tab.c"
+#line 2391 "tinyc_yacc.tab.c"
     break;
 
   case 141: /* INITIALIZER_LIST: INITIALIZER_LIST COMMA DESIGNATION_OPT INITIALIZER  */
 #line 286 "tinyc_yacc.y"
                                                                                   { }
-#line 2577 "y.tab.c"
+#line 2397 "tinyc_yacc.tab.c"
     break;
 
   case 142: /* DESIGNATION_OPT: DESIGNATION  */
 #line 289 "tinyc_yacc.y"
                                                                         { }
-#line 2583 "y.tab.c"
+#line 2403 "tinyc_yacc.tab.c"
     break;
 
   case 143: /* DESIGNATION_OPT: %empty  */
 #line 290 "tinyc_yacc.y"
                                                                         { }
-#line 2589 "y.tab.c"
+#line 2409 "tinyc_yacc.tab.c"
     break;
 
   case 144: /* DESIGNATION: DESIGNATOR_LIST EQUAL_OPERATOR  */
 #line 293 "tinyc_yacc.y"
                                                                                    { }
-#line 2595 "y.tab.c"
+#line 2415 "tinyc_yacc.tab.c"
     break;
 
   case 145: /* DESIGNATOR_LIST: DESIGNATOR  */
 #line 296 "tinyc_yacc.y"
                                                                         { }
-#line 2601 "y.tab.c"
+#line 2421 "tinyc_yacc.tab.c"
     break;
 
   case 146: /* DESIGNATOR_LIST: DESIGNATOR_LIST DESIGNATOR  */
 #line 297 "tinyc_yacc.y"
                                                                         { }
-#line 2607 "y.tab.c"
+#line 2427 "tinyc_yacc.tab.c"
     break;
 
   case 147: /* DESIGNATOR: LEFT_SQUARE_BRACKET CONSTANT_EXPRESSION RIGHT_SQUARE_BRACKET  */
 #line 300 "tinyc_yacc.y"
                                                                                                         { }
-#line 2613 "y.tab.c"
+#line 2433 "tinyc_yacc.tab.c"
     break;
 
   case 148: /* DESIGNATOR: DOT IDENTIFIER  */
 #line 301 "tinyc_yacc.y"
                                                                         { }
-#line 2619 "y.tab.c"
+#line 2439 "tinyc_yacc.tab.c"
     break;
 
   case 149: /* STATEMENT: LABELED_STATEMENT  */
 #line 305 "tinyc_yacc.y"
                               {}
-#line 2625 "y.tab.c"
+#line 2445 "tinyc_yacc.tab.c"
     break;
 
   case 150: /* STATEMENT: COMPOUND_STATEMENT  */
 #line 306 "tinyc_yacc.y"
                                {}
-#line 2631 "y.tab.c"
+#line 2451 "tinyc_yacc.tab.c"
     break;
 
   case 151: /* STATEMENT: EXPRESSION_STATEMENT  */
 #line 307 "tinyc_yacc.y"
                                  {}
-#line 2637 "y.tab.c"
+#line 2457 "tinyc_yacc.tab.c"
     break;
 
   case 152: /* STATEMENT: SELECTION_STATEMENT  */
 #line 308 "tinyc_yacc.y"
                                 {}
-#line 2643 "y.tab.c"
+#line 2463 "tinyc_yacc.tab.c"
     break;
 
   case 153: /* STATEMENT: ITERATION_STATEMENT  */
 #line 309 "tinyc_yacc.y"
                                 {}
-#line 2649 "y.tab.c"
+#line 2469 "tinyc_yacc.tab.c"
     break;
 
   case 154: /* STATEMENT: JUMP_STATEMENT  */
 #line 310 "tinyc_yacc.y"
                            {}
-#line 2655 "y.tab.c"
+#line 2475 "tinyc_yacc.tab.c"
     break;
 
   case 155: /* LABELED_STATEMENT: IDENTIFIER TERNARY_SEPERATOR STATEMENT  */
 #line 313 "tinyc_yacc.y"
                                                            {}
-#line 2661 "y.tab.c"
+#line 2481 "tinyc_yacc.tab.c"
     break;
 
   case 156: /* LABELED_STATEMENT: CASE CONSTANT_EXPRESSION TERNARY_SEPERATOR STATEMENT  */
 #line 314 "tinyc_yacc.y"
                                                                          {}
-#line 2667 "y.tab.c"
+#line 2487 "tinyc_yacc.tab.c"
     break;
 
   case 157: /* LABELED_STATEMENT: DEFAULT TERNARY_SEPERATOR STATEMENT  */
 #line 315 "tinyc_yacc.y"
                                                         {}
-#line 2673 "y.tab.c"
+#line 2493 "tinyc_yacc.tab.c"
     break;
 
   case 158: /* COMPOUND_STATEMENT: LEFT_CURLY_BRACKET BLOCK_ITEM_LIST_OPT RIGHT_CURLY_BRACKET  */
 #line 318 "tinyc_yacc.y"
                                                                                 {}
-#line 2679 "y.tab.c"
+#line 2499 "tinyc_yacc.tab.c"
     break;
 
   case 159: /* BLOCK_ITEM_LIST: BLOCK_ITEM  */
 #line 321 "tinyc_yacc.y"
                              {}
-#line 2685 "y.tab.c"
+#line 2505 "tinyc_yacc.tab.c"
     break;
 
   case 160: /* BLOCK_ITEM_LIST: BLOCK_ITEM_LIST BLOCK_ITEM  */
 #line 322 "tinyc_yacc.y"
                                              {}
-#line 2691 "y.tab.c"
+#line 2511 "tinyc_yacc.tab.c"
     break;
 
   case 161: /* BLOCK_ITEM: DECLARATION  */
 #line 325 "tinyc_yacc.y"
                          {}
-#line 2697 "y.tab.c"
+#line 2517 "tinyc_yacc.tab.c"
     break;
 
   case 162: /* BLOCK_ITEM: STATEMENT  */
 #line 326 "tinyc_yacc.y"
                        {}
-#line 2703 "y.tab.c"
+#line 2523 "tinyc_yacc.tab.c"
     break;
 
   case 163: /* EXPRESSION_STATEMENT: EXPRESSION_OPT SEMI_COLON  */
 #line 329 "tinyc_yacc.y"
                                                  {}
-#line 2709 "y.tab.c"
+#line 2529 "tinyc_yacc.tab.c"
     break;
 
   case 164: /* SELECTION_STATEMENT: IF LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT  */
 #line 332 "tinyc_yacc.y"
                                                                                  {}
-#line 2715 "y.tab.c"
+#line 2535 "tinyc_yacc.tab.c"
     break;
 
   case 165: /* SELECTION_STATEMENT: IF LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT ELSE STATEMENT  */
 #line 333 "tinyc_yacc.y"
                                                                                                 {}
-#line 2721 "y.tab.c"
+#line 2541 "tinyc_yacc.tab.c"
     break;
 
   case 166: /* SELECTION_STATEMENT: SWITCH LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT  */
 #line 334 "tinyc_yacc.y"
                                                                                      {}
-#line 2727 "y.tab.c"
+#line 2547 "tinyc_yacc.tab.c"
     break;
 
   case 167: /* ITERATION_STATEMENT: WHILE LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT  */
 #line 337 "tinyc_yacc.y"
                                                                                     {}
-#line 2733 "y.tab.c"
+#line 2553 "tinyc_yacc.tab.c"
     break;
 
   case 168: /* ITERATION_STATEMENT: DO STATEMENT WHILE LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS SEMI_COLON  */
 #line 338 "tinyc_yacc.y"
                                                                                                   {}
-#line 2739 "y.tab.c"
+#line 2559 "tinyc_yacc.tab.c"
     break;
 
   case 169: /* ITERATION_STATEMENT: FOR LEFT_PARANTHESIS EXPRESSION_OPT SEMI_COLON EXPRESSION_OPT ';' EXPRESSION_OPT RIGHT_PARANTHESIS STATEMENT  */
 #line 339 "tinyc_yacc.y"
                                                                                                                                    {}
-#line 2745 "y.tab.c"
+#line 2565 "tinyc_yacc.tab.c"
     break;
 
   case 170: /* ITERATION_STATEMENT: FOR LEFT_PARANTHESIS DECLARATION EXPRESSION_OPT ';' EXPRESSION_OPT RIGHT_PARANTHESIS STATEMENT  */
 #line 340 "tinyc_yacc.y"
                                                                                                                      {}
-#line 2751 "y.tab.c"
+#line 2571 "tinyc_yacc.tab.c"
     break;
 
   case 171: /* JUMP_STATEMENT: GOTO IDENTIFIER SEMI_COLON  */
 #line 343 "tinyc_yacc.y"
                                             {}
-#line 2757 "y.tab.c"
+#line 2577 "tinyc_yacc.tab.c"
     break;
 
   case 172: /* JUMP_STATEMENT: CONTINUE SEMI_COLON  */
 #line 344 "tinyc_yacc.y"
                                      {}
-#line 2763 "y.tab.c"
+#line 2583 "tinyc_yacc.tab.c"
     break;
 
   case 173: /* JUMP_STATEMENT: BREAK SEMI_COLON  */
 #line 345 "tinyc_yacc.y"
                                   {}
-#line 2769 "y.tab.c"
+#line 2589 "tinyc_yacc.tab.c"
     break;
 
   case 174: /* JUMP_STATEMENT: RETURN EXPRESSION_OPT SEMI_COLON  */
 #line 346 "tinyc_yacc.y"
                                                   {}
-#line 2775 "y.tab.c"
+#line 2595 "tinyc_yacc.tab.c"
     break;
 
   case 175: /* BLOCK_ITEM_LIST_OPT: BLOCK_ITEM_LIST  */
 #line 350 "tinyc_yacc.y"
                                       {}
-#line 2781 "y.tab.c"
+#line 2601 "tinyc_yacc.tab.c"
     break;
 
   case 176: /* BLOCK_ITEM_LIST_OPT: %empty  */
 #line 351 "tinyc_yacc.y"
                                   {}
-#line 2787 "y.tab.c"
+#line 2607 "tinyc_yacc.tab.c"
     break;
 
   case 177: /* EXPRESSION_OPT: EXPRESSION  */
 #line 354 "tinyc_yacc.y"
                             {}
-#line 2793 "y.tab.c"
+#line 2613 "tinyc_yacc.tab.c"
     break;
 
   case 178: /* EXPRESSION_OPT: %empty  */
 #line 355 "tinyc_yacc.y"
                              {}
-#line 2799 "y.tab.c"
+#line 2619 "tinyc_yacc.tab.c"
     break;
 
   case 179: /* TRANSLATIONAL_UNIT: EXTERNAL_DECLARATION  */
 #line 360 "tinyc_yacc.y"
-                                                                        { }
-#line 2805 "y.tab.c"
+                                                                        {  }
+#line 2625 "tinyc_yacc.tab.c"
     break;
 
   case 180: /* TRANSLATIONAL_UNIT: TRANSLATIONAL_UNIT EXTERNAL_DECLARATION  */
 #line 361 "tinyc_yacc.y"
-                                                                        { }
-#line 2811 "y.tab.c"
+                                                                        {  }
+#line 2631 "tinyc_yacc.tab.c"
     break;
 
   case 181: /* EXTERNAL_DECLARATION: FUNCTION_DEFINITION  */
 #line 364 "tinyc_yacc.y"
                                                                         { }
-#line 2817 "y.tab.c"
+#line 2637 "tinyc_yacc.tab.c"
     break;
 
   case 182: /* EXTERNAL_DECLARATION: DECLARATION  */
 #line 365 "tinyc_yacc.y"
                                                                         { }
-#line 2823 "y.tab.c"
+#line 2643 "tinyc_yacc.tab.c"
     break;
 
   case 183: /* FUNCTION_DEFINITION: DECLARATION_SPECIFIERS DECLARATOR DECLARATION_LIST_OPT COMPOUND_STATEMENT  */
 #line 368 "tinyc_yacc.y"
                                                                                                         { }
-#line 2829 "y.tab.c"
+#line 2649 "tinyc_yacc.tab.c"
     break;
 
   case 184: /* DECLARATION_LIST: DECLARATION  */
 #line 371 "tinyc_yacc.y"
                                                                         { }
-#line 2835 "y.tab.c"
+#line 2655 "tinyc_yacc.tab.c"
     break;
 
   case 185: /* DECLARATION_LIST: DECLARATION_LIST DECLARATION  */
 #line 372 "tinyc_yacc.y"
                                                                         { }
-#line 2841 "y.tab.c"
+#line 2661 "tinyc_yacc.tab.c"
     break;
 
   case 186: /* DECLARATION_LIST_OPT: DECLARATION_LIST  */
 #line 375 "tinyc_yacc.y"
                                                                         { }
-#line 2847 "y.tab.c"
+#line 2667 "tinyc_yacc.tab.c"
     break;
 
   case 187: /* DECLARATION_LIST_OPT: %empty  */
 #line 376 "tinyc_yacc.y"
                                                                         { }
-#line 2853 "y.tab.c"
+#line 2673 "tinyc_yacc.tab.c"
     break;
 
 
-#line 2857 "y.tab.c"
+#line 2677 "tinyc_yacc.tab.c"
 
       default: break;
     }

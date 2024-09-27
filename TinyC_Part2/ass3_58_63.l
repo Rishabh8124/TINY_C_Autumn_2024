@@ -1,7 +1,7 @@
 %{
     #include <stdio.h>
     #include <stdlib.h>
-    #include "y.tab.h"
+    #include "tinyc_yacc.tab.h"
 
     int yylex();
     void yyerror(char * s);
@@ -132,92 +132,92 @@ NEGATION_OPERATOR "~"
 {MULTI_LINE_COMMENT}    { }
 {SINGLE_LINE_COMMENT}   { }
 
-{AUTO}                    {return AUTO;} 
-{ENUM}                    {return ENUM;}
-{RESTRICT}                {return RESTRICT;} 
-{UNSIGNED}                {return UNSIGNED;}
-{BREAK}                   {return BREAK;}
-{EXTERN}                  {return EXTERN;}
-{RETURN}                  {return RETURN;} 
-{VOID}                    {return VOID;}
-{CASE}                    {return CASE;}
-{FLOAT}                   {return FLOAT;}
-{SHORT}                   {return SHORT;}
-{VOLATILE}                {return VOLATILE;}
-{CHAR}                    {return CHAR;}
-{FOR}                     {return FOR;}
-{SIGNED}                  {return SIGNED;}
-{WHILE}                   {return WHILE;}
-{CONST}                   {return CONST;}
-{GOTO}                    {return GOTO;}
-{SIZEOF}                  {return SIZEOF;}
-{BOOL}                    {return BOOL;}
-{CONTINUE}                {return CONTINUE;}
-{IF}                      {return IF;}
-{STATIC}                  {return STATIC;}
-{COMPLEX}                 {return COMPLEX;}
-{DEFAULT}                 {return DEFAULT;}
-{INLINE}                  {return INLINE;}
-{STRUCT}                  {return STRUCT;}
-{IMAGINARY}               {return IMAGINARY;}
-{DO}                      {return DO;}
-{INT}                     {return INT;}
-{SWITCH}                  {return SWITCH;}
-{DOUBLE}                  {return DOUBLE;}
-{LONG}                    {return LONG;}
-{TYPEDEF}                 {return TYPEDEF;}
-{ELSE}                    {return ELSE;}
-{REGISTER}                {return REGISTER;}
-{UNION}                   {return UNION;}
+{AUTO}                    { yylval.val = strdup(yytext); return AUTO;} 
+{ENUM}                    { yylval.val = strdup(yytext); return ENUM;}
+{RESTRICT}                { yylval.val = strdup(yytext); return RESTRICT;} 
+{UNSIGNED}                { yylval.val = strdup(yytext); return UNSIGNED;}
+{BREAK}                   { yylval.val = strdup(yytext); return BREAK;}
+{EXTERN}                  { yylval.val = strdup(yytext); return EXTERN;}
+{RETURN}                  { yylval.val = strdup(yytext); return RETURN;} 
+{VOID}                    { yylval.val = strdup(yytext); return VOID;}
+{CASE}                    { yylval.val = strdup(yytext); return CASE;}
+{FLOAT}                   { yylval.val = strdup(yytext); return FLOAT;}
+{SHORT}                   { yylval.val = strdup(yytext); return SHORT;}
+{VOLATILE}                { yylval.val = strdup(yytext); return VOLATILE;}
+{CHAR}                    { yylval.val = strdup(yytext); return CHAR;}
+{FOR}                     { yylval.val = strdup(yytext); return FOR;}
+{SIGNED}                  { yylval.val = strdup(yytext); return SIGNED;}
+{WHILE}                   { yylval.val = strdup(yytext); return WHILE;}
+{CONST}                   { yylval.val = strdup(yytext); return CONST;}
+{GOTO}                    { yylval.val = strdup(yytext); return GOTO;}
+{SIZEOF}                  { yylval.val = strdup(yytext); return SIZEOF;}
+{BOOL}                    { yylval.val = strdup(yytext); return BOOL;}
+{CONTINUE}                { yylval.val = strdup(yytext); return CONTINUE;}
+{IF}                      { yylval.val = strdup(yytext); return IF;}
+{STATIC}                  { yylval.val = strdup(yytext); return STATIC;}
+{COMPLEX}                 { yylval.val = strdup(yytext); return COMPLEX;}
+{DEFAULT}                 { yylval.val = strdup(yytext); return DEFAULT;}
+{INLINE}                  { yylval.val = strdup(yytext); return INLINE;}
+{STRUCT}                  { yylval.val = strdup(yytext); return STRUCT;}
+{IMAGINARY}               { yylval.val = strdup(yytext); return IMAGINARY;}
+{DO}                      { yylval.val = strdup(yytext); return DO;}
+{INT}                     { yylval.val = strdup(yytext); return INT;}
+{SWITCH}                  { yylval.val = strdup(yytext); return SWITCH;}
+{DOUBLE}                  { yylval.val = strdup(yytext); return DOUBLE;}
+{LONG}                    { yylval.val = strdup(yytext); return LONG;}
+{TYPEDEF}                 { yylval.val = strdup(yytext); return TYPEDEF;}
+{ELSE}                    { yylval.val = strdup(yytext); return ELSE;}
+{REGISTER}                { yylval.val = strdup(yytext); return REGISTER;}
+{UNION}                   { yylval.val = strdup(yytext); return UNION;}
 
-{IDENTIFIER}              {return IDENTIFIER;}
-{STRING_LITERAL}          {return STRING_LITERAL;}
-{LESS_THAN}               {return LESS_THAN;}
-{LESS_THAN_EQUAL_TO}      {return LESS_THAN_EQUAL_TO;}
-{GREATER_THAN}            {return GREATER_THAN;}
-{GREATER_THAN_EQUAL_TO}   {return GREATER_THAN_EQUAL_TO;}
-{ESCAPE_OPERATOR}         {return ESCAPE_OPERATOR;}
-{LEFT_SQUARE_BRACKET}     {return LEFT_SQUARE_BRACKET;}
-{RIGHT_SQUARE_BRACKET}    {return RIGHT_SQUARE_BRACKET;}
-{LEFT_PARANTHESIS}        {return LEFT_PARANTHESIS;}
-{RIGHT_PARANTHESIS}       {return RIGHT_PARANTHESIS;}
-{LEFT_CURLY_BRACKET}      {return LEFT_CURLY_BRACKET;}
-{RIGHT_CURLY_BRACKET}     {return RIGHT_CURLY_BRACKET;}
-{DOT}                     {return DOT;}
-{POINTER_ACCESS}          {return POINTER_ACCESS;}
-{INCREMENT_OPERATOR}      {return INCREMENT_OPERATOR;}
-{DECREMENT_OPERATOR}      {return DECREMENT_OPERATOR;}
-{DIVIDE_OPERATOR}         {return DIVIDE_OPERATOR;}
-{REMAINDER_OPERATOR}      {return REMAINDER_OPERATOR;}
-{SHIFT_LEFT_OPERATOR}     {return SHIFT_LEFT_OPERATOR;}
-{SHIFT_RIGHT_OPERATOR}    {return SHIFT_RIGHT_OPERATOR;}
-{EQUALITY_OPERATOR}       {return EQUALITY_OPERATOR;}
-{NON_EQUALITY_OPERATOR}   {return NON_EQUALITY_OPERATOR;}
-{XOR_OPERATOR}            {return XOR_OPERATOR;}
-{BITWISE_OR_OPERATOR}     {return BITWISE_OR_OPERATOR;}
-{BITWISE_AND_OPERATOR}    {return BITWISE_AND_OPERATOR;}
-{LOGICAL_AND_OPERATOR}    {return LOGICAL_AND_OPERATOR;}
-{LOGICAL_OR_OPERATOR}     {return LOGICAL_OR_OPERATOR;}
-{TERNARY_OPERATOR}        {return TERNARY_OPERATOR;}
-{TERNARY_SEPERATOR}       {return TERNARY_SEPERATOR;}
-{SEMI_COLON}              {return SEMI_COLON;}
-{COMMA}                   {return COMMA;}
-{MACRO_OPERATOR}          {return MACRO_OPERATOR;}
-{TRIPLE_DOT}              {return TRIPLE_DOT;}
+{IDENTIFIER}              { yylval.val = strdup(yytext); return IDENTIFIER;}
+{STRING_LITERAL}          { yylval.val = strdup(yytext); return STRING_LITERAL;}
+{LESS_THAN}               { yylval.val = strdup(yytext); return LESS_THAN;}
+{LESS_THAN_EQUAL_TO}      { yylval.val = strdup(yytext); return LESS_THAN_EQUAL_TO;}
+{GREATER_THAN}            { yylval.val = strdup(yytext); return GREATER_THAN;}
+{GREATER_THAN_EQUAL_TO}   { yylval.val = strdup(yytext); return GREATER_THAN_EQUAL_TO;}
+{ESCAPE_OPERATOR}         { yylval.val = strdup(yytext); return ESCAPE_OPERATOR;}
+{LEFT_SQUARE_BRACKET}     { yylval.val = strdup(yytext); return LEFT_SQUARE_BRACKET;}
+{RIGHT_SQUARE_BRACKET}    { yylval.val = strdup(yytext); return RIGHT_SQUARE_BRACKET;}
+{LEFT_PARANTHESIS}        { yylval.val = strdup(yytext); return LEFT_PARANTHESIS;}
+{RIGHT_PARANTHESIS}       { yylval.val = strdup(yytext); return RIGHT_PARANTHESIS;}
+{LEFT_CURLY_BRACKET}      { yylval.val = strdup(yytext); return LEFT_CURLY_BRACKET;}
+{RIGHT_CURLY_BRACKET}     { yylval.val = strdup(yytext); return RIGHT_CURLY_BRACKET;}
+{DOT}                     { yylval.val = strdup(yytext); return DOT;}
+{POINTER_ACCESS}          { yylval.val = strdup(yytext); return POINTER_ACCESS;}
+{INCREMENT_OPERATOR}      { yylval.val = strdup(yytext); return INCREMENT_OPERATOR;}
+{DECREMENT_OPERATOR}      { yylval.val = strdup(yytext); return DECREMENT_OPERATOR;}
+{DIVIDE_OPERATOR}         { yylval.val = strdup(yytext); return DIVIDE_OPERATOR;}
+{REMAINDER_OPERATOR}      { yylval.val = strdup(yytext); return REMAINDER_OPERATOR;}
+{SHIFT_LEFT_OPERATOR}     { yylval.val = strdup(yytext); return SHIFT_LEFT_OPERATOR;}
+{SHIFT_RIGHT_OPERATOR}    { yylval.val = strdup(yytext); return SHIFT_RIGHT_OPERATOR;}
+{EQUALITY_OPERATOR}       { yylval.val = strdup(yytext); return EQUALITY_OPERATOR;}
+{NON_EQUALITY_OPERATOR}   { yylval.val = strdup(yytext); return NON_EQUALITY_OPERATOR;}
+{XOR_OPERATOR}            { yylval.val = strdup(yytext); return XOR_OPERATOR;}
+{BITWISE_OR_OPERATOR}     { yylval.val = strdup(yytext); return BITWISE_OR_OPERATOR;}
+{BITWISE_AND_OPERATOR}    { yylval.val = strdup(yytext); return BITWISE_AND_OPERATOR;}
+{LOGICAL_AND_OPERATOR}    { yylval.val = strdup(yytext); return LOGICAL_AND_OPERATOR;}
+{LOGICAL_OR_OPERATOR}     { yylval.val = strdup(yytext); return LOGICAL_OR_OPERATOR;}
+{TERNARY_OPERATOR}        { yylval.val = strdup(yytext); return TERNARY_OPERATOR;}
+{TERNARY_SEPERATOR}       { yylval.val = strdup(yytext); return TERNARY_SEPERATOR;}
+{SEMI_COLON}              { yylval.val = strdup(yytext); return SEMI_COLON;}
+{COMMA}                   { yylval.val = strdup(yytext); return COMMA;}
+{MACRO_OPERATOR}          { yylval.val = strdup(yytext); return MACRO_OPERATOR;}
+{TRIPLE_DOT}              { yylval.val = strdup(yytext); return TRIPLE_DOT;}
 
-{INTEGER_CONSTANT}        {return CONSTANT;}
-{FLOATING_CONSTANT}       {return CONSTANT;}
-{CHARACTER_CONSTANT}      {return CONSTANT;}
+{INTEGER_CONSTANT}        { yylval.val = strdup(yytext); return CONSTANT;}
+{FLOATING_CONSTANT}       { yylval.val = strdup(yytext); return CONSTANT;}
+{CHARACTER_CONSTANT}      { yylval.val = strdup(yytext); return CONSTANT;}
 
-{ASSIGNMENT_OPERATORS}    {return ASSIGNMENT_OPERATORS;}
+{ASSIGNMENT_OPERATORS}    { yylval.val = strdup(yytext); return ASSIGNMENT_OPERATORS;}
 
-{ADDITION_OPERATOR}       {return ADDITION_OPERATOR;}
-{MULTIPLICATION_OPERATOR} {return MULTIPLICATION_OPERATOR;}
-{SUBTRACTION_OPERATOR}    {return SUBTRACTION_OPERATOR;}
-{NOT_OPERATOR}            {return NOT_OPERATOR;}    
-{NEGATION_OPERATOR}       {return NEGATION_OPERATOR;} 
+{ADDITION_OPERATOR}       { yylval.val = strdup(yytext); return ADDITION_OPERATOR;}
+{MULTIPLICATION_OPERATOR} { yylval.val = strdup(yytext); return MULTIPLICATION_OPERATOR;}
+{SUBTRACTION_OPERATOR}    { yylval.val = strdup(yytext); return SUBTRACTION_OPERATOR;}
+{NOT_OPERATOR}            { yylval.val = strdup(yytext); return NOT_OPERATOR;}    
+{NEGATION_OPERATOR}       { yylval.val = strdup(yytext); return NEGATION_OPERATOR;} 
 
-{EQUAL_OPERATOR}          {return EQUAL_OPERATOR;}
+{EQUAL_OPERATOR}          { yylval.val = strdup(yytext); return EQUAL_OPERATOR;}
 
 {WHITE_SPACE}             { }
 .                         {yyerror("Invalid character found\n");}

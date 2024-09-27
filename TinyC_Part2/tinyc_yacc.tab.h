@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_Y_TAB_H_INCLUDED
-# define YY_YY_Y_TAB_H_INCLUDED
+#ifndef YY_YY_TINYC_YACC_TAB_H_INCLUDED
+# define YY_YY_TINYC_YACC_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -136,99 +136,15 @@ extern int yydebug;
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
-/* Token kinds.  */
-#define YYEMPTY -2
-#define YYEOF 0
-#define YYerror 256
-#define YYUNDEF 257
-#define RIGHT_PARANTHESIS 258
-#define ELSE 259
-#define AUTO 260
-#define ENUM 261
-#define RESTRICT 262
-#define UNSIGNED 263
-#define BREAK 264
-#define EXTERN 265
-#define RETURN 266
-#define VOID 267
-#define CASE 268
-#define FLOAT 269
-#define SHORT 270
-#define VOLATILE 271
-#define CHAR 272
-#define FOR 273
-#define SIGNED 274
-#define WHILE 275
-#define CONST 276
-#define GOTO 277
-#define SIZEOF 278
-#define BOOL 279
-#define CONTINUE 280
-#define IF 281
-#define STATIC 282
-#define COMPLEX 283
-#define DEFAULT 284
-#define INLINE 285
-#define STRUCT 286
-#define IMAGINARY 287
-#define DO 288
-#define INT 289
-#define SWITCH 290
-#define DOUBLE 291
-#define LONG 292
-#define TYPEDEF 293
-#define REGISTER 294
-#define UNION 295
-#define IDENTIFIER 296
-#define STRING_LITERAL 297
-#define CONSTANT 298
-#define LESS_THAN 299
-#define LESS_THAN_EQUAL_TO 300
-#define GREATER_THAN 301
-#define GREATER_THAN_EQUAL_TO 302
-#define ESCAPE_OPERATOR 303
-#define LEFT_SQUARE_BRACKET 304
-#define RIGHT_SQUARE_BRACKET 305
-#define LEFT_PARANTHESIS 306
-#define LEFT_CURLY_BRACKET 307
-#define RIGHT_CURLY_BRACKET 308
-#define DOT 309
-#define POINTER_ACCESS 310
-#define INCREMENT_OPERATOR 311
-#define DECREMENT_OPERATOR 312
-#define DIVIDE_OPERATOR 313
-#define REMAINDER_OPERATOR 314
-#define SHIFT_LEFT_OPERATOR 315
-#define SHIFT_RIGHT_OPERATOR 316
-#define EQUALITY_OPERATOR 317
-#define NON_EQUALITY_OPERATOR 318
-#define XOR_OPERATOR 319
-#define BITWISE_OR_OPERATOR 320
-#define BITWISE_AND_OPERATOR 321
-#define LOGICAL_AND_OPERATOR 322
-#define LOGICAL_OR_OPERATOR 323
-#define TERNARY_OPERATOR 324
-#define TERNARY_SEPERATOR 325
-#define SEMI_COLON 326
-#define COMMA 327
-#define MACRO_OPERATOR 328
-#define TRIPLE_DOT 329
-#define ADDITION_OPERATOR 330
-#define MULTIPLICATION_OPERATOR 331
-#define SUBTRACTION_OPERATOR 332
-#define NOT_OPERATOR 333
-#define NEGATION_OPERATOR 334
-#define EQUAL_OPERATOR 335
-#define ASSIGNMENT_OPERATORS 336
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
 #line 23 "tinyc_yacc.y"
-char * val; 
+char * val; tree_pointer node;
 
-#line 232 "y.tab.h"
+#line 148 "tinyc_yacc.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -243,4 +159,4 @@ extern YYSTYPE yylval;
 int yyparse (void);
 
 
-#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
+#endif /* !YY_YY_TINYC_YACC_TAB_H_INCLUDED  */
