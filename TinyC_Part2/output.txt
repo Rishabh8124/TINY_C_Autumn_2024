@@ -1,0 +1,70 @@
+	-> TRANSLATIONAL_UNIT
+		-> TRANSLATIONAL_UNIT
+			-> EXTERNAL_DECLARATION
+				-> DECLARATION
+					-> DECLARATION_SPECIFIERS
+						-> TYPE_SPECIFIER (int)
+						-> DECLARATION_SPECIFIERS_OPT
+							-> <empty>
+					-> INIT_DECLARATOR_LIST_OPT
+						-> INIT_DECLARATOR_LIST
+							-> INIT_DECLARATOR
+								-> DECLARATOR
+									-> POINTER_OPT
+										-> <empty>
+									-> DIRECT_DECLARATOR
+										-> IDENTIFIER (k)
+								-> =
+								-> INITIALIZER
+									-> ASSIGNMENT_EXPRESSION
+										-> CONDITIONAL_EXPRESSION
+											-> LOGICAL_OR_EXPRESSION
+												-> LOGICAL_AND_EXPRESSION
+													-> INCLUSIVE_OR_EXPRESSION
+														-> EXCLUSIVE_OR_EXPRESSION
+															-> AND_EXPRESSION
+																-> EQUALITY_EXPRESSION
+																	-> RELATIONAL_EXPRESSION
+																		-> SHIFT_EXPRESSION
+																			-> ADDITIVE_EXPRESSION
+																				-> MULTIPLICATIVE_EXPRESSION
+																					-> CAST_EXPRESSION
+																						-> UNARY_EXPRESSION
+																							-> POSTFIX_EXPRESSION
+																								-> PRIMARY_EXPRESSION
+																									-> CONSTANT (8)
+					-> ;
+		-> EXTERNAL_DECLARATION
+			-> DECLARATION
+				-> DECLARATION_SPECIFIERS
+					-> TYPE_SPECIFIER (int)
+					-> DECLARATION_SPECIFIERS_OPT
+						-> <empty>
+				-> INIT_DECLARATOR_LIST_OPT
+					-> INIT_DECLARATOR_LIST
+						-> INIT_DECLARATOR
+							-> DECLARATOR
+								-> POINTER_OPT
+									-> <empty>
+								-> DIRECT_DECLARATOR
+									-> IDENTIFIER (z)
+							-> =
+							-> INITIALIZER
+								-> ASSIGNMENT_EXPRESSION
+									-> CONDITIONAL_EXPRESSION
+										-> LOGICAL_OR_EXPRESSION
+											-> LOGICAL_AND_EXPRESSION
+												-> INCLUSIVE_OR_EXPRESSION
+													-> EXCLUSIVE_OR_EXPRESSION
+														-> AND_EXPRESSION
+															-> EQUALITY_EXPRESSION
+																-> RELATIONAL_EXPRESSION
+																	-> SHIFT_EXPRESSION
+																		-> ADDITIVE_EXPRESSION
+																			-> MULTIPLICATIVE_EXPRESSION
+																				-> CAST_EXPRESSION
+																					-> UNARY_EXPRESSION
+																						-> POSTFIX_EXPRESSION
+																							-> PRIMARY_EXPRESSION
+																								-> CONSTANT (10)
+				-> ;

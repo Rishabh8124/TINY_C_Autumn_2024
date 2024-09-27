@@ -34,5 +34,6 @@ void print_parse_tree(tree_pointer root, int depth) {
 
 int main() {
     yyparse();
+    print_parse_tree(parse_tree,1);
     return 0;
 }
