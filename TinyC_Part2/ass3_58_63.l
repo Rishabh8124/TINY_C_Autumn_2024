@@ -1,7 +1,7 @@
 %{
     #include <stdio.h>
     #include <stdlib.h>
-    #include "tinyc_yacc.tab.h"
+    #include "y.tab.h"
 
     int yylex();
     void yyerror(char * s);

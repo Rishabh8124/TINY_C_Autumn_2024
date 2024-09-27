@@ -1,4 +1,4 @@
-#include "tinyc_yacc.tab.c"
+#include "y.tab.c"
 #include "lex.yy.c"
 
 tree_pointer init_node(char * name, char * val, tree_pointer child) {
