@@ -1,10 +1,10 @@
-/*NAME - S.RISHABH*/
-/*ROLL NUMBER - 22CS10058*/
-
 %{
     #include <stdio.h>
     #include <stdlib.h>
     #include "y.tab.h"
+
+    int yylex();
+    void yyerror(char * s);
 %}
 
 /*REGULAR DEFINITIONS*/
@@ -117,26 +117,28 @@ TRIPLE_DOT              "..."
 WHITE_SPACE [ \n\t]
 
 /* UNARY_OPERATOR "&" | "\*" | "\+" | "\-" | "\~" | "\!" */
+EQUAL_OPERATOR "="
+ASSIGNMENT_OPERATORS "*="
+
+/*| "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | "&=" | "^=" | "|="*/
+
 ADDITION_OPERATOR "+"
 MULTIPLICATION_OPERATOR "*"
 SUBTRACTION_OPERATOR "-"
 NOT_OPERATOR "!"
 NEGATION_OPERATOR "~"
 
-EQUAL_OPERATOR "="
-ASSIGNMENT_OPERATORS "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | "&=" | "^=" | "|="
-
 %%
 {MULTI_LINE_COMMENT}    { }
 {SINGLE_LINE_COMMENT}   { }
 
-{AUTO}                    {return AUTO}; 
+{AUTO}                    {return AUTO;} 
 {ENUM}                    {return ENUM;}
-{RESTRICT}                {return RESTRICT}; 
+{RESTRICT}                {return RESTRICT;} 
 {UNSIGNED}                {return UNSIGNED;}
 {BREAK}                   {return BREAK;}
 {EXTERN}                  {return EXTERN;}
-{RETURN}                  {return RETURN}; 
+{RETURN}                  {return RETURN;} 
 {VOID}                    {return VOID;}
 {CASE}                    {return CASE;}
 {FLOAT}                   {return FLOAT;}
@@ -163,7 +165,7 @@ ASSIGNMENT_OPERATORS "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | "&=" | "
 {SWITCH}                  {return SWITCH;}
 {DOUBLE}                  {return DOUBLE;}
 {LONG}                    {return LONG;}
-{TYPEDEF}                 {return TYOEDEF;}
+{TYPEDEF}                 {return TYPEDEF;}
 {ELSE}                    {return ELSE;}
 {REGISTER}                {return REGISTER;}
 {UNION}                   {return UNION;}
@@ -207,8 +209,8 @@ ASSIGNMENT_OPERATORS "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | "&=" | "
 {FLOATING_CONSTANT}       {return CONSTANT;}
 {CHARACTER_CONSTANT}      {return CONSTANT;}
 
-    // {UNARY_OPERATOR}        {return UNARY_OPERATOR;}
 {ASSIGNMENT_OPERATORS}    {return ASSIGNMENT_OPERATORS;}
+
 {ADDITION_OPERATOR}       {return ADDITION_OPERATOR;}
 {MULTIPLICATION_OPERATOR} {return MULTIPLICATION_OPERATOR;}
 {SUBTRACTION_OPERATOR}    {return SUBTRACTION_OPERATOR;}

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "y.tab.c"
 #include "lex.yy.c"
 
 typedef struct tree_node {
@@ -34,10 +35,15 @@ void print_parse_tree(tree_pointer root, int depth) {
 
     for (int i=0; i<depth; i++) printf("\t");
     if (strcmp("", root->val)) printf("-> %s (%s)\n", root->name, root->val);
-    else printf("-> %s\n", root->name, root->val);
+    else printf("-> %s\n", root->name);
 
     print_parse_tree(root->next, depth);
     print_parse_tree(root->child, depth+1);
 
     return;
+}
+
+int main() {
+    yyparse();
+    return 0;
 }
