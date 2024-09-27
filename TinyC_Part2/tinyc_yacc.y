@@ -22,8 +22,8 @@
 
 %union {char * val; tree_pointer node;}
 
-%nonassoc RIGHT_PARANTHESIS
-%nonassoc ELSE
+%nonassoc <val> RIGHT_PARANTHESIS
+%nonassoc <val> ELSE
 
 %start TRANSLATIONAL_UNIT
 %token <val> AUTO ENUM RESTRICT UNSIGNED BREAK EXTERN RETURN VOID CASE FLOAT SHORT VOLATILE CHAR FOR SIGNED WHILE CONST GOTO SIZEOF BOOL CONTINUE IF STATIC COMPLEX DEFAULT INLINE STRUCT IMAGINARY DO INT SWITCH DOUBLE LONG TYPEDEF REGISTER UNION
@@ -48,259 +48,455 @@
 %%
 
 // Expressions
-PRIMARY_EXPRESSION : IDENTIFIER         {}
-                   | CONSTANT           {}
-                   | STRING_LITERAL     {}
-                   | LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS {}
-                   ;
+PRIMARY_EXPRESSION                  : IDENTIFIER                                    {$$ = init_node("PRIMARY_EXPRESSION", "", init_node("IDENTIFIER", $1, NULL));}
+                                    | CONSTANT                                      {$$ = init_node("PRIMARY_EXPRESSION", "", init_node("CONSTANT", $1, NULL));}
+                                    | STRING_LITERAL                                {$$ = init_node("PRIMARY_EXPRESSION", "", init_node("STRING_LITERAL", $1, NULL));}
+                                    | LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS {
+                                                                                        tree_pointer temp = init_node($1, "", NULL); 
+                                                                                        $$ = init_node("PRIMARY_EXPRESSION", "", temp);
+                                                                                        add_next(temp, $2);
+                                                                                        add_next(temp, init_node($3, "", NULL));
+                                                                                    }
+                                    ;
 
-POSTFIX_EXPRESSION : PRIMARY_EXPRESSION                                  {}
-                   | POSTFIX_EXPRESSION LEFT_SQUARE_BRACKET EXPRESSION RIGHT_SQUARE_BRACKET                {}
-                   | POSTFIX_EXPRESSION LEFT_PARANTHESIS ARGUMENT_EXPRESSION_LIST_OPT RIGHT_PARANTHESIS {}
-                   | POSTFIX_EXPRESSION DOT IDENTIFIER {}
-                   | POSTFIX_EXPRESSION POINTER_ACCESS IDENTIFIER {}
-                   | POSTFIX_EXPRESSION INCREMENT_OPERATOR {}
-                   | POSTFIX_EXPRESSION DECREMENT_OPERATOR {}                   
-                   | LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS LEFT_CURLY_BRACKET INITIALIZER_LIST RIGHT_CURLY_BRACKET {}
-                   | LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS LEFT_CURLY_BRACKET INITIALIZER_LIST COMMA RIGHT_CURLY_BRACKET {}
-                   ;                   
+POSTFIX_EXPRESSION                  : PRIMARY_EXPRESSION                                                                                            {$$ = init_node("POSTFIX_EXPRESSION", "", $1);}
+                                    | POSTFIX_EXPRESSION LEFT_SQUARE_BRACKET EXPRESSION RIGHT_SQUARE_BRACKET                                        {
+                                                                                                                                                        $$ = init_node("POSTFIX_EXPRESSION", "", $1);
+                                                                                                                                                        add_next($1, init_node($2, "", NULL));
+                                                                                                                                                        add_next($1, $3);
+                                                                                                                                                        add_next($1, init_node($4, "", NULL));
+                                                                                                                                                    }
+                                    | POSTFIX_EXPRESSION LEFT_PARANTHESIS ARGUMENT_EXPRESSION_LIST_OPT RIGHT_PARANTHESIS                            {
+                                                                                                                                                        $$ = init_node("POSTFIX_EXPRESSION", "", $1);
+                                                                                                                                                        add_next($1, init_node($2, "", NULL));
+                                                                                                                                                        add_next($1, $3);
+                                                                                                                                                        add_next($1, init_node($4, "", NULL));
+                                                                                                                                                    }
+                                    | POSTFIX_EXPRESSION DOT IDENTIFIER                                                                             {
+                                                                                                                                                        $$ = init_node("POSTFIX_EXPRESSION", "", $1);
+                                                                                                                                                        add_next($1, init_node($2, "", NULL));
+                                                                                                                                                        add_next($1, init_node("IDENTIFIER", $3, NULL));
+                                                                                                                                                    }
+                                    | POSTFIX_EXPRESSION POINTER_ACCESS IDENTIFIER                                                                  {
+                                                                                                                                                        $$ = init_node("POSTFIX_EXPRESSION", "", $1);
+                                                                                                                                                        add_next($1, init_node($2, "", NULL));
+                                                                                                                                                        add_next($1, init_node("IDENTIFIER", $3, NULL));
+                                                                                                                                                    }
+                                    | POSTFIX_EXPRESSION INCREMENT_OPERATOR                                                                         {
+                                                                                                                                                        $$ = init_node("POSTFIX_EXPRESSION", "", $1);
+                                                                                                                                                        add_next($1, init_node($2, "", NULL));
+                                                                                                                                                    }
+                                    | POSTFIX_EXPRESSION DECREMENT_OPERATOR                                                                         {
+                                                                                                                                                        $$ = init_node("POSTFIX_EXPRESSION", "", $1);
+                                                                                                                                                        add_next($1, init_node($2, "", NULL));
+                                                                                                                                                    }                   
+                                    | LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS LEFT_CURLY_BRACKET INITIALIZER_LIST RIGHT_CURLY_BRACKET          {
+                                                                                                                                                        tree_pointer temp = init_node($1, "", NULL); 
+                                                                                                                                                        $$ = init_node("PRIMARY_EXPRESSION", "", temp);
+                                                                                                                                                        add_next(temp, $2);
+                                                                                                                                                        add_next(temp, init_node($3, "", NULL));
+                                                                                                                                                        add_next(temp, init_node($4, "", NULL));
+                                                                                                                                                        add_next(temp, $5);
+                                                                                                                                                        add_next(temp, init_node($6, "", NULL));
+                                                                                                                                                    }
+                                    | LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS LEFT_CURLY_BRACKET INITIALIZER_LIST COMMA RIGHT_CURLY_BRACKET    {
+                                                                                                                                                        tree_pointer temp = init_node($1, "", NULL); 
+                                                                                                                                                        $$ = init_node("PRIMARY_EXPRESSION", "", temp);
+                                                                                                                                                        add_next(temp, $2);
+                                                                                                                                                        add_next(temp, init_node($3, "", NULL));
+                                                                                                                                                        add_next(temp, init_node($4, "", NULL));
+                                                                                                                                                        add_next(temp, $5);
+                                                                                                                                                        add_next(temp, init_node($6, "", NULL));
+                                                                                                                                                    }
+                                    ;                   
 
-ARGUMENT_EXPRESSION_LIST : ASSIGNMENT_EXPRESSION {}
-                         | ARGUMENT_EXPRESSION_LIST COMMA ASSIGNMENT_EXPRESSION {}
-                         ;
+ARGUMENT_EXPRESSION_LIST            : ASSIGNMENT_EXPRESSION                                 {$$ = init_node("ARGUMENT_EXPRESSION_LIST", "", $1);}
+                                    | ARGUMENT_EXPRESSION_LIST COMMA ASSIGNMENT_EXPRESSION  {
+                                                                                                $$ = init_node("ARGUMENT_EXPRESSION_LIST", "", $1);
+                                                                                                add_next($1, init_node($2, "", NULL));
+                                                                                                add_next($1, $3);
+                                                                                            }
+                                    ;
 
-ARGUMENT_EXPRESSION_LIST_OPT : ARGUMENT_EXPRESSION_LIST {}
-                             |  {}
-                             ;
+ARGUMENT_EXPRESSION_LIST_OPT        : ARGUMENT_EXPRESSION_LIST  {$$ = init_node("ARGUMENT_EXPRESSION_LIST_OP", "", $1);}
+                                    |                           {$$ = init_node("ARGUMENT_EXPRESSION_LIST_OP", "", init_node("<empty>", "", NULL));}
+                                    ;
 
-UNARY_EXPRESSION : POSTFIX_EXPRESSION {}
-                 | INCREMENT_OPERATOR UNARY_EXPRESSION {}
-                 | DECREMENT_OPERATOR UNARY_EXPRESSION {}
-                 | UNARY_OPEARATOR CAST_EXPRESSION {}
-                 | SIZEOF UNARY_EXPRESSION {}
-                 | SIZEOF LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS {}
-                 ;
+UNARY_EXPRESSION                    : POSTFIX_EXPRESSION                                    {$$ = init_node("UNARY_EXPRESSION", "", $1);}
+                                    | INCREMENT_OPERATOR UNARY_EXPRESSION                   {
+                                                                                                tree_pointer temp = init_node($1, "", NULL);
+                                                                                                $$ = init_node("UNARY_EXPRESSION", "", temp);
+                                                                                                add_next(temp, $2);
+                                                                                            }
+                                    | DECREMENT_OPERATOR UNARY_EXPRESSION                   {
+                                                                                                tree_pointer temp = init_node($1, "", NULL);
+                                                                                                $$ = init_node("UNARY_EXPRESSION", "", temp);
+                                                                                                add_next(temp, $2);
+                                                                                            }
+                                    | UNARY_OPEARATOR CAST_EXPRESSION                       {
+                                                                                                $$ = init_node("UNARY_EXPRESSION", "", $1);
+                                                                                                add_next($1, $2);
+                                                                                            }
+                                    | SIZEOF UNARY_EXPRESSION                               {
+                                                                                                tree_pointer temp = init_node($1, "", NULL);
+                                                                                                $$ = init_node("UNARY_EXPRESSION", "", temp);
+                                                                                                add_next(temp, $2);
+                                                                                            }
+                                    | SIZEOF LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS   {
+                                                                                                tree_pointer temp = init_node($1, "", NULL);
+                                                                                                $$ = init_node("UNARY_EXPRESSION", "", temp);
+                                                                                                add_next(temp, init_node($2, ", NULL"));
+                                                                                                add_next(temp, $3);
+                                                                                                add_next(temp, init_node($4, ", NULL"));
+                                                                                            }
+                                    ;
 
-UNARY_OPEARATOR : ADDITION_OPERATOR {}
-                | SUBTRACTION_OPERATOR {}
-                | MULTIPLICATION_OPERATOR {}
-                | BITWISE_AND_OPERATOR {}
-                | NEGATION_OPERATOR {}
-                | NOT_OPERATOR {}
-                ;
+UNARY_OPEARATOR                     : ADDITION_OPERATOR         {$$ = init_node("UNARY_OPERATOR", $1, NULL);}
+                                    | SUBTRACTION_OPERATOR      {$$ = init_node("UNARY_OPERATOR", $1, NULL);}
+                                    | MULTIPLICATION_OPERATOR   {$$ = init_node("UNARY_OPERATOR", $1, NULL);}
+                                    | BITWISE_AND_OPERATOR      {$$ = init_node("UNARY_OPERATOR", $1, NULL);}
+                                    | NEGATION_OPERATOR         {$$ = init_node("UNARY_OPERATOR", $1, NULL);}
+                                    | NOT_OPERATOR              {$$ = init_node("UNARY_OPERATOR", $1, NULL);}
+                                    ;
 
-CAST_EXPRESSION : UNARY_EXPRESSION {}
-                | LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS CAST_EXPRESSION {}
-                ;
+CAST_EXPRESSION                     : UNARY_EXPRESSION                                              {$$ = init_node("CAST_EXPRESSION", "", $1);}
+                                    | LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS CAST_EXPRESSION  {
+                                                                                                        tree_pointer temp = init_node($1, "", NULL);
+                                                                                                        $$ = init_node("UNARY_EXPRESSION", "", temp);
+                                                                                                        add_next(temp, $2);
+                                                                                                        add_next(temp, init_node($3, "", NULL));
+                                                                                                        add_next(temp, $4);
+                                                                                                    }
+                                    ;
 
-MULTIPLICATIVE_EXPRESSION : CAST_EXPRESSION {}
-                          | MULTIPLICATIVE_EXPRESSION MULTIPLICATION_OPERATOR CAST_EXPRESSION {}
-                          | MULTIPLICATIVE_EXPRESSION DIVIDE_OPERATOR CAST_EXPRESSION {} 
-                          | MULTIPLICATIVE_EXPRESSION REMAINDER_OPERATOR CAST_EXPRESSION {}
-                          ;
+MULTIPLICATIVE_EXPRESSION           : CAST_EXPRESSION                                                   {$$ = init_node("MULTIPLICATIVE_EXPRESSION", "", $1);}
+                                    | MULTIPLICATIVE_EXPRESSION MULTIPLICATION_OPERATOR CAST_EXPRESSION {
+                                                                                                            $$ = init_node("MULTIPLICATIVE_EXPRESSION", "", $1);
+                                                                                                            add_next($1, init_node($2, "", NULL));
+                                                                                                            add_next($1, $3);
+                                                                                                        }
+                                    | MULTIPLICATIVE_EXPRESSION DIVIDE_OPERATOR CAST_EXPRESSION         {
+                                                                                                            $$ = init_node("MULTIPLICATIVE_EXPRESSION", "", $1);
+                                                                                                            add_next($1, init_node($2, "", NULL));
+                                                                                                            add_next($1, $3);
+                                                                                                        } 
+                                    | MULTIPLICATIVE_EXPRESSION REMAINDER_OPERATOR CAST_EXPRESSION      {
+                                                                                                            $$ = init_node("MULTIPLICATIVE_EXPRESSION", "", $1);
+                                                                                                            add_next($1, init_node($2, "", NULL));
+                                                                                                            add_next($1, $3);
+                                                                                                        }
+                                    ;
 
-ADDITIVE_EXPRESSION : MULTIPLICATIVE_EXPRESSION {} 
-                    | ADDITIVE_EXPRESSION ADDITION_OPERATOR MULTIPLICATIVE_EXPRESSION {} 
-                    | ADDITIVE_EXPRESSION SUBTRACTION_OPERATOR MULTIPLICATIVE_EXPRESSION {} 
-                    ;
+ADDITIVE_EXPRESSION                 : MULTIPLICATIVE_EXPRESSION                                             {$$ = init_node("ADDITIVE_EXPRESSION", "", $1);} 
+                                    | ADDITIVE_EXPRESSION ADDITION_OPERATOR MULTIPLICATIVE_EXPRESSION       {
+                                                                                                                $$ = init_node("ADDITIVE_EXPRESSION", "", $1);
+                                                                                                                add_next($1, init_node($2, "", NULL));
+                                                                                                                add_next($1, $3);
+                                                                                                            }
+                                    | ADDITIVE_EXPRESSION SUBTRACTION_OPERATOR MULTIPLICATIVE_EXPRESSION    {
+                                                                                                                $$ = init_node("ADDITIVE_EXPRESSION", "", $1);
+                                                                                                                add_next($1, init_node($2, "", NULL));
+                                                                                                                add_next($1, $3);
+                                                                                                            }
+                                    ;
 
-SHIFT_EXPRESSION : ADDITIVE_EXPRESSION {} 
-                 | SHIFT_EXPRESSION SHIFT_LEFT_OPERATOR ADDITIVE_EXPRESSION {} 
-                 | SHIFT_EXPRESSION SHIFT_RIGHT_OPERATOR ADDITIVE_EXPRESSION {} 
-                 ;
+SHIFT_EXPRESSION                    : ADDITIVE_EXPRESSION                                       {$$ = init_node("SHIFT_EXPRESSION", "", $1);} 
+                                    | SHIFT_EXPRESSION SHIFT_LEFT_OPERATOR ADDITIVE_EXPRESSION  {
+                                                                                                    $$ = init_node("SHIFT_EXPRESSION", "", $1);
+                                                                                                    add_next($1, init_node($2, "", NULL));
+                                                                                                    add_next($1, $3);
+                                                                                                } 
+                                    | SHIFT_EXPRESSION SHIFT_RIGHT_OPERATOR ADDITIVE_EXPRESSION {
+                                                                                                    $$ = init_node("SHIFT_EXPRESSION", "", $1);
+                                                                                                    add_next($1, init_node($2, "", NULL));
+                                                                                                    add_next($1, $3);
+                                                                                                } 
+                                    ;
 
-RELATIONAL_EXPRESSION : SHIFT_EXPRESSION {} 
-                      | RELATIONAL_EXPRESSION LESS_THAN SHIFT_EXPRESSION {} 
-                      | RELATIONAL_EXPRESSION GREATER_THAN SHIFT_EXPRESSION {} 
-                      | RELATIONAL_EXPRESSION LESS_THAN_EQUAL_TO SHIFT_EXPRESSION {} 
-                      | RELATIONAL_EXPRESSION GREATER_THAN_EQUAL_TO SHIFT_EXPRESSION {} 
-                      ;
+RELATIONAL_EXPRESSION               : SHIFT_EXPRESSION                                              {$$ = init_node("RELATIONAL_EXPRESSION", "", $1);} 
+                                    | RELATIONAL_EXPRESSION LESS_THAN SHIFT_EXPRESSION              {
+                                                                                                        $$ = init_node("RELATIONAL_EXPRESSION", "", $1);
+                                                                                                        add_next($1, init_node($2, "", NULL));
+                                                                                                        add_next($1, $3);
+                                                                                                    }
+                                    | RELATIONAL_EXPRESSION GREATER_THAN SHIFT_EXPRESSION           {
+                                                                                                        $$ = init_node("RELATIONAL_EXPRESSION", "", $1);
+                                                                                                        add_next($1, init_node($2, "", NULL));
+                                                                                                        add_next($1, $3);
+                                                                                                    }
+                                    | RELATIONAL_EXPRESSION LESS_THAN_EQUAL_TO SHIFT_EXPRESSION     {
+                                                                                                        $$ = init_node("RELATIONAL_EXPRESSION", "", $1);
+                                                                                                        add_next($1, init_node($2, "", NULL));
+                                                                                                        add_next($1, $3);
+                                                                                                    } 
+                                    | RELATIONAL_EXPRESSION GREATER_THAN_EQUAL_TO SHIFT_EXPRESSION  {
+                                                                                                        $$ = init_node("RELATIONAL_EXPRESSION", "", $1);
+                                                                                                        add_next($1, init_node($2, "", NULL));
+                                                                                                        add_next($1, $3);
+                                                                                                    } 
+                                    ;
 
-EQUALITY_EXPRESSION : RELATIONAL_EXPRESSION {} 
-                    | EQUALITY_EXPRESSION EQUALITY_OPERATOR RELATIONAL_EXPRESSION {} 
-                    | EQUALITY_EXPRESSION NON_EQUALITY_OPERATOR RELATIONAL_EXPRESSION {} 
-                    ;
+EQUALITY_EXPRESSION                 : RELATIONAL_EXPRESSION                                             {$$ = init_node("EQUALITY_EXPRESSION", "", $1);} 
+                                    | EQUALITY_EXPRESSION EQUALITY_OPERATOR RELATIONAL_EXPRESSION       {
+                                                                                                            $$ = init_node("EQUALITY_EXPRESSION", "", $1);
+                                                                                                            add_next($1, init_node($2, "", NULL));
+                                                                                                            add_next($1, $3);
+                                                                                                        }  
+                                    | EQUALITY_EXPRESSION NON_EQUALITY_OPERATOR RELATIONAL_EXPRESSION   {
+                                                                                                            $$ = init_node("EQUALITY_EXPRESSION", "", $1);
+                                                                                                            add_next($1, init_node($2, "", NULL));
+                                                                                                            add_next($1, $3);
+                                                                                                        } 
+                                    ;
 
-AND_EXPRESSION : EQUALITY_EXPRESSION {} 
-               | AND_EXPRESSION BITWISE_AND_OPERATOR EQUALITY_EXPRESSION {} 
-               ;
+AND_EXPRESSION                      : EQUALITY_EXPRESSION                                       {$$ = init_node("AND_EXPRESSION", "", $1);} 
+                                    | AND_EXPRESSION BITWISE_AND_OPERATOR EQUALITY_EXPRESSION   {
+                                                                                                    $$ = init_node("AND_EXPRESSION", "", $1);
+                                                                                                    add_next($1, init_node($2, "", NULL));
+                                                                                                    add_next($1, $3);
+                                                                                                } 
+                                    ;
 
-EXCLUSIVE_OR_EXPRESSION : AND_EXPRESSION {} 
-                        | EXCLUSIVE_OR_EXPRESSION XOR_OPERATOR AND_EXPRESSION {} 
-                        ;
+EXCLUSIVE_OR_EXPRESSION             : AND_EXPRESSION                                        {$$ = init_node("EXCLUSIVE_OR_EXPRESSION", "", $1);} 
+                                    | EXCLUSIVE_OR_EXPRESSION XOR_OPERATOR AND_EXPRESSION   {
+                                                                                                $$ = init_node("EXCLUSIVE_OR_EXPRESSION", "", $1);
+                                                                                                add_next($1, init_node($2, "", NULL));
+                                                                                                add_next($1, $3);
+                                                                                            } 
+                                    ;
 
-INCLUSIVE_OR_EXPRESSION : EXCLUSIVE_OR_EXPRESSION {} 
-                        | INCLUSIVE_OR_EXPRESSION BITWISE_OR_OPERATOR EXCLUSIVE_OR_EXPRESSION {} 
-                        ;
+INCLUSIVE_OR_EXPRESSION             : EXCLUSIVE_OR_EXPRESSION                                               {$$ = init_node("INCLUSIVE_OR_EXPRESSION", "", $1);} 
+                                    | INCLUSIVE_OR_EXPRESSION BITWISE_OR_OPERATOR EXCLUSIVE_OR_EXPRESSION   {
+                                                                                                                $$ = init_node("INCLUSIVE_OR_EXPRESSION", "", $1);
+                                                                                                                add_next($1, init_node($2, "", NULL));
+                                                                                                                add_next($1, $3);
+                                                                                                            } 
+                                    ;
 
-LOGICAL_AND_EXPRESSION : INCLUSIVE_OR_EXPRESSION {} 
-                       | LOGICAL_AND_EXPRESSION LOGICAL_AND_OPERATOR INCLUSIVE_OR_EXPRESSION {} 
-                       ;
+LOGICAL_AND_EXPRESSION              : INCLUSIVE_OR_EXPRESSION                                               {$$ = init_node("LOGICAL_AND_EXPRESSION", "", $1);}  
+                                    | LOGICAL_AND_EXPRESSION LOGICAL_AND_OPERATOR INCLUSIVE_OR_EXPRESSION   {
+                                                                                                                $$ = init_node("LOGICAL_AND_EXPRESSION", "", $1);
+                                                                                                                add_next($1, init_node($2, "", NULL));
+                                                                                                                add_next($1, $3);
+                                                                                                            }  
+                                    ;
 
-LOGICAL_OR_EXPRESSION : LOGICAL_AND_EXPRESSION {} 
-                      | LOGICAL_OR_EXPRESSION LOGICAL_OR_OPERATOR LOGICAL_AND_EXPRESSION {} 
-                      ;
+LOGICAL_OR_EXPRESSION               : LOGICAL_AND_EXPRESSION                                            {$$ = init_node("LOGICAL_OR_EXPRESSION", "", $1);} 
+                                    | LOGICAL_OR_EXPRESSION LOGICAL_OR_OPERATOR LOGICAL_AND_EXPRESSION  {
+                                                                                                            $$ = init_node("LOGICAL_OR_EXPRESSION", "", $1);
+                                                                                                            add_next($1, init_node($2, "", NULL));
+                                                                                                            add_next($1, $3);
+                                                                                                        }   
+                                    ;
 
-CONDITIONAL_EXPRESSION : LOGICAL_OR_EXPRESSION {} 
-                       | LOGICAL_OR_EXPRESSION TERNARY_OPERATOR EXPRESSION TERNARY_SEPERATOR CONDITIONAL_EXPRESSION {}
-                       ;
+CONDITIONAL_EXPRESSION              : LOGICAL_OR_EXPRESSION                                                                         {$$ = init_node("CONDITIONAL_EXPRESSION", "", $1);} 
+                                    | LOGICAL_OR_EXPRESSION TERNARY_OPERATOR EXPRESSION TERNARY_SEPERATOR CONDITIONAL_EXPRESSION    {
+                                                                                                                                        $$ = init_node("CONDITIONAL_EXPRESSION", "", $1);
+                                                                                                                                        add_next($1, init_node($2, "", NULL));
+                                                                                                                                        add_next($1, $3);
+                                                                                                                                        add_next($1, init_node($4, "", NULL));
+                                                                                                                                        add_next($1, $5);
+                                                                                                                                    } 
+                                    ;
 
-ASSIGNMENT_EXPRESSION : CONDITIONAL_EXPRESSION {}
-                      | UNARY_EXPRESSION ASSIGNMENT_OPERATOR ASSIGNMENT_EXPRESSION {}
-                      ;
+ASSIGNMENT_EXPRESSION               : CONDITIONAL_EXPRESSION                                        {$$ = init_node("ASSIGNMENT_EXPRESSION", "", $1);}
+                                    | UNARY_EXPRESSION ASSIGNMENT_OPERATOR ASSIGNMENT_EXPRESSION    {
+                                                                                                        $$ = init_node("ASSIGNMENT_EXPRESSION", "", $1);
+                                                                                                        add_next($1, $2);
+                                                                                                        add_next($1, $3);
+                                                                                                    } 
+                                    ;
 
-ASSIGNMENT_OPERATOR : EQUAL_OPERATOR {}
-                    | ASSIGNMENT_OPERATORS {}
-                    ;
+ASSIGNMENT_OPERATOR                 : EQUAL_OPERATOR        {$$ = init_node("ASSIGNMENT_OPERATOR", $1, NULL);}
+                                    | ASSIGNMENT_OPERATORS  {$$ = init_node("ASSIGNMENT_OPERATOR", $1, NULL);}
+                                    ;
 
-EXPRESSION : ASSIGNMENT_EXPRESSION {}
-           | EXPRESSION COMMA ASSIGNMENT_EXPRESSION {}
-           ;
+EXPRESSION                          : ASSIGNMENT_EXPRESSION                     {$$ = init_node("EXPRESSION", "", $1);}
+                                    | EXPRESSION COMMA ASSIGNMENT_EXPRESSION    {
+                                                                                    $$ = init_node("EXPRESSION", "", $1);
+                                                                                    add_next($1, init_node($2, "", NULL));
+                                                                                    add_next($1, $3);
+                                                                                }
+                                    ;
 
-CONSTANT_EXPRESSION : CONDITIONAL_EXPRESSION {}
-                    ;
+CONSTANT_EXPRESSION                 : CONDITIONAL_EXPRESSION    {$$ = init_node("CONSTANT_EXPRESSION", "", $1);}
+                                    ;
 
 /*Declarations*/
 
-DECLARATION             : DECLARATION_SPECIFIERS INIT_DECLARATOR_LIST_OPT SEMI_COLON   { }
-                        ;
+DECLARATION                         : DECLARATION_SPECIFIERS INIT_DECLARATOR_LIST_OPT SEMI_COLON    {
+                                                                                                        $$ = init_node("DECLARATION", "", $1);
+                                                                                                        add_next($1, $2);
+                                                                                                        add_next($1, init_node($3, "", NULL));
+                                                                                                    }
+                                    ;
 
-INIT_DECLARATOR_LIST_OPT    : INIT_DECLARATOR_LIST      { }
-                            |   { }
-                            ;
+INIT_DECLARATOR_LIST_OPT            : INIT_DECLARATOR_LIST  {$$ = init_node("INIT_DECLARATOR_LIST_OPT", "", $1);}
+                                    |                       {$$ = init_node("INIT_DECLARATOR_LIST_OPT", "", init_node("<empty>", "", NULL));}
+                                    ;
 
-DECLARATION_SPECIFIERS      :   STORAGE_CLASS_SPECIFIER DECLARATION_SPECIFIERS_OPT  { }
-                            |   TYPE_SPECIFIER DECLARATION_SPECIFIERS_OPT
-                            |   TYPE_QUALIFIER DECLARATION_SPECIFIERS_OPT
-                            |   FUNCTION_SPECIFIER DECLARATION_SPECIFIERS_OPT
-                            ;
+DECLARATION_SPECIFIERS              :   STORAGE_CLASS_SPECIFIER DECLARATION_SPECIFIERS_OPT  {$$ = init_node("DECLARATION_SPECIFIERS", "", $1); add_next($1, $2);}
+                                    |   TYPE_SPECIFIER DECLARATION_SPECIFIERS_OPT           {$$ = init_node("DECLARATION_SPECIFIERS", "", $1); add_next($1, $2);}
+                                    |   TYPE_QUALIFIER DECLARATION_SPECIFIERS_OPT           {$$ = init_node("DECLARATION_SPECIFIERS", "", $1); add_next($1, $2);}
+                                    |   FUNCTION_SPECIFIER DECLARATION_SPECIFIERS_OPT       {$$ = init_node("DECLARATION_SPECIFIERS", "", $1); add_next($1, $2);}
+                                    ;
 
-DECLARATION_SPECIFIERS_OPT  :   DECLARATION_SPECIFIERS          { }
-                            |       { }
-                            ;                            
+DECLARATION_SPECIFIERS_OPT          :   DECLARATION_SPECIFIERS  {$$ = init_node("DECLARATION_SPECIFIERS_OPT", "", $1);}
+                                    |                           {$$ = init_node("DECLARATION_SPECIFIERS_OPT", "", init_node("<empty>", "", NULL));}
+                                    ;                            
 
-INIT_DECLARATOR_LIST        :   INIT_DECLARATOR             { }
-                            |   INIT_DECLARATOR_LIST COMMA INIT_DECLARATOR    { }
-                            ;
+INIT_DECLARATOR_LIST                :   INIT_DECLARATOR                             {$$ = init_node("INIT_DECLARATOR_LIST", "", $1);}
+                                    |   INIT_DECLARATOR_LIST COMMA INIT_DECLARATOR  {
+                                                                                        $$ = init_node("INIT_DECLARATOR_LIST", "", $1);
+                                                                                        add_next($1, init_node($2, "", NULL));
+                                                                                        add_next($1, $3);
+                                                                                    }
+                                    ;
 
-INIT_DECLARATOR         :   DECLARATOR      { }
-                        |   DECLARATOR EQUAL_OPERATOR INITIALIZER  { }
-                        ;
+INIT_DECLARATOR                     :   DECLARATOR                              {$$ = init_node("INIT_DECLARATOR", "", $1);}
+                                    |   DECLARATOR EQUAL_OPERATOR INITIALIZER   {
+                                                                                    $$ = init_node("INIT_DECLARATOR", "", $1);
+                                                                                    add_next($1, init_node($2, "", NULL));
+                                                                                    add_next($1, $3);
+                                                                                }
+                                    ;
 
-STORAGE_CLASS_SPECIFIER :   EXTERN  { }
-                        |   STATIC  { }
-                        |   AUTO    { }
-                        |   REGISTER { }
-                        ;
+STORAGE_CLASS_SPECIFIER             :   EXTERN      {$$ = init_node($1, "", NULL);}
+                                    |   STATIC      {$$ = init_node($1, "", NULL);}
+                                    |   AUTO        {$$ = init_node($1, "", NULL);}
+                                    |   REGISTER    {$$ = init_node($1, "", NULL);}
+                                    ;
 
-TYPE_SPECIFIER  :      VOID   { }
-                |      CHAR  { }
-                |      SHORT { }
-                |      INT   { }
-                |      LONG  { }
-                |      FLOAT { }
-                |      DOUBLE    { }
-                |      SIGNED    { }
-                |      UNSIGNED  { }
-                |      BOOL      { }
-                |      COMPLEX   { }
-                |      IMAGINARY { }
-                ;
+TYPE_SPECIFIER                      :   VOID        {$$ = init_node($1, "", NULL);}
+                                    |   CHAR        {$$ = init_node($1, "", NULL);}
+                                    |   SHORT       {$$ = init_node($1, "", NULL);}
+                                    |   INT         {$$ = init_node($1, "", NULL);}
+                                    |   LONG        {$$ = init_node($1, "", NULL);}
+                                    |   FLOAT       {$$ = init_node($1, "", NULL);}
+                                    |   DOUBLE      {$$ = init_node($1, "", NULL);}
+                                    |   SIGNED      {$$ = init_node($1, "", NULL);}
+                                    |   UNSIGNED    {$$ = init_node($1, "", NULL);}
+                                    |   BOOL        {$$ = init_node($1, "", NULL);}
+                                    |   COMPLEX     {$$ = init_node($1, "", NULL);}
+                                    |   IMAGINARY   {$$ = init_node($1, "", NULL);}
+                                    ;
 
-SPECIFIER_QUALIFIER_LIST    :   TYPE_SPECIFIER SPECIFIER_QUALIFIER_LIST_OPT
-                            |   TYPE_QUALIFIER SPECIFIER_QUALIFIER_LIST_OPT
-                            ;
+SPECIFIER_QUALIFIER_LIST            :   TYPE_SPECIFIER SPECIFIER_QUALIFIER_LIST_OPT
+                                    |   TYPE_QUALIFIER SPECIFIER_QUALIFIER_LIST_OPT
+                                    ;
 
-SPECIFIER_QUALIFIER_LIST_OPT    :   SPECIFIER_QUALIFIER_LIST            { }
-                                |   { }
-                                ;
+SPECIFIER_QUALIFIER_LIST_OPT        :   SPECIFIER_QUALIFIER_LIST            { }
+                                    |   { }
+                                    ;
 
-TYPE_QUALIFIER      :    CONST      { }
-                    | RESTRICT          { }
-                    | VOLATILE          { }
-                    ;
+TYPE_QUALIFIER                      :    CONST      { }
+                                    | RESTRICT          { }
+                                    | VOLATILE          { }
+                                    ;
 
-FUNCTION_SPECIFIER  :    INLINE         { }
-                    ;
+FUNCTION_SPECIFIER                  :    INLINE         { }
+                                    ;
 
-DECLARATOR  :    POINTER_OPT DIRECT_DECLARATOR  { }
-            ;
+DECLARATOR                          :    POINTER_OPT DIRECT_DECLARATOR  { }
+                                    ;
 
-POINTER_OPT :   POINTER     { }
-            |   { }
-            ;
+POINTER_OPT                         :   POINTER     { }
+                                    |   { }
+                                    ;
 
-DIRECT_DECLARATOR       :   IDENTIFIER                                                                  { }
-                        | LEFT_PARANTHESIS DECLARATOR RIGHT_PARANTHESIS                                                            { }
-                        | DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION_OPT RIGHT_SQUARE_BRACKET   { }
-                        | DIRECT_DECLARATOR LEFT_SQUARE_BRACKET STATIC TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION RIGHT_SQUARE_BRACKET{ }
-                        | DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST STATIC ASSIGNMENT_EXPRESSION RIGHT_SQUARE_BRACKET    { }
-                        | DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST_OPT MULTIPLICATION_OPERATOR RIGHT_SQUARE_BRACKET     { }
-                        | DIRECT_DECLARATOR LEFT_PARANTHESIS PARAMETER_TYPE_LIST RIGHT_PARANTHESIS                                 { }
-                        | DIRECT_DECLARATOR LEFT_PARANTHESIS IDENTIFIER_LIST_OPT RIGHT_PARANTHESIS                                 { }
-                        ;
+DIRECT_DECLARATOR                   :   IDENTIFIER                                                                  { }
+                                    | LEFT_PARANTHESIS DECLARATOR RIGHT_PARANTHESIS                                                            { }
+                                    | DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION_OPT RIGHT_SQUARE_BRACKET   { }
+                                    | DIRECT_DECLARATOR LEFT_SQUARE_BRACKET STATIC TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION RIGHT_SQUARE_BRACKET   { }
+                                    | DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST STATIC ASSIGNMENT_EXPRESSION RIGHT_SQUARE_BRACKET    { }
+                                    | DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST_OPT MULTIPLICATION_OPERATOR RIGHT_SQUARE_BRACKET     { }
+                                    | DIRECT_DECLARATOR LEFT_PARANTHESIS PARAMETER_TYPE_LIST RIGHT_PARANTHESIS                                 { }
+                                    | DIRECT_DECLARATOR LEFT_PARANTHESIS IDENTIFIER_LIST_OPT RIGHT_PARANTHESIS                                 { }
+                                    ;
 
-ASSIGNMENT_EXPRESSION_OPT   :   ASSIGNMENT_EXPRESSION           { }
-                            |       { }
-                            ;
+ASSIGNMENT_EXPRESSION_OPT           :   ASSIGNMENT_EXPRESSION           { }
+                                    |       { }
+                                    ;
 
-POINTER                 :   MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT          {}
-                        |   MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT POINTER  {}
-                        ;
+POINTER                             :   MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT 
+                                    |   MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT POINTER
+                                    ;
 
-TYPE_QUALIFIER_LIST     :   TYPE_QUALIFIER                     {}
-                        |   TYPE_QUALIFIER_LIST TYPE_QUALIFIER {}
-                        ;
+TYPE_QUALIFIER_LIST                 :   TYPE_QUALIFIER 
+                                    |   TYPE_QUALIFIER_LIST TYPE_QUALIFIER 
+                                    ;
 
-TYPE_QUALIFIER_LIST_OPT :   TYPE_QUALIFIER_LIST                         { }
-                        |                                               { }
-                        ;
+TYPE_QUALIFIER_LIST_OPT             :   TYPE_QUALIFIER_LIST                         { }
+                                    |                                               { }
+                                    ;
 
-PARAMETER_TYPE_LIST     :   PARAMETER_LIST                     {}
-                        |   PARAMETER_LIST COMMA TRIPLE_DOT             { }
+PARAMETER_TYPE_LIST                 :   PARAMETER_LIST 
+                                    |   PARAMETER_LIST COMMA TRIPLE_DOT             { }
+                                    ;
 
-PARAMETER_LIST          :   PARAMETER_DECLARATION 
-                        |   PARAMETER_LIST COMMA PARAMETER_DECLARATION    { }
+PARAMETER_LIST                      :   PARAMETER_DECLARATION 
+                                    |   PARAMETER_LIST COMMA PARAMETER_DECLARATION    { }
+                                    ;
 
-PARAMETER_DECLARATION   :   DECLARATION_SPECIFIERS DECLARATOR           { } 
-                        |   DECLARATION_SPECIFIERS                      { }
-                        ;
+PARAMETER_DECLARATION               :   DECLARATION_SPECIFIERS DECLARATOR           { $$ = init_node("PARAMETER_DECLARATION","",$1); add_node($1,$2 ); } 
+                                    |   DECLARATION_SPECIFIERS                      { $$ = init_node("PARAMETER_DECLARATION","",$1); }
+                                    ;
 
-IDENTIFIER_LIST         :   IDENTIFIER                                  { }
-                        |   IDENTIFIER_LIST COMMA IDENTIFIER            { }
-                        ;
+IDENTIFIER_LIST                     :   IDENTIFIER                                  {   $$ = init_node("IDENTIFIER_LIST","", init_node("IDENTIFIER",$1,NULL)); }
+                                    |   IDENTIFIER_LIST COMMA IDENTIFIER            {   $$ = init_node("IDENTIFIER_LIST","",$1);
+                                                                                        add_node($1, init_node($2,"",NULL) );
+                                                                                        add_node($1, init_node($3,"",NULL) );
+                                                                                    }
+                                    ;
 
-IDENTIFIER_LIST_OPT     :   IDENTIFIER_LIST     { }
-                        |   { }
-                        ;
+IDENTIFIER_LIST_OPT                 :   IDENTIFIER_LIST     { $$ = init_node("IDENTIFIER_LIST_OPT","",$1); }
+                                    |   { $$ = init_node("IDENTIFIER_LIST_OPT","",init_node("<empty>","",NULL)); }
+                                    ;
 
-TYPE_NAME               :   SPECIFIER_QUALIFIER_LIST                    { }
-                        ;
+TYPE_NAME                           :   SPECIFIER_QUALIFIER_LIST                    { $$ = init_node("TYPE_NAME","",$1); }
+                                    ;
 
-INITIALIZER             :   ASSIGNMENT_EXPRESSION                       { }
-                        |   LEFT_CURLY_BRACKET INITIALIZER_LIST RIGHT_CURLY_BRACKET      { }
-                        |   LEFT_CURLY_BRACKET INITIALIZER_LIST COMMA RIGHT_CURLY_BRACKET    { }
-                        ;
+INITIALIZER                         :   ASSIGNMENT_EXPRESSION                       { $$ = init_node("INITIALIZER_LIST","",$1); }
+                                    |   LEFT_CURLY_BRACKET INITIALIZER_LIST RIGHT_CURLY_BRACKET    {    tree_pointer temp = init_node($1,"",NULL);
+                                                                                                        $$ = init_node("INITIALIZER","",temp);
+                                                                                                        add_node(temp, $2 );
+                                                                                                        add_node(temp, init_node($3,"",NULL) );
+                                                                                                   }
+                                    |   LEFT_CURLY_BRACKET INITIALIZER_LIST COMMA RIGHT_CURLY_BRACKET    { }
+                                    ;
 
-INITIALIZER_LIST        :   DESIGNATION_OPT INITIALIZER                 { }
-                        |   INITIALIZER_LIST COMMA DESIGNATION_OPT INITIALIZER    { }
-                        ;
+INITIALIZER_LIST                    :   DESIGNATION_OPT INITIALIZER    {    $$ = init_node("INITIALIZER_LIST","",$1); 
+                                                                            add_node($1, $2 );
+                                                                       }
+                                    |   INITIALIZER_LIST COMMA DESIGNATION_OPT INITIALIZER  {   $$ = init_node("INITIALIZER_LIST","",$1); 
+                                                                                                add_node($1, init_node($2,"",NULL) );
+                                                                                                add_node($1, $3 );
+                                                                                            }
+                                    ;
 
-DESIGNATION_OPT         :   DESIGNATION                                 { }
-                        |                                               { }
-                        ;
+DESIGNATION                         :   DESIGNATOR_LIST EQUAL_OPERATOR  {   $$ = init_node("DESIGNATION","",$1); 
+                                                                            add_node(temp, init_node($2,"",NULL) );
+                                                                        }
+                                    ;
+DESIGNATION_OPT                     :   DESIGNATION  { $$ = init_node("DESIGNATION_OPT","",$1); }
+                                    |                { $$ = init_node("DESIGNATION_OPT","",init_node("<empty>","",NULL)); }
+                                    ;
 
-DESIGNATION             :   DESIGNATOR_LIST EQUAL_OPERATOR                         { }
-                        ;
-
-DESIGNATOR_LIST         :   DESIGNATOR                                  { }
-                        |   DESIGNATOR_LIST DESIGNATOR                  { }
-                        ;
+DESIGNATOR_LIST                     :   DESIGNATOR                                  { $$ = init_node("DESIGNATOR_LIST","",$1); }
+                                    |   DESIGNATOR_LIST DESIGNATOR                  { $$ = init_node("DESIGNATOR_LIST","",$1); add_node($1,$2); }
+                                    ;
                         
-DESIGNATOR              :   LEFT_SQUARE_BRACKET CONSTANT_EXPRESSION RIGHT_SQUARE_BRACKET                { }
-                        |   DOT IDENTIFIER                              { }
-                        ;
-                
+DESIGNATOR                          :   LEFT_SQUARE_BRACKET CONSTANT_EXPRESSION RIGHT_SQUARE_BRACKET  {     tree_pointer temp = init_node($1,"",NULL);
+                                                                                                            $$ = init_node("DESIGNATOR","",temp); 
+                                                                                                            add_node(temp, $2 );
+                                                                                                            add_node(temp, init_node($3,"",NULL) );
+                                                                                                      }
+                                    |   DOT IDENTIFIER      {   tree_pointer temp = init_node($1,"",NULL); 
+                                                                $$ = init_node("DESIGNATOR","",temp); 
+                                                                add_node(temp, init_node("IDENTIFIER",$2,NULL) );
+                                                            }
+                                    ;
+//-------------------------------------------------------------------------------------------------------------------------                
 // statements
 STATEMENT : LABELED_STATEMENT    { $$ = init_node("STATEMENT","",$1); } 
           | COMPOUND_STATEMENT   { $$ = init_node("STATEMENT","",$1); } 
@@ -453,7 +649,7 @@ FUNCTION_DEFINITION     :   DECLARATION_SPECIFIERS DECLARATOR DECLARATION_LIST_O
                         ;
 
 DECLARATION_LIST        :   DECLARATION                                 { $$ = init_node("DECLARATION_LIST","",$1); }                                             
-                        |   DECLARATION_LIST DECLARATION                { $$ = init_node("DECLARATION_LIST","",$1); add_next($$,$2); }
+                        |   DECLARATION_LIST DECLARATION                { $$ = init_node("DECLARATION_LIST","",$1); add_next($1,$2); }
                         ;
 
 DECLARATION_LIST_OPT    :   DECLARATION_LIST                            { $$ = init_node("DECLARATION_LIST_OPT","",$1); }
