@@ -1,17 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "y.tab.c"
 #include "lex.yy.c"
-
-typedef struct tree_node {
-    char * name;
-    char * val;
-    struct tree_node * next;
-    struct tree_node * child;
-} tree;
-
-typedef tree * tree_pointer;
 
 tree_pointer init_node(char * name, char * val, tree_pointer child) {
     tree_pointer new_tree = (tree_pointer) malloc(sizeof(tree));
