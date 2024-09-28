@@ -225,7 +225,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 25 "tinyc_yacc.y"
+#line 27 "tinyc_yacc.y"
 char * val; tree_pointer node;
 
 #line 232 "y.tab.h"

@@ -9,7 +9,7 @@ all:
 	gcc ${C_FILE}
 
 run:
-	./a.exe < test.txt > ${OUTPUT_FILE}
+	./a.out < test.txt > ${OUTPUT_FILE}
 
 clean:
 	rm -f lex.yy.c y.tab.c y.tab.h a.out ${OUTPUT_FILE}
