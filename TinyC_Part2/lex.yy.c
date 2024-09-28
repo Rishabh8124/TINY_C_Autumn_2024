@@ -1,5 +1,5 @@
 
-#line 3 "lex.yy.c"
+#line 2 "lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -641,10 +641,9 @@ char *yytext;
     #include <stdio.h>
     #include <stdlib.h>
     #include "y.tab.h"
-
     int yylex();
     void yyerror(char * s);
-#line 648 "lex.yy.c"
+#line 646 "lex.yy.c"
 /*REGULAR DEFINITIONS*/
 /* REGEX FOR MULTI LINE COMMENT */
 /*     <--[^\*\/]--             */
@@ -658,7 +657,7 @@ char *yytext;
 /*punctuators*/
 /* UNARY_OPERATOR "&" | "\*" | "\+" | "\-" | "\~" | "\!" */
 /*| "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | "&=" | "^=" | "|="*/
-#line 662 "lex.yy.c"
+#line 660 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -875,9 +874,9 @@ YY_DECL
 		}
 
 	{
-#line 131 "ass3_58_63.l"
+#line 130 "ass3_58_63.l"
 
-#line 881 "lex.yy.c"
+#line 879 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -937,437 +936,437 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 132 "ass3_58_63.l"
+#line 131 "ass3_58_63.l"
 { }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 133 "ass3_58_63.l"
+#line 132 "ass3_58_63.l"
 { }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 135 "ass3_58_63.l"
+#line 134 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return AUTO;} 
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 136 "ass3_58_63.l"
+#line 135 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return ENUM;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 137 "ass3_58_63.l"
+#line 136 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return RESTRICT;} 
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 138 "ass3_58_63.l"
+#line 137 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return UNSIGNED;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 139 "ass3_58_63.l"
+#line 138 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return BREAK;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 140 "ass3_58_63.l"
+#line 139 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return EXTERN;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 141 "ass3_58_63.l"
+#line 140 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return RETURN;} 
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 142 "ass3_58_63.l"
+#line 141 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return VOID;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 143 "ass3_58_63.l"
+#line 142 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return CASE;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 144 "ass3_58_63.l"
+#line 143 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return FLOAT;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 145 "ass3_58_63.l"
+#line 144 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return SHORT;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 146 "ass3_58_63.l"
+#line 145 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return VOLATILE;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 147 "ass3_58_63.l"
+#line 146 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return CHAR;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 148 "ass3_58_63.l"
+#line 147 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return FOR;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 149 "ass3_58_63.l"
+#line 148 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return SIGNED;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 150 "ass3_58_63.l"
+#line 149 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return WHILE;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 151 "ass3_58_63.l"
+#line 150 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return CONST;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 152 "ass3_58_63.l"
+#line 151 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return GOTO;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 153 "ass3_58_63.l"
+#line 152 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return SIZEOF;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 154 "ass3_58_63.l"
+#line 153 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return BOOL;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 155 "ass3_58_63.l"
+#line 154 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return CONTINUE;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 156 "ass3_58_63.l"
+#line 155 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return IF;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 157 "ass3_58_63.l"
+#line 156 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return STATIC;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 158 "ass3_58_63.l"
+#line 157 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return COMPLEX;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 159 "ass3_58_63.l"
+#line 158 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return DEFAULT;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 160 "ass3_58_63.l"
+#line 159 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return INLINE;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 161 "ass3_58_63.l"
+#line 160 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return STRUCT;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 162 "ass3_58_63.l"
+#line 161 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return IMAGINARY;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 163 "ass3_58_63.l"
+#line 162 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return DO;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 164 "ass3_58_63.l"
+#line 163 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return INT;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 165 "ass3_58_63.l"
+#line 164 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return SWITCH;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 166 "ass3_58_63.l"
+#line 165 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return DOUBLE;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 167 "ass3_58_63.l"
+#line 166 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return LONG;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 168 "ass3_58_63.l"
+#line 167 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return TYPEDEF;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 169 "ass3_58_63.l"
+#line 168 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return ELSE;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 170 "ass3_58_63.l"
+#line 169 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return REGISTER;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 171 "ass3_58_63.l"
+#line 170 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return UNION;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 173 "ass3_58_63.l"
+#line 172 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return IDENTIFIER;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 174 "ass3_58_63.l"
+#line 173 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return STRING_LITERAL;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 175 "ass3_58_63.l"
+#line 174 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return LESS_THAN;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 176 "ass3_58_63.l"
+#line 175 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return LESS_THAN_EQUAL_TO;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 177 "ass3_58_63.l"
+#line 176 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return GREATER_THAN;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 178 "ass3_58_63.l"
+#line 177 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return GREATER_THAN_EQUAL_TO;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 179 "ass3_58_63.l"
+#line 178 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return ESCAPE_OPERATOR;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 180 "ass3_58_63.l"
+#line 179 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return LEFT_SQUARE_BRACKET;}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 181 "ass3_58_63.l"
+#line 180 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return RIGHT_SQUARE_BRACKET;}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 182 "ass3_58_63.l"
+#line 181 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return LEFT_PARANTHESIS;}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 183 "ass3_58_63.l"
+#line 182 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return RIGHT_PARANTHESIS;}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 184 "ass3_58_63.l"
+#line 183 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return LEFT_CURLY_BRACKET;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 185 "ass3_58_63.l"
+#line 184 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return RIGHT_CURLY_BRACKET;}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 186 "ass3_58_63.l"
+#line 185 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return DOT;}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 187 "ass3_58_63.l"
+#line 186 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return POINTER_ACCESS;}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 188 "ass3_58_63.l"
+#line 187 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return INCREMENT_OPERATOR;}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 189 "ass3_58_63.l"
+#line 188 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return DECREMENT_OPERATOR;}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 190 "ass3_58_63.l"
+#line 189 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return DIVIDE_OPERATOR;}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 191 "ass3_58_63.l"
+#line 190 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return REMAINDER_OPERATOR;}
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 192 "ass3_58_63.l"
+#line 191 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return SHIFT_LEFT_OPERATOR;}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 193 "ass3_58_63.l"
+#line 192 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return SHIFT_RIGHT_OPERATOR;}
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 194 "ass3_58_63.l"
+#line 193 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return EQUALITY_OPERATOR;}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 195 "ass3_58_63.l"
+#line 194 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return NON_EQUALITY_OPERATOR;}
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 196 "ass3_58_63.l"
+#line 195 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return XOR_OPERATOR;}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 197 "ass3_58_63.l"
+#line 196 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return BITWISE_OR_OPERATOR;}
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 198 "ass3_58_63.l"
+#line 197 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return BITWISE_AND_OPERATOR;}
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 199 "ass3_58_63.l"
+#line 198 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return LOGICAL_AND_OPERATOR;}
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 200 "ass3_58_63.l"
+#line 199 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return LOGICAL_OR_OPERATOR;}
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 201 "ass3_58_63.l"
+#line 200 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return TERNARY_OPERATOR;}
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 202 "ass3_58_63.l"
+#line 201 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return TERNARY_SEPERATOR;}
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 203 "ass3_58_63.l"
+#line 202 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return SEMI_COLON;}
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 204 "ass3_58_63.l"
+#line 203 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return COMMA;}
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 205 "ass3_58_63.l"
+#line 204 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return MACRO_OPERATOR;}
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 206 "ass3_58_63.l"
+#line 205 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return TRIPLE_DOT;}
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 208 "ass3_58_63.l"
+#line 207 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return CONSTANT;}
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 209 "ass3_58_63.l"
+#line 208 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return CONSTANT;}
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 210 "ass3_58_63.l"
+#line 209 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return CONSTANT;}
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 212 "ass3_58_63.l"
+#line 211 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return ASSIGNMENT_OPERATORS;}
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 214 "ass3_58_63.l"
+#line 213 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return ADDITION_OPERATOR;}
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 215 "ass3_58_63.l"
+#line 214 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return MULTIPLICATION_OPERATOR;}
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 216 "ass3_58_63.l"
+#line 215 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return SUBTRACTION_OPERATOR;}
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 217 "ass3_58_63.l"
+#line 216 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return NOT_OPERATOR;}    
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 218 "ass3_58_63.l"
+#line 217 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return NEGATION_OPERATOR;} 
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 220 "ass3_58_63.l"
+#line 219 "ass3_58_63.l"
 { yylval.val = strdup(yytext); return EQUAL_OPERATOR;}
 	YY_BREAK
 case 84:
 /* rule 84 can match eol */
 YY_RULE_SETUP
-#line 222 "ass3_58_63.l"
+#line 221 "ass3_58_63.l"
 { }
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 223 "ass3_58_63.l"
+#line 222 "ass3_58_63.l"
 {yyerror("Invalid character found\n");}
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 224 "ass3_58_63.l"
+#line 223 "ass3_58_63.l"
 ECHO;
 	YY_BREAK
-#line 1371 "lex.yy.c"
+#line 1369 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2372,7 +2371,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 224 "ass3_58_63.l"
+#line 223 "ass3_58_63.l"
 
 
 int yywrap(void) {return 1;}

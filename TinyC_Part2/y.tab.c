@@ -72,6 +72,8 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
+    #define YYDEBUG 1
+    int yydebug = 1;
     int yylex();
     void yyerror(char *s);
 
@@ -89,7 +91,7 @@
     void print_parse_tree(tree_pointer root, int depth);
     tree_pointer parse_tree = NULL;
 
-#line 93 "y.tab.c"
+#line 95 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -304,10 +306,10 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 23 "tinyc_yacc.y"
+#line 25 "tinyc_yacc.y"
 char * val; tree_pointer node;
 
-#line 311 "y.tab.c"
+#line 313 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -872,25 +874,25 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    51,    51,    52,    53,    54,    62,    63,    69,    75,
-      80,    85,    89,    93,   102,   113,   114,   121,   122,   125,
-     126,   131,   136,   140,   145,   154,   155,   156,   157,   158,
-     159,   162,   163,   172,   173,   178,   183,   190,   191,   196,
-     203,   204,   209,   216,   217,   222,   227,   232,   239,   240,
-     245,   252,   253,   260,   261,   268,   269,   276,   277,   284,
-     285,   292,   293,   302,   303,   310,   311,   314,   315,   322,
-     327,   333,   334,   337,   338,   339,   340,   343,   344,   347,
-     348,   355,   356,   363,   364,   365,   366,   369,   370,   371,
-     372,   373,   374,   375,   376,   377,   378,   379,   380,   383,
-     387,   393,   394,   397,   398,   399,   402,   405,   408,   409,
-     412,   413,   419,   426,   434,   442,   449,   455,   463,   464,
-     467,   472,   480,   481,   484,   485,   488,   489,   496,   497,
-     504,   505,   508,   509,   515,   516,   519,   522,   523,   528,
-     531,   534,   540,   544,   545,   548,   549,   552,   557,   564,
-     565,   566,   567,   568,   569,   572,   577,   583,   590,   597,
-     598,   601,   602,   605,   608,   615,   624,   633,   640,   649,
-     660,   672,   677,   681,   685,   693,   694,   697,   698,   703,
-     706,   712,   713,   716,   719,   720,   723,   724
+       0,    53,    53,    54,    55,    56,    64,    65,    71,    77,
+      82,    87,    91,    95,   104,   115,   116,   123,   124,   127,
+     128,   133,   138,   142,   147,   156,   157,   158,   159,   160,
+     161,   164,   165,   174,   175,   180,   185,   192,   193,   198,
+     205,   206,   211,   218,   219,   224,   229,   234,   241,   242,
+     247,   254,   255,   262,   263,   270,   271,   278,   279,   286,
+     287,   294,   295,   304,   305,   312,   313,   316,   317,   324,
+     329,   335,   336,   339,   340,   341,   342,   345,   346,   349,
+     350,   357,   358,   365,   366,   367,   368,   371,   372,   373,
+     374,   375,   376,   377,   378,   379,   380,   381,   382,   385,
+     389,   395,   396,   399,   400,   401,   404,   407,   410,   411,
+     414,   415,   421,   428,   436,   444,   451,   457,   465,   466,
+     469,   474,   482,   483,   486,   487,   490,   491,   498,   499,
+     506,   507,   510,   511,   517,   518,   521,   524,   525,   530,
+     533,   536,   542,   546,   547,   550,   551,   554,   559,   566,
+     567,   568,   569,   570,   571,   574,   579,   585,   592,   599,
+     600,   603,   604,   607,   610,   617,   626,   635,   642,   651,
+     662,   674,   679,   683,   687,   695,   696,   699,   700,   705,
+     708,   714,   715,   718,   721,   722,   725,   726
 };
 #endif
 
@@ -1802,102 +1804,102 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* PRIMARY_EXPRESSION: IDENTIFIER  */
-#line 51 "tinyc_yacc.y"
+#line 53 "tinyc_yacc.y"
                                                                                     {   (yyval.node) = init_node("PRIMARY_EXPRESSION", "", init_node("IDENTIFIER", (yyvsp[0].val), NULL));}
-#line 1808 "y.tab.c"
+#line 1810 "y.tab.c"
     break;
 
   case 3: /* PRIMARY_EXPRESSION: CONSTANT  */
-#line 52 "tinyc_yacc.y"
+#line 54 "tinyc_yacc.y"
                                                                                     {   (yyval.node) = init_node("PRIMARY_EXPRESSION", "", init_node("CONSTANT", (yyvsp[0].val), NULL));}
-#line 1814 "y.tab.c"
+#line 1816 "y.tab.c"
     break;
 
   case 4: /* PRIMARY_EXPRESSION: STRING_LITERAL  */
-#line 53 "tinyc_yacc.y"
+#line 55 "tinyc_yacc.y"
                                                                                     {   (yyval.node) = init_node("PRIMARY_EXPRESSION", "", init_node("STRING_LITERAL", (yyvsp[0].val), NULL));}
-#line 1820 "y.tab.c"
+#line 1822 "y.tab.c"
     break;
 
   case 5: /* PRIMARY_EXPRESSION: LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS  */
-#line 54 "tinyc_yacc.y"
+#line 56 "tinyc_yacc.y"
                                                                                     {
                                                                                         tree_pointer temp = init_node((yyvsp[-2].val), "", NULL); 
                                                                                         (yyval.node) = init_node("PRIMARY_EXPRESSION", "", temp);
                                                                                         add_next(temp, (yyvsp[-1].node));
                                                                                         add_next(temp, init_node((yyvsp[0].val), "", NULL));
                                                                                     }
-#line 1831 "y.tab.c"
+#line 1833 "y.tab.c"
     break;
 
   case 6: /* POSTFIX_EXPRESSION: PRIMARY_EXPRESSION  */
-#line 62 "tinyc_yacc.y"
+#line 64 "tinyc_yacc.y"
                                                                                                                                                     {   (yyval.node) = init_node("POSTFIX_EXPRESSION", "", (yyvsp[0].node));}
-#line 1837 "y.tab.c"
+#line 1839 "y.tab.c"
     break;
 
   case 7: /* POSTFIX_EXPRESSION: POSTFIX_EXPRESSION LEFT_SQUARE_BRACKET EXPRESSION RIGHT_SQUARE_BRACKET  */
-#line 63 "tinyc_yacc.y"
+#line 65 "tinyc_yacc.y"
                                                                                                                                                     {
                                                                                                                                                         (yyval.node) = init_node("POSTFIX_EXPRESSION", "", (yyvsp[-3].node));
                                                                                                                                                         add_next((yyvsp[-3].node), init_node((yyvsp[-2].val), "", NULL));
                                                                                                                                                         add_next((yyvsp[-3].node), (yyvsp[-1].node));
                                                                                                                                                         add_next((yyvsp[-3].node), init_node((yyvsp[0].val), "", NULL));
                                                                                                                                                     }
-#line 1848 "y.tab.c"
+#line 1850 "y.tab.c"
     break;
 
   case 8: /* POSTFIX_EXPRESSION: POSTFIX_EXPRESSION LEFT_PARANTHESIS ARGUMENT_EXPRESSION_LIST_OPT RIGHT_PARANTHESIS  */
-#line 69 "tinyc_yacc.y"
+#line 71 "tinyc_yacc.y"
                                                                                                                                                     {
                                                                                                                                                         (yyval.node) = init_node("POSTFIX_EXPRESSION", "", (yyvsp[-3].node));
                                                                                                                                                         add_next((yyvsp[-3].node), init_node((yyvsp[-2].val), "", NULL));
                                                                                                                                                         add_next((yyvsp[-3].node), (yyvsp[-1].node));
                                                                                                                                                         add_next((yyvsp[-3].node), init_node((yyvsp[0].val), "", NULL));
                                                                                                                                                     }
-#line 1859 "y.tab.c"
+#line 1861 "y.tab.c"
     break;
 
   case 9: /* POSTFIX_EXPRESSION: POSTFIX_EXPRESSION DOT IDENTIFIER  */
-#line 75 "tinyc_yacc.y"
+#line 77 "tinyc_yacc.y"
                                                                                                                                                     {
                                                                                                                                                         (yyval.node) = init_node("POSTFIX_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                                                                         add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                                                                         add_next((yyvsp[-2].node), init_node("IDENTIFIER", (yyvsp[0].val), NULL));
                                                                                                                                                     }
-#line 1869 "y.tab.c"
+#line 1871 "y.tab.c"
     break;
 
   case 10: /* POSTFIX_EXPRESSION: POSTFIX_EXPRESSION POINTER_ACCESS IDENTIFIER  */
-#line 80 "tinyc_yacc.y"
+#line 82 "tinyc_yacc.y"
                                                                                                                                                     {
                                                                                                                                                         (yyval.node) = init_node("POSTFIX_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                                                                         add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                                                                         add_next((yyvsp[-2].node), init_node("IDENTIFIER", (yyvsp[0].val), NULL));
                                                                                                                                                     }
-#line 1879 "y.tab.c"
+#line 1881 "y.tab.c"
     break;
 
   case 11: /* POSTFIX_EXPRESSION: POSTFIX_EXPRESSION INCREMENT_OPERATOR  */
-#line 85 "tinyc_yacc.y"
+#line 87 "tinyc_yacc.y"
                                                                                                                                                     {
                                                                                                                                                         (yyval.node) = init_node("POSTFIX_EXPRESSION", "", (yyvsp[-1].node));
                                                                                                                                                         add_next((yyvsp[-1].node), init_node((yyvsp[0].val), "", NULL));
                                                                                                                                                     }
-#line 1888 "y.tab.c"
+#line 1890 "y.tab.c"
     break;
 
   case 12: /* POSTFIX_EXPRESSION: POSTFIX_EXPRESSION DECREMENT_OPERATOR  */
-#line 89 "tinyc_yacc.y"
+#line 91 "tinyc_yacc.y"
                                                                                                                                                     {
                                                                                                                                                         (yyval.node) = init_node("POSTFIX_EXPRESSION", "", (yyvsp[-1].node));
                                                                                                                                                         add_next((yyvsp[-1].node), init_node((yyvsp[0].val), "", NULL));
                                                                                                                                                     }
-#line 1897 "y.tab.c"
+#line 1899 "y.tab.c"
     break;
 
   case 13: /* POSTFIX_EXPRESSION: LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS LEFT_CURLY_BRACKET INITIALIZER_LIST RIGHT_CURLY_BRACKET  */
-#line 93 "tinyc_yacc.y"
+#line 95 "tinyc_yacc.y"
                                                                                                                                                     {
                                                                                                                                                         tree_pointer temp = init_node((yyvsp[-5].val), "", NULL); 
                                                                                                                                                         (yyval.node) = init_node("POSTFIX_EXPRESSION", "", temp);
@@ -1907,11 +1909,11 @@ yyreduce:
                                                                                                                                                         add_next(temp, (yyvsp[-1].node));
                                                                                                                                                         add_next(temp, init_node((yyvsp[0].val), "", NULL));
                                                                                                                                                     }
-#line 1911 "y.tab.c"
+#line 1913 "y.tab.c"
     break;
 
   case 14: /* POSTFIX_EXPRESSION: LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS LEFT_CURLY_BRACKET INITIALIZER_LIST COMMA RIGHT_CURLY_BRACKET  */
-#line 102 "tinyc_yacc.y"
+#line 104 "tinyc_yacc.y"
                                                                                                                                                     {
                                                                                                                                                         tree_pointer temp = init_node((yyvsp[-6].val), "", NULL); 
                                                                                                                                                         (yyval.node) = init_node("POSTFIX_EXPRESSION", "", temp);
@@ -1921,84 +1923,84 @@ yyreduce:
                                                                                                                                                         add_next(temp, (yyvsp[-2].node));
                                                                                                                                                         add_next(temp, init_node((yyvsp[-1].val), "", NULL));
                                                                                                                                                     }
-#line 1925 "y.tab.c"
+#line 1927 "y.tab.c"
     break;
 
   case 15: /* ARGUMENT_EXPRESSION_LIST: ASSIGNMENT_EXPRESSION  */
-#line 113 "tinyc_yacc.y"
+#line 115 "tinyc_yacc.y"
                                                                                             {(yyval.node) = init_node("ARGUMENT_EXPRESSION_LIST", "", (yyvsp[0].node));}
-#line 1931 "y.tab.c"
+#line 1933 "y.tab.c"
     break;
 
   case 16: /* ARGUMENT_EXPRESSION_LIST: ARGUMENT_EXPRESSION_LIST COMMA ASSIGNMENT_EXPRESSION  */
-#line 114 "tinyc_yacc.y"
+#line 116 "tinyc_yacc.y"
                                                                                             {
                                                                                                 (yyval.node) = init_node("ARGUMENT_EXPRESSION_LIST", "", (yyvsp[-2].node));
                                                                                                 add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                 add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                             }
-#line 1941 "y.tab.c"
+#line 1943 "y.tab.c"
     break;
 
   case 17: /* ARGUMENT_EXPRESSION_LIST_OPT: ARGUMENT_EXPRESSION_LIST  */
-#line 121 "tinyc_yacc.y"
+#line 123 "tinyc_yacc.y"
                                                                 {(yyval.node) = init_node("ARGUMENT_EXPRESSION_LIST_OPT", "", (yyvsp[0].node));}
-#line 1947 "y.tab.c"
+#line 1949 "y.tab.c"
     break;
 
   case 18: /* ARGUMENT_EXPRESSION_LIST_OPT: %empty  */
-#line 122 "tinyc_yacc.y"
+#line 124 "tinyc_yacc.y"
                                                                 {(yyval.node) = init_node("ARGUMENT_EXPRESSION_LIST_OPT", "", init_node("<empty>", "", NULL));}
-#line 1953 "y.tab.c"
+#line 1955 "y.tab.c"
     break;
 
   case 19: /* UNARY_EXPRESSION: POSTFIX_EXPRESSION  */
-#line 125 "tinyc_yacc.y"
+#line 127 "tinyc_yacc.y"
                                                                                             {(yyval.node) = init_node("UNARY_EXPRESSION", "", (yyvsp[0].node));}
-#line 1959 "y.tab.c"
+#line 1961 "y.tab.c"
     break;
 
   case 20: /* UNARY_EXPRESSION: INCREMENT_OPERATOR UNARY_EXPRESSION  */
-#line 126 "tinyc_yacc.y"
+#line 128 "tinyc_yacc.y"
                                                                                             {
                                                                                                 tree_pointer temp = init_node((yyvsp[-1].val), "", NULL);
                                                                                                 (yyval.node) = init_node("UNARY_EXPRESSION", "", temp);
                                                                                                 add_next(temp, (yyvsp[0].node));
                                                                                             }
-#line 1969 "y.tab.c"
+#line 1971 "y.tab.c"
     break;
 
   case 21: /* UNARY_EXPRESSION: DECREMENT_OPERATOR UNARY_EXPRESSION  */
-#line 131 "tinyc_yacc.y"
+#line 133 "tinyc_yacc.y"
                                                                                             {
                                                                                                 tree_pointer temp = init_node((yyvsp[-1].val), "", NULL);
                                                                                                 (yyval.node) = init_node("UNARY_EXPRESSION", "", temp);
                                                                                                 add_next(temp, (yyvsp[0].node));
                                                                                             }
-#line 1979 "y.tab.c"
+#line 1981 "y.tab.c"
     break;
 
   case 22: /* UNARY_EXPRESSION: UNARY_OPEARATOR CAST_EXPRESSION  */
-#line 136 "tinyc_yacc.y"
+#line 138 "tinyc_yacc.y"
                                                                                             {
                                                                                                 (yyval.node) = init_node("UNARY_EXPRESSION", "", (yyvsp[-1].node));
                                                                                                 add_next((yyvsp[-1].node), (yyvsp[0].node));
                                                                                             }
-#line 1988 "y.tab.c"
+#line 1990 "y.tab.c"
     break;
 
   case 23: /* UNARY_EXPRESSION: SIZEOF UNARY_EXPRESSION  */
-#line 140 "tinyc_yacc.y"
+#line 142 "tinyc_yacc.y"
                                                                                             {
                                                                                                 tree_pointer temp = init_node((yyvsp[-1].val), "", NULL);
                                                                                                 (yyval.node) = init_node("UNARY_EXPRESSION", "", temp);
                                                                                                 add_next(temp, (yyvsp[0].node));
                                                                                             }
-#line 1998 "y.tab.c"
+#line 2000 "y.tab.c"
     break;
 
   case 24: /* UNARY_EXPRESSION: SIZEOF LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS  */
-#line 145 "tinyc_yacc.y"
+#line 147 "tinyc_yacc.y"
                                                                                             {
                                                                                                 tree_pointer temp = init_node((yyvsp[-3].val), "", NULL);
                                                                                                 (yyval.node) = init_node("UNARY_EXPRESSION", "", temp);
@@ -2006,53 +2008,53 @@ yyreduce:
                                                                                                 add_next(temp, (yyvsp[-1].node));
                                                                                                 add_next(temp, init_node((yyvsp[0].val), "", NULL));
                                                                                             }
-#line 2010 "y.tab.c"
+#line 2012 "y.tab.c"
     break;
 
   case 25: /* UNARY_OPEARATOR: ADDITION_OPERATOR  */
-#line 154 "tinyc_yacc.y"
+#line 156 "tinyc_yacc.y"
                                                                 {(yyval.node) = init_node("UNARY_OPERATOR", (yyvsp[0].val), NULL);}
-#line 2016 "y.tab.c"
+#line 2018 "y.tab.c"
     break;
 
   case 26: /* UNARY_OPEARATOR: SUBTRACTION_OPERATOR  */
-#line 155 "tinyc_yacc.y"
+#line 157 "tinyc_yacc.y"
                                                                 {(yyval.node) = init_node("UNARY_OPERATOR", (yyvsp[0].val), NULL);}
-#line 2022 "y.tab.c"
+#line 2024 "y.tab.c"
     break;
 
   case 27: /* UNARY_OPEARATOR: MULTIPLICATION_OPERATOR  */
-#line 156 "tinyc_yacc.y"
+#line 158 "tinyc_yacc.y"
                                                                 {(yyval.node) = init_node("UNARY_OPERATOR", (yyvsp[0].val), NULL);}
-#line 2028 "y.tab.c"
+#line 2030 "y.tab.c"
     break;
 
   case 28: /* UNARY_OPEARATOR: BITWISE_AND_OPERATOR  */
-#line 157 "tinyc_yacc.y"
+#line 159 "tinyc_yacc.y"
                                                                 {(yyval.node) = init_node("UNARY_OPERATOR", (yyvsp[0].val), NULL);}
-#line 2034 "y.tab.c"
+#line 2036 "y.tab.c"
     break;
 
   case 29: /* UNARY_OPEARATOR: NEGATION_OPERATOR  */
-#line 158 "tinyc_yacc.y"
+#line 160 "tinyc_yacc.y"
                                                                 {(yyval.node) = init_node("UNARY_OPERATOR", (yyvsp[0].val), NULL);}
-#line 2040 "y.tab.c"
+#line 2042 "y.tab.c"
     break;
 
   case 30: /* UNARY_OPEARATOR: NOT_OPERATOR  */
-#line 159 "tinyc_yacc.y"
+#line 161 "tinyc_yacc.y"
                                                                 {(yyval.node) = init_node("UNARY_OPERATOR", (yyvsp[0].val), NULL);}
-#line 2046 "y.tab.c"
+#line 2048 "y.tab.c"
     break;
 
   case 31: /* CAST_EXPRESSION: UNARY_EXPRESSION  */
-#line 162 "tinyc_yacc.y"
+#line 164 "tinyc_yacc.y"
                                                                                                     {(yyval.node) = init_node("CAST_EXPRESSION", "", (yyvsp[0].node));}
-#line 2052 "y.tab.c"
+#line 2054 "y.tab.c"
     break;
 
   case 32: /* CAST_EXPRESSION: LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS CAST_EXPRESSION  */
-#line 163 "tinyc_yacc.y"
+#line 165 "tinyc_yacc.y"
                                                                                                     {
                                                                                                         tree_pointer temp = init_node((yyvsp[-3].val), "", NULL);
                                                                                                         (yyval.node) = init_node("CAST_EXPRESSION", "", temp);
@@ -2060,257 +2062,257 @@ yyreduce:
                                                                                                         add_next(temp, init_node((yyvsp[-1].val), "", NULL));
                                                                                                         add_next(temp, (yyvsp[0].node));
                                                                                                     }
-#line 2064 "y.tab.c"
+#line 2066 "y.tab.c"
     break;
 
   case 33: /* MULTIPLICATIVE_EXPRESSION: CAST_EXPRESSION  */
-#line 172 "tinyc_yacc.y"
+#line 174 "tinyc_yacc.y"
                                                                                                         {(yyval.node) = init_node("MULTIPLICATIVE_EXPRESSION", "", (yyvsp[0].node));}
-#line 2070 "y.tab.c"
+#line 2072 "y.tab.c"
     break;
 
   case 34: /* MULTIPLICATIVE_EXPRESSION: MULTIPLICATIVE_EXPRESSION MULTIPLICATION_OPERATOR CAST_EXPRESSION  */
-#line 173 "tinyc_yacc.y"
+#line 175 "tinyc_yacc.y"
                                                                                                         {
                                                                                                             (yyval.node) = init_node("MULTIPLICATIVE_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                             add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                             add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                                         }
-#line 2080 "y.tab.c"
+#line 2082 "y.tab.c"
     break;
 
   case 35: /* MULTIPLICATIVE_EXPRESSION: MULTIPLICATIVE_EXPRESSION DIVIDE_OPERATOR CAST_EXPRESSION  */
-#line 178 "tinyc_yacc.y"
+#line 180 "tinyc_yacc.y"
                                                                                                         {
                                                                                                             (yyval.node) = init_node("MULTIPLICATIVE_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                             add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                             add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                                         }
-#line 2090 "y.tab.c"
+#line 2092 "y.tab.c"
     break;
 
   case 36: /* MULTIPLICATIVE_EXPRESSION: MULTIPLICATIVE_EXPRESSION REMAINDER_OPERATOR CAST_EXPRESSION  */
-#line 183 "tinyc_yacc.y"
+#line 185 "tinyc_yacc.y"
                                                                                                         {
                                                                                                             (yyval.node) = init_node("MULTIPLICATIVE_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                             add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                             add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                                         }
-#line 2100 "y.tab.c"
+#line 2102 "y.tab.c"
     break;
 
   case 37: /* ADDITIVE_EXPRESSION: MULTIPLICATIVE_EXPRESSION  */
-#line 190 "tinyc_yacc.y"
+#line 192 "tinyc_yacc.y"
                                                                                                             {(yyval.node) = init_node("ADDITIVE_EXPRESSION", "", (yyvsp[0].node));}
-#line 2106 "y.tab.c"
+#line 2108 "y.tab.c"
     break;
 
   case 38: /* ADDITIVE_EXPRESSION: ADDITIVE_EXPRESSION ADDITION_OPERATOR MULTIPLICATIVE_EXPRESSION  */
-#line 191 "tinyc_yacc.y"
+#line 193 "tinyc_yacc.y"
                                                                                                             {
                                                                                                                 (yyval.node) = init_node("ADDITIVE_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                                 add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                                 add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                                             }
-#line 2116 "y.tab.c"
+#line 2118 "y.tab.c"
     break;
 
   case 39: /* ADDITIVE_EXPRESSION: ADDITIVE_EXPRESSION SUBTRACTION_OPERATOR MULTIPLICATIVE_EXPRESSION  */
-#line 196 "tinyc_yacc.y"
+#line 198 "tinyc_yacc.y"
                                                                                                             {
                                                                                                                 (yyval.node) = init_node("ADDITIVE_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                                 add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                                 add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                                             }
-#line 2126 "y.tab.c"
+#line 2128 "y.tab.c"
     break;
 
   case 40: /* SHIFT_EXPRESSION: ADDITIVE_EXPRESSION  */
-#line 203 "tinyc_yacc.y"
+#line 205 "tinyc_yacc.y"
                                                                                                 {   (yyval.node) = init_node("SHIFT_EXPRESSION", "", (yyvsp[0].node));}
-#line 2132 "y.tab.c"
+#line 2134 "y.tab.c"
     break;
 
   case 41: /* SHIFT_EXPRESSION: SHIFT_EXPRESSION SHIFT_LEFT_OPERATOR ADDITIVE_EXPRESSION  */
-#line 204 "tinyc_yacc.y"
+#line 206 "tinyc_yacc.y"
                                                                                                 {
                                                                                                     (yyval.node) = init_node("SHIFT_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                     add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                     add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                                 }
-#line 2142 "y.tab.c"
+#line 2144 "y.tab.c"
     break;
 
   case 42: /* SHIFT_EXPRESSION: SHIFT_EXPRESSION SHIFT_RIGHT_OPERATOR ADDITIVE_EXPRESSION  */
-#line 209 "tinyc_yacc.y"
+#line 211 "tinyc_yacc.y"
                                                                                                 {
                                                                                                     (yyval.node) = init_node("SHIFT_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                     add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                     add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                                 }
-#line 2152 "y.tab.c"
+#line 2154 "y.tab.c"
     break;
 
   case 43: /* RELATIONAL_EXPRESSION: SHIFT_EXPRESSION  */
-#line 216 "tinyc_yacc.y"
+#line 218 "tinyc_yacc.y"
                                                                                                     {   (yyval.node) = init_node("RELATIONAL_EXPRESSION", "", (yyvsp[0].node));}
-#line 2158 "y.tab.c"
+#line 2160 "y.tab.c"
     break;
 
   case 44: /* RELATIONAL_EXPRESSION: RELATIONAL_EXPRESSION LESS_THAN SHIFT_EXPRESSION  */
-#line 217 "tinyc_yacc.y"
+#line 219 "tinyc_yacc.y"
                                                                                                     {
                                                                                                         (yyval.node) = init_node("RELATIONAL_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                         add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                         add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                                     }
-#line 2168 "y.tab.c"
+#line 2170 "y.tab.c"
     break;
 
   case 45: /* RELATIONAL_EXPRESSION: RELATIONAL_EXPRESSION GREATER_THAN SHIFT_EXPRESSION  */
-#line 222 "tinyc_yacc.y"
+#line 224 "tinyc_yacc.y"
                                                                                                     {
                                                                                                         (yyval.node) = init_node("RELATIONAL_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                         add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                         add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                                     }
-#line 2178 "y.tab.c"
+#line 2180 "y.tab.c"
     break;
 
   case 46: /* RELATIONAL_EXPRESSION: RELATIONAL_EXPRESSION LESS_THAN_EQUAL_TO SHIFT_EXPRESSION  */
-#line 227 "tinyc_yacc.y"
+#line 229 "tinyc_yacc.y"
                                                                                                     {
                                                                                                         (yyval.node) = init_node("RELATIONAL_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                         add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                         add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                                     }
-#line 2188 "y.tab.c"
+#line 2190 "y.tab.c"
     break;
 
   case 47: /* RELATIONAL_EXPRESSION: RELATIONAL_EXPRESSION GREATER_THAN_EQUAL_TO SHIFT_EXPRESSION  */
-#line 232 "tinyc_yacc.y"
+#line 234 "tinyc_yacc.y"
                                                                                                     {
                                                                                                         (yyval.node) = init_node("RELATIONAL_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                         add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                         add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                                     }
-#line 2198 "y.tab.c"
+#line 2200 "y.tab.c"
     break;
 
   case 48: /* EQUALITY_EXPRESSION: RELATIONAL_EXPRESSION  */
-#line 239 "tinyc_yacc.y"
+#line 241 "tinyc_yacc.y"
                                                                                                         {   (yyval.node) = init_node("EQUALITY_EXPRESSION", "", (yyvsp[0].node));}
-#line 2204 "y.tab.c"
+#line 2206 "y.tab.c"
     break;
 
   case 49: /* EQUALITY_EXPRESSION: EQUALITY_EXPRESSION EQUALITY_OPERATOR RELATIONAL_EXPRESSION  */
-#line 240 "tinyc_yacc.y"
+#line 242 "tinyc_yacc.y"
                                                                                                         {
                                                                                                             (yyval.node) = init_node("EQUALITY_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                             add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                             add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                                         }
-#line 2214 "y.tab.c"
+#line 2216 "y.tab.c"
     break;
 
   case 50: /* EQUALITY_EXPRESSION: EQUALITY_EXPRESSION NON_EQUALITY_OPERATOR RELATIONAL_EXPRESSION  */
-#line 245 "tinyc_yacc.y"
+#line 247 "tinyc_yacc.y"
                                                                                                         {
                                                                                                             (yyval.node) = init_node("EQUALITY_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                             add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                             add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                                         }
-#line 2224 "y.tab.c"
+#line 2226 "y.tab.c"
     break;
 
   case 51: /* AND_EXPRESSION: EQUALITY_EXPRESSION  */
-#line 252 "tinyc_yacc.y"
+#line 254 "tinyc_yacc.y"
                                                                                                 {   (yyval.node) = init_node("AND_EXPRESSION", "", (yyvsp[0].node));}
-#line 2230 "y.tab.c"
+#line 2232 "y.tab.c"
     break;
 
   case 52: /* AND_EXPRESSION: AND_EXPRESSION BITWISE_AND_OPERATOR EQUALITY_EXPRESSION  */
-#line 253 "tinyc_yacc.y"
+#line 255 "tinyc_yacc.y"
                                                                                                 {
                                                                                                     (yyval.node) = init_node("AND_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                     add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                     add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                                 }
-#line 2240 "y.tab.c"
+#line 2242 "y.tab.c"
     break;
 
   case 53: /* EXCLUSIVE_OR_EXPRESSION: AND_EXPRESSION  */
-#line 260 "tinyc_yacc.y"
+#line 262 "tinyc_yacc.y"
                                                                                             {   (yyval.node) = init_node("EXCLUSIVE_OR_EXPRESSION", "", (yyvsp[0].node));}
-#line 2246 "y.tab.c"
+#line 2248 "y.tab.c"
     break;
 
   case 54: /* EXCLUSIVE_OR_EXPRESSION: EXCLUSIVE_OR_EXPRESSION XOR_OPERATOR AND_EXPRESSION  */
-#line 261 "tinyc_yacc.y"
+#line 263 "tinyc_yacc.y"
                                                                                             {
                                                                                                 (yyval.node) = init_node("EXCLUSIVE_OR_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                 add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                 add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                             }
-#line 2256 "y.tab.c"
+#line 2258 "y.tab.c"
     break;
 
   case 55: /* INCLUSIVE_OR_EXPRESSION: EXCLUSIVE_OR_EXPRESSION  */
-#line 268 "tinyc_yacc.y"
+#line 270 "tinyc_yacc.y"
                                                                                                             {   (yyval.node) = init_node("INCLUSIVE_OR_EXPRESSION", "", (yyvsp[0].node));}
-#line 2262 "y.tab.c"
+#line 2264 "y.tab.c"
     break;
 
   case 56: /* INCLUSIVE_OR_EXPRESSION: INCLUSIVE_OR_EXPRESSION BITWISE_OR_OPERATOR EXCLUSIVE_OR_EXPRESSION  */
-#line 269 "tinyc_yacc.y"
+#line 271 "tinyc_yacc.y"
                                                                                                             {
                                                                                                                 (yyval.node) = init_node("INCLUSIVE_OR_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                                 add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                                 add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                                             }
-#line 2272 "y.tab.c"
+#line 2274 "y.tab.c"
     break;
 
   case 57: /* LOGICAL_AND_EXPRESSION: INCLUSIVE_OR_EXPRESSION  */
-#line 276 "tinyc_yacc.y"
+#line 278 "tinyc_yacc.y"
                                                                                                             {   (yyval.node) = init_node("LOGICAL_AND_EXPRESSION", "", (yyvsp[0].node));}
-#line 2278 "y.tab.c"
+#line 2280 "y.tab.c"
     break;
 
   case 58: /* LOGICAL_AND_EXPRESSION: LOGICAL_AND_EXPRESSION LOGICAL_AND_OPERATOR INCLUSIVE_OR_EXPRESSION  */
-#line 277 "tinyc_yacc.y"
+#line 279 "tinyc_yacc.y"
                                                                                                             {
                                                                                                                 (yyval.node) = init_node("LOGICAL_AND_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                                 add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                                 add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                                             }
-#line 2288 "y.tab.c"
+#line 2290 "y.tab.c"
     break;
 
   case 59: /* LOGICAL_OR_EXPRESSION: LOGICAL_AND_EXPRESSION  */
-#line 284 "tinyc_yacc.y"
+#line 286 "tinyc_yacc.y"
                                                                                                         {   (yyval.node) = init_node("LOGICAL_OR_EXPRESSION", "", (yyvsp[0].node));}
-#line 2294 "y.tab.c"
+#line 2296 "y.tab.c"
     break;
 
   case 60: /* LOGICAL_OR_EXPRESSION: LOGICAL_OR_EXPRESSION LOGICAL_OR_OPERATOR LOGICAL_AND_EXPRESSION  */
-#line 285 "tinyc_yacc.y"
+#line 287 "tinyc_yacc.y"
                                                                                                         {
                                                                                                             (yyval.node) = init_node("LOGICAL_OR_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                             add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                             add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                                         }
-#line 2304 "y.tab.c"
+#line 2306 "y.tab.c"
     break;
 
   case 61: /* CONDITIONAL_EXPRESSION: LOGICAL_OR_EXPRESSION  */
-#line 292 "tinyc_yacc.y"
+#line 294 "tinyc_yacc.y"
                                                                                                                                     {   (yyval.node) = init_node("CONDITIONAL_EXPRESSION", "", (yyvsp[0].node));}
-#line 2310 "y.tab.c"
+#line 2312 "y.tab.c"
     break;
 
   case 62: /* CONDITIONAL_EXPRESSION: LOGICAL_OR_EXPRESSION TERNARY_OPERATOR EXPRESSION TERNARY_SEPERATOR CONDITIONAL_EXPRESSION  */
-#line 293 "tinyc_yacc.y"
+#line 295 "tinyc_yacc.y"
                                                                                                                                     {
                                                                                                                                         (yyval.node) = init_node("CONDITIONAL_EXPRESSION", "", (yyvsp[-4].node));
                                                                                                                                         add_next((yyvsp[-4].node), init_node((yyvsp[-3].val), "", NULL));
@@ -2318,335 +2320,335 @@ yyreduce:
                                                                                                                                         add_next((yyvsp[-4].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                                                         add_next((yyvsp[-4].node), (yyvsp[0].node));
                                                                                                                                     }
-#line 2322 "y.tab.c"
+#line 2324 "y.tab.c"
     break;
 
   case 63: /* ASSIGNMENT_EXPRESSION: CONDITIONAL_EXPRESSION  */
-#line 302 "tinyc_yacc.y"
+#line 304 "tinyc_yacc.y"
                                                                                                     {   (yyval.node) = init_node("ASSIGNMENT_EXPRESSION", "", (yyvsp[0].node));}
-#line 2328 "y.tab.c"
+#line 2330 "y.tab.c"
     break;
 
   case 64: /* ASSIGNMENT_EXPRESSION: UNARY_EXPRESSION ASSIGNMENT_OPERATOR ASSIGNMENT_EXPRESSION  */
-#line 303 "tinyc_yacc.y"
+#line 305 "tinyc_yacc.y"
                                                                                                     {
                                                                                                         (yyval.node) = init_node("ASSIGNMENT_EXPRESSION", "", (yyvsp[-2].node));
                                                                                                         add_next((yyvsp[-2].node), (yyvsp[-1].node));
                                                                                                         add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                                     }
-#line 2338 "y.tab.c"
+#line 2340 "y.tab.c"
     break;
 
   case 65: /* ASSIGNMENT_OPERATOR: EQUAL_OPERATOR  */
-#line 310 "tinyc_yacc.y"
+#line 312 "tinyc_yacc.y"
                                                             {(yyval.node) = init_node("ASSIGNMENT_OPERATOR", (yyvsp[0].val), NULL);}
-#line 2344 "y.tab.c"
+#line 2346 "y.tab.c"
     break;
 
   case 66: /* ASSIGNMENT_OPERATOR: ASSIGNMENT_OPERATORS  */
-#line 311 "tinyc_yacc.y"
+#line 313 "tinyc_yacc.y"
                                                             {(yyval.node) = init_node("ASSIGNMENT_OPERATOR", (yyvsp[0].val), NULL);}
-#line 2350 "y.tab.c"
+#line 2352 "y.tab.c"
     break;
 
   case 67: /* EXPRESSION: ASSIGNMENT_EXPRESSION  */
-#line 314 "tinyc_yacc.y"
+#line 316 "tinyc_yacc.y"
                                                                                 {   (yyval.node) = init_node("EXPRESSION", "", (yyvsp[0].node));}
-#line 2356 "y.tab.c"
+#line 2358 "y.tab.c"
     break;
 
   case 68: /* EXPRESSION: EXPRESSION COMMA ASSIGNMENT_EXPRESSION  */
-#line 315 "tinyc_yacc.y"
+#line 317 "tinyc_yacc.y"
                                                                                 {
                                                                                     (yyval.node) = init_node("EXPRESSION", "", (yyvsp[-2].node));
                                                                                     add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                     add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                 }
-#line 2366 "y.tab.c"
+#line 2368 "y.tab.c"
     break;
 
   case 69: /* CONSTANT_EXPRESSION: CONDITIONAL_EXPRESSION  */
-#line 322 "tinyc_yacc.y"
+#line 324 "tinyc_yacc.y"
                                                                 {   (yyval.node) = init_node("CONSTANT_EXPRESSION", "", (yyvsp[0].node));}
-#line 2372 "y.tab.c"
+#line 2374 "y.tab.c"
     break;
 
   case 70: /* DECLARATION: DECLARATION_SPECIFIERS INIT_DECLARATOR_LIST_OPT SEMI_COLON  */
-#line 327 "tinyc_yacc.y"
+#line 329 "tinyc_yacc.y"
                                                                                                     {   (yyval.node) = init_node("DECLARATION", "", (yyvsp[-2].node));
                                                                                                         add_next((yyvsp[-2].node), (yyvsp[-1].node));
                                                                                                         add_next((yyvsp[-2].node), init_node((yyvsp[0].val), "", NULL));
                                                                                                     }
-#line 2381 "y.tab.c"
+#line 2383 "y.tab.c"
     break;
 
   case 71: /* INIT_DECLARATOR_LIST_OPT: INIT_DECLARATOR_LIST  */
-#line 333 "tinyc_yacc.y"
+#line 335 "tinyc_yacc.y"
                                                             {   (yyval.node) = init_node("INIT_DECLARATOR_LIST_OPT", "", (yyvsp[0].node));}
-#line 2387 "y.tab.c"
+#line 2389 "y.tab.c"
     break;
 
   case 72: /* INIT_DECLARATOR_LIST_OPT: %empty  */
-#line 334 "tinyc_yacc.y"
+#line 336 "tinyc_yacc.y"
                                                             {   (yyval.node) = init_node("INIT_DECLARATOR_LIST_OPT", "", init_node("<empty>", "", NULL));}
-#line 2393 "y.tab.c"
+#line 2395 "y.tab.c"
     break;
 
   case 73: /* DECLARATION_SPECIFIERS: STORAGE_CLASS_SPECIFIER DECLARATION_SPECIFIERS_OPT  */
-#line 337 "tinyc_yacc.y"
+#line 339 "tinyc_yacc.y"
                                                                                             {   (yyval.node) = init_node("DECLARATION_SPECIFIERS", "", (yyvsp[-1].node)); add_next((yyvsp[-1].node), (yyvsp[0].node));}
-#line 2399 "y.tab.c"
+#line 2401 "y.tab.c"
     break;
 
   case 74: /* DECLARATION_SPECIFIERS: TYPE_SPECIFIER DECLARATION_SPECIFIERS_OPT  */
-#line 338 "tinyc_yacc.y"
+#line 340 "tinyc_yacc.y"
                                                                                             {   (yyval.node) = init_node("DECLARATION_SPECIFIERS", "", (yyvsp[-1].node)); add_next((yyvsp[-1].node), (yyvsp[0].node));}
-#line 2405 "y.tab.c"
+#line 2407 "y.tab.c"
     break;
 
   case 75: /* DECLARATION_SPECIFIERS: TYPE_QUALIFIER DECLARATION_SPECIFIERS_OPT  */
-#line 339 "tinyc_yacc.y"
+#line 341 "tinyc_yacc.y"
                                                                                             {   (yyval.node) = init_node("DECLARATION_SPECIFIERS", "", (yyvsp[-1].node)); add_next((yyvsp[-1].node), (yyvsp[0].node));}
-#line 2411 "y.tab.c"
+#line 2413 "y.tab.c"
     break;
 
   case 76: /* DECLARATION_SPECIFIERS: FUNCTION_SPECIFIER DECLARATION_SPECIFIERS_OPT  */
-#line 340 "tinyc_yacc.y"
+#line 342 "tinyc_yacc.y"
                                                                                             {   (yyval.node) = init_node("DECLARATION_SPECIFIERS", "", (yyvsp[-1].node)); add_next((yyvsp[-1].node), (yyvsp[0].node));}
-#line 2417 "y.tab.c"
+#line 2419 "y.tab.c"
     break;
 
   case 77: /* DECLARATION_SPECIFIERS_OPT: DECLARATION_SPECIFIERS  */
-#line 343 "tinyc_yacc.y"
+#line 345 "tinyc_yacc.y"
                                                                 {(yyval.node) = init_node("DECLARATION_SPECIFIERS_OPT", "", (yyvsp[0].node));}
-#line 2423 "y.tab.c"
+#line 2425 "y.tab.c"
     break;
 
   case 78: /* DECLARATION_SPECIFIERS_OPT: %empty  */
-#line 344 "tinyc_yacc.y"
+#line 346 "tinyc_yacc.y"
                                                                 {(yyval.node) = init_node("DECLARATION_SPECIFIERS_OPT", "", init_node("<empty>", "", NULL));}
-#line 2429 "y.tab.c"
+#line 2431 "y.tab.c"
     break;
 
   case 79: /* INIT_DECLARATOR_LIST: INIT_DECLARATOR  */
-#line 347 "tinyc_yacc.y"
+#line 349 "tinyc_yacc.y"
                                                                                     {   (yyval.node) = init_node("INIT_DECLARATOR_LIST", "", (yyvsp[0].node));}
-#line 2435 "y.tab.c"
+#line 2437 "y.tab.c"
     break;
 
   case 80: /* INIT_DECLARATOR_LIST: INIT_DECLARATOR_LIST COMMA INIT_DECLARATOR  */
-#line 348 "tinyc_yacc.y"
+#line 350 "tinyc_yacc.y"
                                                                                     {
                                                                                         (yyval.node) = init_node("INIT_DECLARATOR_LIST", "", (yyvsp[-2].node));
                                                                                         add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                         add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                     }
-#line 2445 "y.tab.c"
+#line 2447 "y.tab.c"
     break;
 
   case 81: /* INIT_DECLARATOR: DECLARATOR  */
-#line 355 "tinyc_yacc.y"
+#line 357 "tinyc_yacc.y"
                                                                                 {(yyval.node) = init_node("INIT_DECLARATOR", "", (yyvsp[0].node));}
-#line 2451 "y.tab.c"
+#line 2453 "y.tab.c"
     break;
 
   case 82: /* INIT_DECLARATOR: DECLARATOR EQUAL_OPERATOR INITIALIZER  */
-#line 356 "tinyc_yacc.y"
+#line 358 "tinyc_yacc.y"
                                                                                 {
                                                                                     (yyval.node) = init_node("INIT_DECLARATOR", "", (yyvsp[-2].node));
                                                                                     add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                     add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                 }
-#line 2461 "y.tab.c"
+#line 2463 "y.tab.c"
     break;
 
   case 83: /* STORAGE_CLASS_SPECIFIER: EXTERN  */
-#line 363 "tinyc_yacc.y"
+#line 365 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("STORAGE_CLASS_SPECIFIER", (yyvsp[0].val), NULL);}
-#line 2467 "y.tab.c"
+#line 2469 "y.tab.c"
     break;
 
   case 84: /* STORAGE_CLASS_SPECIFIER: STATIC  */
-#line 364 "tinyc_yacc.y"
+#line 366 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("STORAGE_CLASS_SPECIFIER", (yyvsp[0].val), NULL);}
-#line 2473 "y.tab.c"
+#line 2475 "y.tab.c"
     break;
 
   case 85: /* STORAGE_CLASS_SPECIFIER: AUTO  */
-#line 365 "tinyc_yacc.y"
+#line 367 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("STORAGE_CLASS_SPECIFIER", (yyvsp[0].val), NULL);}
-#line 2479 "y.tab.c"
+#line 2481 "y.tab.c"
     break;
 
   case 86: /* STORAGE_CLASS_SPECIFIER: REGISTER  */
-#line 366 "tinyc_yacc.y"
+#line 368 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("STORAGE_CLASS_SPECIFIER", (yyvsp[0].val), NULL);}
-#line 2485 "y.tab.c"
+#line 2487 "y.tab.c"
     break;
 
   case 87: /* TYPE_SPECIFIER: VOID  */
-#line 369 "tinyc_yacc.y"
+#line 371 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("TYPE_SPECIFIER", (yyvsp[0].val), NULL);}
-#line 2491 "y.tab.c"
+#line 2493 "y.tab.c"
     break;
 
   case 88: /* TYPE_SPECIFIER: CHAR  */
-#line 370 "tinyc_yacc.y"
+#line 372 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("TYPE_SPECIFIER", (yyvsp[0].val), NULL);}
-#line 2497 "y.tab.c"
+#line 2499 "y.tab.c"
     break;
 
   case 89: /* TYPE_SPECIFIER: SHORT  */
-#line 371 "tinyc_yacc.y"
+#line 373 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("TYPE_SPECIFIER", (yyvsp[0].val), NULL);}
-#line 2503 "y.tab.c"
+#line 2505 "y.tab.c"
     break;
 
   case 90: /* TYPE_SPECIFIER: INT  */
-#line 372 "tinyc_yacc.y"
+#line 374 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("TYPE_SPECIFIER", (yyvsp[0].val), NULL);}
-#line 2509 "y.tab.c"
+#line 2511 "y.tab.c"
     break;
 
   case 91: /* TYPE_SPECIFIER: LONG  */
-#line 373 "tinyc_yacc.y"
+#line 375 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("TYPE_SPECIFIER", (yyvsp[0].val), NULL);}
-#line 2515 "y.tab.c"
+#line 2517 "y.tab.c"
     break;
 
   case 92: /* TYPE_SPECIFIER: FLOAT  */
-#line 374 "tinyc_yacc.y"
+#line 376 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("TYPE_SPECIFIER", (yyvsp[0].val), NULL);}
-#line 2521 "y.tab.c"
+#line 2523 "y.tab.c"
     break;
 
   case 93: /* TYPE_SPECIFIER: DOUBLE  */
-#line 375 "tinyc_yacc.y"
+#line 377 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("TYPE_SPECIFIER", (yyvsp[0].val), NULL);}
-#line 2527 "y.tab.c"
+#line 2529 "y.tab.c"
     break;
 
   case 94: /* TYPE_SPECIFIER: SIGNED  */
-#line 376 "tinyc_yacc.y"
+#line 378 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("TYPE_SPECIFIER", (yyvsp[0].val), NULL);}
-#line 2533 "y.tab.c"
+#line 2535 "y.tab.c"
     break;
 
   case 95: /* TYPE_SPECIFIER: UNSIGNED  */
-#line 377 "tinyc_yacc.y"
+#line 379 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("TYPE_SPECIFIER", (yyvsp[0].val), NULL);}
-#line 2539 "y.tab.c"
+#line 2541 "y.tab.c"
     break;
 
   case 96: /* TYPE_SPECIFIER: BOOL  */
-#line 378 "tinyc_yacc.y"
+#line 380 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("TYPE_SPECIFIER", (yyvsp[0].val), NULL);}
-#line 2545 "y.tab.c"
+#line 2547 "y.tab.c"
     break;
 
   case 97: /* TYPE_SPECIFIER: COMPLEX  */
-#line 379 "tinyc_yacc.y"
+#line 381 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("TYPE_SPECIFIER", (yyvsp[0].val), NULL);}
-#line 2551 "y.tab.c"
+#line 2553 "y.tab.c"
     break;
 
   case 98: /* TYPE_SPECIFIER: IMAGINARY  */
-#line 380 "tinyc_yacc.y"
+#line 382 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("TYPE_SPECIFIER", (yyvsp[0].val), NULL);}
-#line 2557 "y.tab.c"
+#line 2559 "y.tab.c"
     break;
 
   case 99: /* SPECIFIER_QUALIFIER_LIST: TYPE_SPECIFIER SPECIFIER_QUALIFIER_LIST_OPT  */
-#line 383 "tinyc_yacc.y"
+#line 385 "tinyc_yacc.y"
                                                                                     {
                                                                                         (yyval.node) = init_node("SPECIFIER_QUALIFIER_LIST", "", (yyvsp[-1].node));
                                                                                         add_next((yyvsp[-1].node), (yyvsp[0].node));
                                                                                     }
-#line 2566 "y.tab.c"
+#line 2568 "y.tab.c"
     break;
 
   case 100: /* SPECIFIER_QUALIFIER_LIST: TYPE_QUALIFIER SPECIFIER_QUALIFIER_LIST_OPT  */
-#line 387 "tinyc_yacc.y"
+#line 389 "tinyc_yacc.y"
                                                                                     {
                                                                                         (yyval.node) = init_node("SPECIFIER_QUALIFIER_LIST", "", (yyvsp[-1].node));
                                                                                         add_next((yyvsp[-1].node), (yyvsp[0].node));
                                                                                     }
-#line 2575 "y.tab.c"
+#line 2577 "y.tab.c"
     break;
 
   case 101: /* SPECIFIER_QUALIFIER_LIST_OPT: SPECIFIER_QUALIFIER_LIST  */
-#line 393 "tinyc_yacc.y"
+#line 395 "tinyc_yacc.y"
                                                                     {(yyval.node) = init_node("SPECIFIER_QUALIFIER_LIST_OPT", "", (yyvsp[0].node));}
-#line 2581 "y.tab.c"
+#line 2583 "y.tab.c"
     break;
 
   case 102: /* SPECIFIER_QUALIFIER_LIST_OPT: %empty  */
-#line 394 "tinyc_yacc.y"
+#line 396 "tinyc_yacc.y"
                                                                     {(yyval.node) = init_node("SPECIFIER_QUALIFIER_LIST_OPT", "", init_node("<empty>", "", NULL));}
-#line 2587 "y.tab.c"
+#line 2589 "y.tab.c"
     break;
 
   case 103: /* TYPE_QUALIFIER: CONST  */
-#line 397 "tinyc_yacc.y"
+#line 399 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("TYPE_QUALIFIER", (yyvsp[0].val), NULL);}
-#line 2593 "y.tab.c"
+#line 2595 "y.tab.c"
     break;
 
   case 104: /* TYPE_QUALIFIER: RESTRICT  */
-#line 398 "tinyc_yacc.y"
+#line 400 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("TYPE_QUALIFIER", (yyvsp[0].val), NULL);}
-#line 2599 "y.tab.c"
+#line 2601 "y.tab.c"
     break;
 
   case 105: /* TYPE_QUALIFIER: VOLATILE  */
-#line 399 "tinyc_yacc.y"
+#line 401 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("TYPE_QUALIFIER", (yyvsp[0].val), NULL);}
-#line 2605 "y.tab.c"
+#line 2607 "y.tab.c"
     break;
 
   case 106: /* FUNCTION_SPECIFIER: INLINE  */
-#line 402 "tinyc_yacc.y"
+#line 404 "tinyc_yacc.y"
                                                     {(yyval.node) = init_node("FUNCTION_SPECIFIER", (yyvsp[0].val), NULL);}
-#line 2611 "y.tab.c"
+#line 2613 "y.tab.c"
     break;
 
   case 107: /* DECLARATOR: POINTER_OPT DIRECT_DECLARATOR  */
-#line 405 "tinyc_yacc.y"
+#line 407 "tinyc_yacc.y"
                                                                         {(yyval.node) = init_node("DECLARATOR", "", (yyvsp[-1].node)); add_next((yyvsp[-1].node), (yyvsp[0].node));}
-#line 2617 "y.tab.c"
+#line 2619 "y.tab.c"
     break;
 
   case 108: /* POINTER_OPT: POINTER  */
-#line 408 "tinyc_yacc.y"
+#line 410 "tinyc_yacc.y"
                                                 {(yyval.node) = init_node("POINTER_OPT", "", (yyvsp[0].node));}
-#line 2623 "y.tab.c"
+#line 2625 "y.tab.c"
     break;
 
   case 109: /* POINTER_OPT: %empty  */
-#line 409 "tinyc_yacc.y"
+#line 411 "tinyc_yacc.y"
                                                 {(yyval.node) = init_node("POINTER_OPT", "", init_node("<empty>", "", NULL));}
-#line 2629 "y.tab.c"
+#line 2631 "y.tab.c"
     break;
 
   case 110: /* DIRECT_DECLARATOR: IDENTIFIER  */
-#line 412 "tinyc_yacc.y"
+#line 414 "tinyc_yacc.y"
                                                                                                                                                         {(yyval.node) = init_node("DIRECT_DECLARATOR", "", init_node("IDENTIFIER", (yyvsp[0].val), NULL));}
-#line 2635 "y.tab.c"
+#line 2637 "y.tab.c"
     break;
 
   case 111: /* DIRECT_DECLARATOR: LEFT_PARANTHESIS DECLARATOR RIGHT_PARANTHESIS  */
-#line 413 "tinyc_yacc.y"
+#line 415 "tinyc_yacc.y"
                                                                                                                                                         {
                                                                                                                                                             tree_pointer temp = init_node((yyvsp[-2].val), "", NULL);
                                                                                                                                                             (yyval.node) = init_node("DIRECT_DECLARATOR", "", temp);
                                                                                                                                                             add_next(temp, (yyvsp[-1].node));
                                                                                                                                                             add_next(temp, init_node((yyvsp[0].val), "", NULL));
                                                                                                                                                         }
-#line 2646 "y.tab.c"
+#line 2648 "y.tab.c"
     break;
 
   case 112: /* DIRECT_DECLARATOR: DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION_OPT RIGHT_SQUARE_BRACKET  */
-#line 419 "tinyc_yacc.y"
+#line 421 "tinyc_yacc.y"
                                                                                                                                                         {
                                                                                                                                                             (yyval.node) = init_node("DIRECT_DECLARATOR", "", (yyvsp[-4].node));
                                                                                                                                                             add_next((yyvsp[-4].node), init_node((yyvsp[-3].val), "", NULL));
@@ -2654,11 +2656,11 @@ yyreduce:
                                                                                                                                                             add_next((yyvsp[-4].node), (yyvsp[-1].node));
                                                                                                                                                             add_next((yyvsp[-4].node), init_node((yyvsp[0].val), "", NULL));
                                                                                                                                                         }
-#line 2658 "y.tab.c"
+#line 2660 "y.tab.c"
     break;
 
   case 113: /* DIRECT_DECLARATOR: DIRECT_DECLARATOR LEFT_SQUARE_BRACKET STATIC TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION RIGHT_SQUARE_BRACKET  */
-#line 426 "tinyc_yacc.y"
+#line 428 "tinyc_yacc.y"
                                                                                                                                                         {
                                                                                                                                                             (yyval.node) = init_node("DIRECT_DECLARATOR", "", (yyvsp[-5].node));
                                                                                                                                                             add_next((yyvsp[-5].node), init_node((yyvsp[-4].val), "", NULL));
@@ -2667,11 +2669,11 @@ yyreduce:
                                                                                                                                                             add_next((yyvsp[-5].node), (yyvsp[-1].node));
                                                                                                                                                             add_next((yyvsp[-5].node), init_node((yyvsp[0].val), "", NULL));
                                                                                                                                                         }
-#line 2671 "y.tab.c"
+#line 2673 "y.tab.c"
     break;
 
   case 114: /* DIRECT_DECLARATOR: DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST STATIC ASSIGNMENT_EXPRESSION RIGHT_SQUARE_BRACKET  */
-#line 434 "tinyc_yacc.y"
+#line 436 "tinyc_yacc.y"
                                                                                                                                                         {
                                                                                                                                                             (yyval.node) = init_node("DIRECT_DECLARATOR", "", (yyvsp[-5].node));
                                                                                                                                                             add_next((yyvsp[-5].node), init_node((yyvsp[-4].val), "", NULL));
@@ -2680,11 +2682,11 @@ yyreduce:
                                                                                                                                                             add_next((yyvsp[-5].node), (yyvsp[-1].node));
                                                                                                                                                             add_next((yyvsp[-5].node), init_node((yyvsp[0].val), "", NULL));
                                                                                                                                                         }
-#line 2684 "y.tab.c"
+#line 2686 "y.tab.c"
     break;
 
   case 115: /* DIRECT_DECLARATOR: DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST_OPT MULTIPLICATION_OPERATOR RIGHT_SQUARE_BRACKET  */
-#line 442 "tinyc_yacc.y"
+#line 444 "tinyc_yacc.y"
                                                                                                                                                         {
                                                                                                                                                             (yyval.node) = init_node("DIRECT_DECLARATOR", "", (yyvsp[-4].node));
                                                                                                                                                             add_next((yyvsp[-4].node), init_node((yyvsp[-3].val), "", NULL));
@@ -2692,364 +2694,364 @@ yyreduce:
                                                                                                                                                             add_next((yyvsp[-4].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                                                                                             add_next((yyvsp[-4].node), init_node((yyvsp[0].val), "", NULL));
                                                                                                                                                         }
-#line 2696 "y.tab.c"
+#line 2698 "y.tab.c"
     break;
 
   case 116: /* DIRECT_DECLARATOR: DIRECT_DECLARATOR LEFT_PARANTHESIS PARAMETER_TYPE_LIST RIGHT_PARANTHESIS  */
-#line 449 "tinyc_yacc.y"
+#line 451 "tinyc_yacc.y"
                                                                                                                                                         {
                                                                                                                                                             (yyval.node) = init_node("DIRECT_DECLARATOR", "", (yyvsp[-3].node));
                                                                                                                                                             add_next((yyvsp[-3].node), init_node((yyvsp[-2].val), "", NULL));
                                                                                                                                                             add_next((yyvsp[-3].node), (yyvsp[-1].node));
                                                                                                                                                             add_next((yyvsp[-3].node), init_node((yyvsp[0].val), "", NULL));
                                                                                                                                                         }
-#line 2707 "y.tab.c"
+#line 2709 "y.tab.c"
     break;
 
   case 117: /* DIRECT_DECLARATOR: DIRECT_DECLARATOR LEFT_PARANTHESIS IDENTIFIER_LIST_OPT RIGHT_PARANTHESIS  */
-#line 455 "tinyc_yacc.y"
+#line 457 "tinyc_yacc.y"
                                                                                                                                                         {
                                                                                                                                                             (yyval.node) = init_node("DIRECT_DECLARATOR", "", (yyvsp[-3].node));
                                                                                                                                                             add_next((yyvsp[-3].node), init_node((yyvsp[-2].val), "", NULL));
                                                                                                                                                             add_next((yyvsp[-3].node), (yyvsp[-1].node));
                                                                                                                                                             add_next((yyvsp[-3].node), init_node((yyvsp[0].val), "", NULL));
                                                                                                                                                         }
-#line 2718 "y.tab.c"
+#line 2720 "y.tab.c"
     break;
 
   case 118: /* ASSIGNMENT_EXPRESSION_OPT: ASSIGNMENT_EXPRESSION  */
-#line 463 "tinyc_yacc.y"
+#line 465 "tinyc_yacc.y"
                                                                 {(yyval.node) = init_node("ASSIGNMENT_EXPRESSION_OPT", "", (yyvsp[0].node));}
-#line 2724 "y.tab.c"
+#line 2726 "y.tab.c"
     break;
 
   case 119: /* ASSIGNMENT_EXPRESSION_OPT: %empty  */
-#line 464 "tinyc_yacc.y"
+#line 466 "tinyc_yacc.y"
                                                                 {(yyval.node) = init_node("ASSIGNMENT_EXPRESSION_OPT", "", init_node("<empty>", "", NULL));}
-#line 2730 "y.tab.c"
+#line 2732 "y.tab.c"
     break;
 
   case 120: /* POINTER: MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT  */
-#line 467 "tinyc_yacc.y"
+#line 469 "tinyc_yacc.y"
                                                                                                 {
                                                                                                     tree_pointer temp = init_node((yyvsp[-1].val), "", NULL);
                                                                                                     (yyval.node) = init_node("POINTER", "", temp);
                                                                                                     add_next(temp, (yyvsp[0].node));
                                                                                                 }
-#line 2740 "y.tab.c"
+#line 2742 "y.tab.c"
     break;
 
   case 121: /* POINTER: MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT POINTER  */
-#line 472 "tinyc_yacc.y"
+#line 474 "tinyc_yacc.y"
                                                                                                 {
                                                                                                     tree_pointer temp = init_node((yyvsp[-2].val), "", NULL);
                                                                                                     (yyval.node) = init_node("POINTER", "", temp);
                                                                                                     add_next(temp, (yyvsp[-1].node));
                                                                                                     add_next(temp, (yyvsp[0].node));
                                                                                                 }
-#line 2751 "y.tab.c"
+#line 2753 "y.tab.c"
     break;
 
   case 122: /* TYPE_QUALIFIER_LIST: TYPE_QUALIFIER  */
-#line 480 "tinyc_yacc.y"
+#line 482 "tinyc_yacc.y"
                                                                             {(yyval.node) = init_node("TYPE_QUALIFIER_LIST", "", (yyvsp[0].node));}
-#line 2757 "y.tab.c"
+#line 2759 "y.tab.c"
     break;
 
   case 123: /* TYPE_QUALIFIER_LIST: TYPE_QUALIFIER_LIST TYPE_QUALIFIER  */
-#line 481 "tinyc_yacc.y"
+#line 483 "tinyc_yacc.y"
                                                                             {(yyval.node) = init_node("TYPE_QUALIFIER_LIST", "", (yyvsp[-1].node)); add_next((yyvsp[-1].node), (yyvsp[0].node));}
-#line 2763 "y.tab.c"
+#line 2765 "y.tab.c"
     break;
 
   case 124: /* TYPE_QUALIFIER_LIST_OPT: TYPE_QUALIFIER_LIST  */
-#line 484 "tinyc_yacc.y"
+#line 486 "tinyc_yacc.y"
                                                                                     {(yyval.node) = init_node("TYPE_QUALIFIER_LIST_OPT", "", (yyvsp[0].node));}
-#line 2769 "y.tab.c"
+#line 2771 "y.tab.c"
     break;
 
   case 125: /* TYPE_QUALIFIER_LIST_OPT: %empty  */
-#line 485 "tinyc_yacc.y"
+#line 487 "tinyc_yacc.y"
                                                                                     {(yyval.node) = init_node("TYPE_QUALIFIER_LIST_OPT", "", init_node("<empty>", "", NULL));}
-#line 2775 "y.tab.c"
+#line 2777 "y.tab.c"
     break;
 
   case 126: /* PARAMETER_TYPE_LIST: PARAMETER_LIST  */
-#line 488 "tinyc_yacc.y"
+#line 490 "tinyc_yacc.y"
                                                                         {(yyval.node) = init_node("PARAMETER_TYPE_LIST", "", (yyvsp[0].node));}
-#line 2781 "y.tab.c"
+#line 2783 "y.tab.c"
     break;
 
   case 127: /* PARAMETER_TYPE_LIST: PARAMETER_LIST COMMA TRIPLE_DOT  */
-#line 489 "tinyc_yacc.y"
+#line 491 "tinyc_yacc.y"
                                                                         {
                                                                             (yyval.node) = init_node("PARAMETER_TYPE_LIST", "", (yyvsp[-2].node));
                                                                             add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                             add_next((yyvsp[-2].node), init_node((yyvsp[0].val), "", NULL));
                                                                         }
-#line 2791 "y.tab.c"
+#line 2793 "y.tab.c"
     break;
 
   case 128: /* PARAMETER_LIST: PARAMETER_DECLARATION  */
-#line 496 "tinyc_yacc.y"
+#line 498 "tinyc_yacc.y"
                                                                                     {(yyval.node) = init_node("PARAMETER_LIST", "", (yyvsp[0].node));}
-#line 2797 "y.tab.c"
+#line 2799 "y.tab.c"
     break;
 
   case 129: /* PARAMETER_LIST: PARAMETER_LIST COMMA PARAMETER_DECLARATION  */
-#line 497 "tinyc_yacc.y"
+#line 499 "tinyc_yacc.y"
                                                                                     {
                                                                                         (yyval.node) = init_node("PARAMETER_LIST", "", (yyvsp[-2].node));
                                                                                         add_next((yyvsp[-2].node), init_node((yyvsp[-1].val), "", NULL));
                                                                                         add_next((yyvsp[-2].node), (yyvsp[0].node));
                                                                                     }
-#line 2807 "y.tab.c"
+#line 2809 "y.tab.c"
     break;
 
   case 130: /* PARAMETER_DECLARATION: DECLARATION_SPECIFIERS DECLARATOR  */
-#line 504 "tinyc_yacc.y"
+#line 506 "tinyc_yacc.y"
                                                                                     { (yyval.node) = init_node("PARAMETER_DECLARATION","",(yyvsp[-1].node)); add_next((yyvsp[-1].node),(yyvsp[0].node) ); }
-#line 2813 "y.tab.c"
+#line 2815 "y.tab.c"
     break;
 
   case 131: /* PARAMETER_DECLARATION: DECLARATION_SPECIFIERS  */
-#line 505 "tinyc_yacc.y"
+#line 507 "tinyc_yacc.y"
                                                                                     { (yyval.node) = init_node("PARAMETER_DECLARATION","",(yyvsp[0].node)); }
-#line 2819 "y.tab.c"
+#line 2821 "y.tab.c"
     break;
 
   case 132: /* IDENTIFIER_LIST: IDENTIFIER  */
-#line 508 "tinyc_yacc.y"
+#line 510 "tinyc_yacc.y"
                                                                                     {   (yyval.node) = init_node("IDENTIFIER_LIST","", init_node("IDENTIFIER",(yyvsp[0].val),NULL)); }
-#line 2825 "y.tab.c"
+#line 2827 "y.tab.c"
     break;
 
   case 133: /* IDENTIFIER_LIST: IDENTIFIER_LIST COMMA IDENTIFIER  */
-#line 509 "tinyc_yacc.y"
+#line 511 "tinyc_yacc.y"
                                                                                     {   (yyval.node) = init_node("IDENTIFIER_LIST","",(yyvsp[-2].node));
                                                                                         add_next((yyvsp[-2].node), init_node((yyvsp[-1].val),"",NULL) );
                                                                                         add_next((yyvsp[-2].node), init_node((yyvsp[0].val),"",NULL) );
                                                                                     }
-#line 2834 "y.tab.c"
+#line 2836 "y.tab.c"
     break;
 
   case 134: /* IDENTIFIER_LIST_OPT: IDENTIFIER_LIST  */
-#line 515 "tinyc_yacc.y"
+#line 517 "tinyc_yacc.y"
                                                             { (yyval.node) = init_node("IDENTIFIER_LIST_OPT","",(yyvsp[0].node)); }
-#line 2840 "y.tab.c"
+#line 2842 "y.tab.c"
     break;
 
   case 135: /* IDENTIFIER_LIST_OPT: %empty  */
-#line 516 "tinyc_yacc.y"
+#line 518 "tinyc_yacc.y"
                                         { (yyval.node) = init_node("IDENTIFIER_LIST_OPT","",init_node("<empty>","",NULL)); }
-#line 2846 "y.tab.c"
+#line 2848 "y.tab.c"
     break;
 
   case 136: /* TYPE_NAME: SPECIFIER_QUALIFIER_LIST  */
-#line 519 "tinyc_yacc.y"
+#line 521 "tinyc_yacc.y"
                                                                                     { (yyval.node) = init_node("TYPE_NAME","",(yyvsp[0].node)); }
-#line 2852 "y.tab.c"
+#line 2854 "y.tab.c"
     break;
 
   case 137: /* INITIALIZER: ASSIGNMENT_EXPRESSION  */
-#line 522 "tinyc_yacc.y"
+#line 524 "tinyc_yacc.y"
                                                                                     { (yyval.node) = init_node("INITIALIZER","",(yyvsp[0].node)); }
-#line 2858 "y.tab.c"
+#line 2860 "y.tab.c"
     break;
 
   case 138: /* INITIALIZER: LEFT_CURLY_BRACKET INITIALIZER_LIST RIGHT_CURLY_BRACKET  */
-#line 523 "tinyc_yacc.y"
+#line 525 "tinyc_yacc.y"
                                                                                                    {    tree_pointer temp = init_node((yyvsp[-2].val),"",NULL);
                                                                                                         (yyval.node) = init_node("INITIALIZER","",temp);
                                                                                                         add_next(temp, (yyvsp[-1].node) );
                                                                                                         add_next(temp, init_node((yyvsp[0].val),"",NULL) );
                                                                                                    }
-#line 2868 "y.tab.c"
+#line 2870 "y.tab.c"
     break;
 
   case 139: /* INITIALIZER: LEFT_CURLY_BRACKET INITIALIZER_LIST COMMA RIGHT_CURLY_BRACKET  */
-#line 528 "tinyc_yacc.y"
+#line 530 "tinyc_yacc.y"
                                                                                                          { }
-#line 2874 "y.tab.c"
+#line 2876 "y.tab.c"
     break;
 
   case 140: /* INITIALIZER_LIST: DESIGNATION_OPT INITIALIZER  */
-#line 531 "tinyc_yacc.y"
+#line 533 "tinyc_yacc.y"
                                                                        {    (yyval.node) = init_node("INITIALIZER_LIST","",(yyvsp[-1].node)); 
                                                                             add_next((yyvsp[-1].node), (yyvsp[0].node) );
                                                                        }
-#line 2882 "y.tab.c"
+#line 2884 "y.tab.c"
     break;
 
   case 141: /* INITIALIZER_LIST: INITIALIZER_LIST COMMA DESIGNATION_OPT INITIALIZER  */
-#line 534 "tinyc_yacc.y"
+#line 536 "tinyc_yacc.y"
                                                                                             {   (yyval.node) = init_node("INITIALIZER_LIST","",(yyvsp[-3].node)); 
                                                                                                 add_next((yyvsp[-3].node), init_node((yyvsp[-2].val),"",NULL) );
                                                                                                 add_next((yyvsp[-3].node), (yyvsp[-1].node) );
                                                                                             }
-#line 2891 "y.tab.c"
+#line 2893 "y.tab.c"
     break;
 
   case 142: /* DESIGNATION: DESIGNATOR_LIST EQUAL_OPERATOR  */
-#line 540 "tinyc_yacc.y"
+#line 542 "tinyc_yacc.y"
                                                                         {   (yyval.node) = init_node("DESIGNATION","",(yyvsp[-1].node)); 
                                                                             add_next((yyvsp[-1].node), init_node((yyvsp[0].val),"",NULL) );
                                                                         }
-#line 2899 "y.tab.c"
+#line 2901 "y.tab.c"
     break;
 
   case 143: /* DESIGNATION_OPT: DESIGNATION  */
-#line 544 "tinyc_yacc.y"
+#line 546 "tinyc_yacc.y"
                                                      { (yyval.node) = init_node("DESIGNATION_OPT","",(yyvsp[0].node)); }
-#line 2905 "y.tab.c"
+#line 2907 "y.tab.c"
     break;
 
   case 144: /* DESIGNATION_OPT: %empty  */
-#line 545 "tinyc_yacc.y"
+#line 547 "tinyc_yacc.y"
                                                      { (yyval.node) = init_node("DESIGNATION_OPT","",init_node("<empty>","",NULL)); }
-#line 2911 "y.tab.c"
+#line 2913 "y.tab.c"
     break;
 
   case 145: /* DESIGNATOR_LIST: DESIGNATOR  */
-#line 548 "tinyc_yacc.y"
+#line 550 "tinyc_yacc.y"
                                                                                     { (yyval.node) = init_node("DESIGNATOR_LIST","",(yyvsp[0].node)); }
-#line 2917 "y.tab.c"
+#line 2919 "y.tab.c"
     break;
 
   case 146: /* DESIGNATOR_LIST: DESIGNATOR_LIST DESIGNATOR  */
-#line 549 "tinyc_yacc.y"
+#line 551 "tinyc_yacc.y"
                                                                                     { (yyval.node) = init_node("DESIGNATOR_LIST","",(yyvsp[-1].node)); add_next((yyvsp[-1].node),(yyvsp[0].node)); }
-#line 2923 "y.tab.c"
+#line 2925 "y.tab.c"
     break;
 
   case 147: /* DESIGNATOR: LEFT_SQUARE_BRACKET CONSTANT_EXPRESSION RIGHT_SQUARE_BRACKET  */
-#line 552 "tinyc_yacc.y"
+#line 554 "tinyc_yacc.y"
                                                                                                       {     tree_pointer temp = init_node((yyvsp[-2].val),"",NULL);
                                                                                                             (yyval.node) = init_node("DESIGNATOR","",temp); 
                                                                                                             add_next(temp, (yyvsp[-1].node) );
                                                                                                             add_next(temp, init_node((yyvsp[0].val),"",NULL) );
                                                                                                       }
-#line 2933 "y.tab.c"
+#line 2935 "y.tab.c"
     break;
 
   case 148: /* DESIGNATOR: DOT IDENTIFIER  */
-#line 557 "tinyc_yacc.y"
+#line 559 "tinyc_yacc.y"
                                                             {   tree_pointer temp = init_node((yyvsp[-1].val),"",NULL); 
                                                                 (yyval.node) = init_node("DESIGNATOR","",temp); 
                                                                 add_next(temp, init_node("IDENTIFIER",(yyvsp[0].val),NULL) );
                                                             }
-#line 2942 "y.tab.c"
+#line 2944 "y.tab.c"
     break;
 
   case 149: /* STATEMENT: LABELED_STATEMENT  */
-#line 564 "tinyc_yacc.y"
+#line 566 "tinyc_yacc.y"
                                  { (yyval.node) = init_node("STATEMENT","",(yyvsp[0].node)); }
-#line 2948 "y.tab.c"
+#line 2950 "y.tab.c"
     break;
 
   case 150: /* STATEMENT: COMPOUND_STATEMENT  */
-#line 565 "tinyc_yacc.y"
+#line 567 "tinyc_yacc.y"
                                  { (yyval.node) = init_node("STATEMENT","",(yyvsp[0].node)); }
-#line 2954 "y.tab.c"
+#line 2956 "y.tab.c"
     break;
 
   case 151: /* STATEMENT: EXPRESSION_STATEMENT  */
-#line 566 "tinyc_yacc.y"
+#line 568 "tinyc_yacc.y"
                                  { (yyval.node) = init_node("STATEMENT","",(yyvsp[0].node)); }
-#line 2960 "y.tab.c"
+#line 2962 "y.tab.c"
     break;
 
   case 152: /* STATEMENT: SELECTION_STATEMENT  */
-#line 567 "tinyc_yacc.y"
+#line 569 "tinyc_yacc.y"
                                  { (yyval.node) = init_node("STATEMENT","",(yyvsp[0].node)); }
-#line 2966 "y.tab.c"
+#line 2968 "y.tab.c"
     break;
 
   case 153: /* STATEMENT: ITERATION_STATEMENT  */
-#line 568 "tinyc_yacc.y"
+#line 570 "tinyc_yacc.y"
                                  { (yyval.node) = init_node("STATEMENT","",(yyvsp[0].node)); }
-#line 2972 "y.tab.c"
+#line 2974 "y.tab.c"
     break;
 
   case 154: /* STATEMENT: JUMP_STATEMENT  */
-#line 569 "tinyc_yacc.y"
+#line 571 "tinyc_yacc.y"
                                  { (yyval.node) = init_node("STATEMENT","",(yyvsp[0].node)); }
-#line 2978 "y.tab.c"
+#line 2980 "y.tab.c"
     break;
 
   case 155: /* LABELED_STATEMENT: IDENTIFIER TERNARY_SEPERATOR STATEMENT  */
-#line 572 "tinyc_yacc.y"
+#line 574 "tinyc_yacc.y"
                                                             {   tree_pointer temp = init_node("IDENTIFIER",(yyvsp[-2].val),NULL); 
                                                                 (yyval.node) = init_node("LABELED_STATEMENT","",temp); 
                                                                 add_next(temp, init_node((yyvsp[-1].val),"",NULL) );
                                                                 add_next(temp, (yyvsp[0].node) );
                                                             }
-#line 2988 "y.tab.c"
+#line 2990 "y.tab.c"
     break;
 
   case 156: /* LABELED_STATEMENT: CASE CONSTANT_EXPRESSION TERNARY_SEPERATOR STATEMENT  */
-#line 577 "tinyc_yacc.y"
+#line 579 "tinyc_yacc.y"
                                                                          {  tree_pointer temp = init_node((yyvsp[-3].val),"",NULL); 
                                                                             (yyval.node) = init_node("LABELED_STATEMENT","",temp); 
                                                                             add_next(temp, (yyvsp[-2].node) );
                                                                             add_next(temp, init_node((yyvsp[-1].val),"",NULL) );
                                                                             add_next(temp, (yyvsp[0].node) );
                                                                          }
-#line 2999 "y.tab.c"
+#line 3001 "y.tab.c"
     break;
 
   case 157: /* LABELED_STATEMENT: DEFAULT TERNARY_SEPERATOR STATEMENT  */
-#line 583 "tinyc_yacc.y"
+#line 585 "tinyc_yacc.y"
                                                         {   tree_pointer temp = init_node((yyvsp[-2].val),"",NULL); 
                                                             (yyval.node) = init_node("LABELED_STATEMENT","",temp); 
                                                             add_next(temp, init_node((yyvsp[-1].val),"",NULL) );
                                                             add_next(temp, (yyvsp[0].node) );
                                                         }
-#line 3009 "y.tab.c"
+#line 3011 "y.tab.c"
     break;
 
   case 158: /* COMPOUND_STATEMENT: LEFT_CURLY_BRACKET BLOCK_ITEM_LIST_OPT RIGHT_CURLY_BRACKET  */
-#line 590 "tinyc_yacc.y"
+#line 592 "tinyc_yacc.y"
                                                                                 {   tree_pointer temp = init_node((yyvsp[-2].val),"",NULL); 
                                                                                     (yyval.node) = init_node("COMPOUND_STATEMENT","",temp); 
                                                                                     add_next(temp, (yyvsp[-1].node) );
                                                                                     add_next(temp, init_node((yyvsp[0].val),"",NULL) );
                                                                                 }
-#line 3019 "y.tab.c"
+#line 3021 "y.tab.c"
     break;
 
   case 159: /* BLOCK_ITEM_LIST: BLOCK_ITEM  */
-#line 597 "tinyc_yacc.y"
+#line 599 "tinyc_yacc.y"
                                              { (yyval.node) = init_node("BLOCK_ITEM_LIST","",(yyvsp[0].node));}
-#line 3025 "y.tab.c"
+#line 3027 "y.tab.c"
     break;
 
   case 160: /* BLOCK_ITEM_LIST: BLOCK_ITEM_LIST BLOCK_ITEM  */
-#line 598 "tinyc_yacc.y"
+#line 600 "tinyc_yacc.y"
                                              { (yyval.node) = init_node("BLOCK_ITEM_LIST","",(yyvsp[-1].node)); add_next((yyvsp[-1].node),(yyvsp[0].node)); }
-#line 3031 "y.tab.c"
+#line 3033 "y.tab.c"
     break;
 
   case 161: /* BLOCK_ITEM: DECLARATION  */
-#line 601 "tinyc_yacc.y"
+#line 603 "tinyc_yacc.y"
                          { (yyval.node) = init_node("BLOCK_ITEM","",(yyvsp[0].node)); }
-#line 3037 "y.tab.c"
+#line 3039 "y.tab.c"
     break;
 
   case 162: /* BLOCK_ITEM: STATEMENT  */
-#line 602 "tinyc_yacc.y"
+#line 604 "tinyc_yacc.y"
                          { (yyval.node) = init_node("BLOCK_ITEM","",(yyvsp[0].node)); }
-#line 3043 "y.tab.c"
+#line 3045 "y.tab.c"
     break;
 
   case 163: /* EXPRESSION_STATEMENT: EXPRESSION_OPT SEMI_COLON  */
-#line 605 "tinyc_yacc.y"
+#line 607 "tinyc_yacc.y"
                                                  { (yyval.node) = init_node("EXPRESSION_STATEMENT","",(yyvsp[-1].node)); add_next((yyvsp[-1].node),init_node((yyvsp[0].val),"",NULL)); }
-#line 3049 "y.tab.c"
+#line 3051 "y.tab.c"
     break;
 
   case 164: /* SELECTION_STATEMENT: IF LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT  */
-#line 608 "tinyc_yacc.y"
+#line 610 "tinyc_yacc.y"
                                                                                  {  tree_pointer temp = init_node((yyvsp[-4].val),"",NULL); 
                                                                                     (yyval.node) = init_node("SELECTION_STATEMENT","",temp); 
                                                                                     add_next(temp, init_node((yyvsp[-3].val),"",NULL) );
@@ -3057,11 +3059,11 @@ yyreduce:
                                                                                     add_next(temp, init_node((yyvsp[-1].val),"",NULL) );
                                                                                     add_next(temp, (yyvsp[0].node) );
                                                                                  }
-#line 3061 "y.tab.c"
+#line 3063 "y.tab.c"
     break;
 
   case 165: /* SELECTION_STATEMENT: IF LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT ELSE STATEMENT  */
-#line 615 "tinyc_yacc.y"
+#line 617 "tinyc_yacc.y"
                                                                                                 {   tree_pointer temp = init_node((yyvsp[-6].val),"",NULL); 
                                                                                                     (yyval.node) = init_node("SELECTION_STATEMENT","",temp); 
                                                                                                     add_next(temp, init_node((yyvsp[-5].val),"",NULL) );
@@ -3071,11 +3073,11 @@ yyreduce:
                                                                                                     add_next(temp, init_node((yyvsp[-1].val),"",NULL) );
                                                                                                     add_next(temp, (yyvsp[0].node) );
                                                                                                 }
-#line 3075 "y.tab.c"
+#line 3077 "y.tab.c"
     break;
 
   case 166: /* SELECTION_STATEMENT: SWITCH LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT  */
-#line 624 "tinyc_yacc.y"
+#line 626 "tinyc_yacc.y"
                                                                                      {  tree_pointer temp = init_node((yyvsp[-4].val),"",NULL); 
                                                                                         (yyval.node) = init_node("SELECTION_STATEMENT","",temp); 
                                                                                         add_next(temp, init_node((yyvsp[-3].val),"",NULL) );
@@ -3083,11 +3085,11 @@ yyreduce:
                                                                                         add_next(temp, init_node((yyvsp[-1].val),"",NULL) );
                                                                                         add_next(temp, (yyvsp[0].node) );
                                                                                      }
-#line 3087 "y.tab.c"
+#line 3089 "y.tab.c"
     break;
 
   case 167: /* ITERATION_STATEMENT: WHILE LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT  */
-#line 633 "tinyc_yacc.y"
+#line 635 "tinyc_yacc.y"
                                                                                     {  tree_pointer temp = init_node((yyvsp[-4].val),"",NULL); 
                                                                                         (yyval.node) = init_node("ITERATION_STATEMENT","",temp); 
                                                                                         add_next(temp, init_node((yyvsp[-3].val),"",NULL) );
@@ -3095,11 +3097,11 @@ yyreduce:
                                                                                         add_next(temp, init_node((yyvsp[-1].val),"",NULL) );
                                                                                         add_next(temp, (yyvsp[0].node) );
                                                                                      }
-#line 3099 "y.tab.c"
+#line 3101 "y.tab.c"
     break;
 
   case 168: /* ITERATION_STATEMENT: DO STATEMENT WHILE LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS SEMI_COLON  */
-#line 640 "tinyc_yacc.y"
+#line 642 "tinyc_yacc.y"
                                                                                                   {     tree_pointer temp = init_node((yyvsp[-6].val),"",NULL); 
                                                                                                         (yyval.node) = init_node("ITERATION_STATEMENT","",temp); 
                                                                                                         add_next(temp, (yyvsp[-5].node) );
@@ -3109,11 +3111,11 @@ yyreduce:
                                                                                                         add_next(temp, init_node((yyvsp[-1].val),"",NULL) );
                                                                                                         add_next(temp, init_node((yyvsp[0].val),"",NULL) );
                                                                                                   }
-#line 3113 "y.tab.c"
+#line 3115 "y.tab.c"
     break;
 
   case 169: /* ITERATION_STATEMENT: FOR LEFT_PARANTHESIS EXPRESSION_OPT SEMI_COLON EXPRESSION_OPT SEMI_COLON EXPRESSION_OPT RIGHT_PARANTHESIS STATEMENT  */
-#line 649 "tinyc_yacc.y"
+#line 651 "tinyc_yacc.y"
                                                                                                                                           {     tree_pointer temp = init_node((yyvsp[-8].val),"",NULL); 
                                                                                                                                                 (yyval.node) = init_node("ITERATION_STATEMENT","",temp); 
                                                                                                                                                 add_next(temp, init_node((yyvsp[-7].val),"",NULL) );
@@ -3125,11 +3127,11 @@ yyreduce:
                                                                                                                                                 add_next(temp, init_node((yyvsp[-1].val),"",NULL) );
                                                                                                                                                 add_next(temp, (yyvsp[0].node) );
                                                                                                                                           }
-#line 3129 "y.tab.c"
+#line 3131 "y.tab.c"
     break;
 
   case 170: /* ITERATION_STATEMENT: FOR LEFT_PARANTHESIS DECLARATION EXPRESSION_OPT SEMI_COLON EXPRESSION_OPT RIGHT_PARANTHESIS STATEMENT  */
-#line 660 "tinyc_yacc.y"
+#line 662 "tinyc_yacc.y"
                                                                                                                             {   tree_pointer temp = init_node((yyvsp[-7].val),"",NULL); 
                                                                                                                                 (yyval.node) = init_node("ITERATION_STATEMENT","",temp); 
                                                                                                                                 add_next(temp, init_node((yyvsp[-6].val),"",NULL) );
@@ -3140,132 +3142,132 @@ yyreduce:
                                                                                                                                 add_next(temp, init_node((yyvsp[-1].val),"",NULL) );
                                                                                                                                 add_next(temp, (yyvsp[0].node) );
                                                                                                                             }
-#line 3144 "y.tab.c"
+#line 3146 "y.tab.c"
     break;
 
   case 171: /* JUMP_STATEMENT: GOTO IDENTIFIER SEMI_COLON  */
-#line 672 "tinyc_yacc.y"
+#line 674 "tinyc_yacc.y"
                                              {   tree_pointer temp = init_node((yyvsp[-2].val),"",NULL);
                                                 (yyval.node) = init_node("JUMP_STATEMENT","",temp) ; 
                                                 add_next(temp,init_node((yyvsp[-1].val),"",NULL)); 
                                                 add_next(temp,init_node((yyvsp[0].val),"",NULL));  
                                              }
-#line 3154 "y.tab.c"
+#line 3156 "y.tab.c"
     break;
 
   case 172: /* JUMP_STATEMENT: CONTINUE SEMI_COLON  */
-#line 677 "tinyc_yacc.y"
+#line 679 "tinyc_yacc.y"
                                              {  tree_pointer temp = init_node((yyvsp[-1].val),"",NULL);
                                                 (yyval.node) = init_node("JUMP_STATEMENT","",temp) ; 
                                                 add_next(temp,init_node((yyvsp[0].val),"",NULL));
                                              }
-#line 3163 "y.tab.c"
+#line 3165 "y.tab.c"
     break;
 
   case 173: /* JUMP_STATEMENT: BREAK SEMI_COLON  */
-#line 681 "tinyc_yacc.y"
+#line 683 "tinyc_yacc.y"
                                              {  tree_pointer temp = init_node((yyvsp[-1].val),"",NULL);
                                                 (yyval.node) = init_node("JUMP_STATEMENT","",temp) ; 
                                                 add_next(temp,init_node((yyvsp[0].val),"",NULL));
                                              }
-#line 3172 "y.tab.c"
+#line 3174 "y.tab.c"
     break;
 
   case 174: /* JUMP_STATEMENT: RETURN EXPRESSION_OPT SEMI_COLON  */
-#line 685 "tinyc_yacc.y"
+#line 687 "tinyc_yacc.y"
                                                   {  tree_pointer temp = init_node((yyvsp[-2].val),"",NULL);
                                                      (yyval.node) = init_node("JUMP_STATEMENT","",temp) ; 
                                                      add_next(temp,(yyvsp[-1].node));
                                                      add_next(temp,init_node((yyvsp[0].val),"",NULL));
                                                   }
-#line 3182 "y.tab.c"
+#line 3184 "y.tab.c"
     break;
 
   case 175: /* BLOCK_ITEM_LIST_OPT: BLOCK_ITEM_LIST  */
-#line 693 "tinyc_yacc.y"
+#line 695 "tinyc_yacc.y"
                                       { (yyval.node) = init_node("BLOCK_ITEM_LIST_OPT","",(yyvsp[0].node)); }
-#line 3188 "y.tab.c"
+#line 3190 "y.tab.c"
     break;
 
   case 176: /* BLOCK_ITEM_LIST_OPT: %empty  */
-#line 694 "tinyc_yacc.y"
+#line 696 "tinyc_yacc.y"
                                       { (yyval.node) = init_node("BLOCK_ITEM_LIST_OPT","",init_node("<empty>","",NULL)); }
-#line 3194 "y.tab.c"
+#line 3196 "y.tab.c"
     break;
 
   case 177: /* EXPRESSION_OPT: EXPRESSION  */
-#line 697 "tinyc_yacc.y"
+#line 699 "tinyc_yacc.y"
                              { (yyval.node) = init_node("EXPRESSION_OPT","",(yyvsp[0].node)); }
-#line 3200 "y.tab.c"
+#line 3202 "y.tab.c"
     break;
 
   case 178: /* EXPRESSION_OPT: %empty  */
-#line 698 "tinyc_yacc.y"
+#line 700 "tinyc_yacc.y"
                              { (yyval.node) = init_node("EXPRESSION_OPT","",init_node("<empty>","",NULL)); }
-#line 3206 "y.tab.c"
+#line 3208 "y.tab.c"
     break;
 
   case 179: /* TRANSLATIONAL_UNIT: EXTERNAL_DECLARATION  */
-#line 703 "tinyc_yacc.y"
+#line 705 "tinyc_yacc.y"
                                                                         {   parse_tree = init_node("TRANSLATIONAL_UNIT","",(yyvsp[0].node));
                                                                             (yyval.node)=parse_tree;
                                                                         }
-#line 3214 "y.tab.c"
+#line 3216 "y.tab.c"
     break;
 
   case 180: /* TRANSLATIONAL_UNIT: TRANSLATIONAL_UNIT EXTERNAL_DECLARATION  */
-#line 706 "tinyc_yacc.y"
+#line 708 "tinyc_yacc.y"
                                                                         {   parse_tree = init_node("TRANSLATIONAL_UNIT","",(yyvsp[-1].node));
                                                                             add_next((yyvsp[-1].node),(yyvsp[0].node));
                                                                             (yyval.node) = parse_tree;
                                                                         }
-#line 3223 "y.tab.c"
+#line 3225 "y.tab.c"
     break;
 
   case 181: /* EXTERNAL_DECLARATION: FUNCTION_DEFINITION  */
-#line 712 "tinyc_yacc.y"
+#line 714 "tinyc_yacc.y"
                                                                         { (yyval.node) = init_node("EXTERNAL_DECLARATION","",(yyvsp[0].node)); }
-#line 3229 "y.tab.c"
+#line 3231 "y.tab.c"
     break;
 
   case 182: /* EXTERNAL_DECLARATION: DECLARATION  */
-#line 713 "tinyc_yacc.y"
+#line 715 "tinyc_yacc.y"
                                                                         { (yyval.node) = init_node("EXTERNAL_DECLARATION","",(yyvsp[0].node)); }
-#line 3235 "y.tab.c"
+#line 3237 "y.tab.c"
     break;
 
   case 183: /* FUNCTION_DEFINITION: DECLARATION_SPECIFIERS DECLARATOR DECLARATION_LIST_OPT COMPOUND_STATEMENT  */
-#line 716 "tinyc_yacc.y"
+#line 718 "tinyc_yacc.y"
                                                                                                         { (yyval.node) = init_node("FUNCTION_DEFINITION","",(yyvsp[-3].node)); add_next((yyvsp[-3].node),(yyvsp[-2].node)); add_next((yyvsp[-2].node),(yyvsp[-1].node)); add_next((yyvsp[-1].node),(yyvsp[0].node)); }
-#line 3241 "y.tab.c"
+#line 3243 "y.tab.c"
     break;
 
   case 184: /* DECLARATION_LIST: DECLARATION  */
-#line 719 "tinyc_yacc.y"
+#line 721 "tinyc_yacc.y"
                                                                         { (yyval.node) = init_node("DECLARATION_LIST","",(yyvsp[0].node)); }
-#line 3247 "y.tab.c"
+#line 3249 "y.tab.c"
     break;
 
   case 185: /* DECLARATION_LIST: DECLARATION_LIST DECLARATION  */
-#line 720 "tinyc_yacc.y"
+#line 722 "tinyc_yacc.y"
                                                                         { (yyval.node) = init_node("DECLARATION_LIST","",(yyvsp[-1].node)); add_next((yyvsp[-1].node),(yyvsp[0].node)); }
-#line 3253 "y.tab.c"
+#line 3255 "y.tab.c"
     break;
 
   case 186: /* DECLARATION_LIST_OPT: DECLARATION_LIST  */
-#line 723 "tinyc_yacc.y"
+#line 725 "tinyc_yacc.y"
                                                                         { (yyval.node) = init_node("DECLARATION_LIST_OPT","",(yyvsp[0].node)); }
-#line 3259 "y.tab.c"
+#line 3261 "y.tab.c"
     break;
 
   case 187: /* DECLARATION_LIST_OPT: %empty  */
-#line 724 "tinyc_yacc.y"
+#line 726 "tinyc_yacc.y"
                                                                         { (yyval.node) = init_node("DECLARATION_LIST_OPT","",NULL); }
-#line 3265 "y.tab.c"
+#line 3267 "y.tab.c"
     break;
 
 
-#line 3269 "y.tab.c"
+#line 3271 "y.tab.c"
 
       default: break;
     }
@@ -3458,11 +3460,15 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 726 "tinyc_yacc.y"
+#line 728 "tinyc_yacc.y"
 
 
-void yyerror(char * s) {
-    printf("\nError: %s\n", s);
-    exit(0);
-    return;
+void yyerror(char *s) {
+    extern int yylineno; // Defined and maintained by Flex
+    extern char *yytext; // Defined and maintained by Flex
+    fprintf(stderr, "Error: %s at line %d, near '%s'\n", s, yylineno, yytext);
 }
+/* void yyerror(char *s) { */
+    /* extern YYLTYPE yylloc; // Defined and maintained by Bison */
+    /* fprintf(stderr, "Error: %s at line %d, column %d, near '%s'\n", s, yylloc.first_line, yylloc.first_column, yytext); */
+/* } */

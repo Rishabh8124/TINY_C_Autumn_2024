@@ -2,6 +2,8 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
+    #define YYDEBUG 1
+    int yydebug = 1;
     int yylex();
     void yyerror(char *s);
 
@@ -725,8 +727,12 @@ DECLARATION_LIST_OPT    :   DECLARATION_LIST                            { $$ = i
                         ;                        
 %%
 
-void yyerror(char * s) {
-    printf("\nError: %s\n", s);
-    exit(0);
-    return;
+void yyerror(char *s) {
+    extern int yylineno; // Defined and maintained by Flex
+    extern char *yytext; // Defined and maintained by Flex
+    fprintf(stderr, "Error: %s at line %d, near '%s'\n", s, yylineno, yytext);
 }
+/* void yyerror(char *s) { */
+    /* extern YYLTYPE yylloc; // Defined and maintained by Bison */
+    /* fprintf(stderr, "Error: %s at line %d, column %d, near '%s'\n", s, yylloc.first_line, yylloc.first_column, yytext); */
+/* } */
