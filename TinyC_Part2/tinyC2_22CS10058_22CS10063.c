@@ -34,6 +34,6 @@ void print_parse_tree(tree_pointer root, int depth) {
 
 int main() {
     yyparse();
-    print_parse_tree(parse_tree,1);
+    print_parse_tree(parse_tree,0); // parse tree initialized in bison file
     return 0;
 }

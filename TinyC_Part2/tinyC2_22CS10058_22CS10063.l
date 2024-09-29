@@ -15,71 +15,72 @@
 /*  -> S ---*---> A --/--> E    */
 /*    |_^        |_^            */
 /*   [^\*]        *             */
-MULTI_LINE_COMMENT \/\*[^\*]*(\*+[^\*\/][^\*]*)*[\*]+\/
-SINGLE_LINE_COMMENT \/\/.*\n
+
+MULTI_LINE_COMMENT      \/\*[^\*]*(\*+[^\*\/][^\*]*)*[\*]+\/
+SINGLE_LINE_COMMENT     \/\/.*(\n)?
 
 /*keywords*/
-AUTO "auto"
-ENUM "enum"
-RESTRICT "restrict"
-UNSIGNED "unsigned"
-BREAK "break"
-EXTERN "extern"
-RETURN "return"
-VOID "void"
-CASE "case"
-FLOAT "float"
-SHORT "short"
-VOLATILE "volatile"
-CHAR "char"
-FOR "for"
-SIGNED "signed"
-WHILE "while"
-CONST "const"
-GOTO "goto"
-SIZEOF "sizeof"
-BOOL "_Bool"
-CONTINUE "continue"
-IF "if"
-STATIC "static"
-COMPLEX "_Complex"
-DEFAULT "default"
-INLINE "inline"
-STRUCT "struct"
-IMAGINARY "_Imaginary"
-DO "do"
-INT "int"
-SWITCH "switch"
-DOUBLE "double"
-LONG "long"
-TYPEDEF "typedef"
-ELSE "else"
-REGISTER "register"
-UNION "union"
+AUTO                    "auto"
+ENUM                    "enum"
+RESTRICT                "restrict"
+UNSIGNED                "unsigned"
+BREAK                   "break"
+EXTERN                  "extern"
+RETURN                  "return"
+VOID                    "void"
+CASE                    "case"
+FLOAT                   "float"
+SHORT                   "short"
+VOLATILE                "volatile"
+CHAR                    "char"
+FOR                     "for"
+SIGNED                  "signed"
+WHILE                   "while"
+CONST                   "const"
+GOTO                    "goto"
+SIZEOF                  "sizeof"
+BOOL                    "_Bool"
+CONTINUE                "continue"
+IF                      "if"
+STATIC                  "static"
+COMPLEX                 "_Complex"
+DEFAULT                 "default"
+INLINE                  "inline"
+STRUCT                  "struct"
+IMAGINARY               "_Imaginary"
+DO                      "do"
+INT                     "int"
+SWITCH                  "switch"
+DOUBLE                  "double"
+LONG                    "long"
+TYPEDEF                 "typedef"
+ELSE                    "else"
+REGISTER                "register"
+UNION                   "union"
 
 /*identifiers*/
-digit [0-9]
-identifier_nondigit [_a-zA-Z]
+digit                   [0-9]
+identifier_nondigit     [_a-zA-Z]
 
-IDENTIFIER {identifier_nondigit}({digit}|{identifier_nondigit})*
+IDENTIFIER              {identifier_nondigit}({digit}|{identifier_nondigit})*
 
 /*constants*/
-sign [+-]
-escape_sequence "\\\'"|"\\\""|"\\\?"|"\\\\"|"\\a"|"\\b"|"\\f"|"\\n"|"\\r"|"\\t"|"\\v"
-c_char [^\'\\\n]|{escape_sequence}
-c_char_sequence {c_char}+
-digit_sequence {digit}*|\'{c_char_sequence}\'
-exponent_part [eE]{sign}?{digit_sequence}
-fractional_constant ({digit_sequence}\.)|({digit_sequence}?\.{digit_sequence})
+sign                    [+-]
+escape_sequence         "\\\'"|"\\\""|"\\\?"|"\\\\"|"\\a"|"\\b"|"\\f"|"\\n"|"\\r"|"\\t"|"\\v"
+c_char                  [^\'\\\n]|{escape_sequence}
+c_char_sequence         {c_char}+
+digit_sequence          {digit}*
+exponent_part           [eE]{sign}?{digit_sequence}
+fractional_constant     ({digit_sequence}\.)|({digit_sequence}?\.{digit_sequence})
 
-INTEGER_CONSTANT [1-9]{digit}*|0
-FLOATING_CONSTANT {fractional_constant}{exponent_part}?|{digit_sequence}{exponent_part}
-CHARACTER_CONSTANT \'{c_char_sequence}\'
+INTEGER_CONSTANT        [1-9]{digit}*|0
+FLOATING_CONSTANT       {fractional_constant}{exponent_part}?|{digit_sequence}{exponent_part}
+CHARACTER_CONSTANT      \'{c_char_sequence}\'
 
 /*string literals*/
-s_char [^\'\\\n]|{escape_sequence}
-s_char_sequence {s_char}+
-STRING_LITERAL \"{s_char_sequence}?\"
+s_char                  [^\'\\\n]|{escape_sequence}
+s_char_sequence         {s_char}+
+STRING_LITERAL          \"{s_char_sequence}?\"
 
 /*punctuators*/
 LESS_THAN               "<"
@@ -117,15 +118,14 @@ TRIPLE_DOT              "..."
 
 WHITE_SPACE [ \n\t]
 
-/* UNARY_OPERATOR "&" | "\*" | "\+" | "\-" | "\~" | "\!" */
-EQUAL_OPERATOR "="
-ASSIGNMENT_OPERATORS "*="|"/="|"%="|"+="|"-="|"<<="|">>="|"&="|"^="|"|="
+EQUAL_OPERATOR          "="
+ASSIGNMENT_OPERATORS    "*="|"/="|"%="|"+="|"-="|"<<="|">>="|"&="|"^="|"|="
 
-ADDITION_OPERATOR "+"
+ADDITION_OPERATOR       "+"
 MULTIPLICATION_OPERATOR "*"
-SUBTRACTION_OPERATOR "-"
-NOT_OPERATOR "!"
-NEGATION_OPERATOR "~"
+SUBTRACTION_OPERATOR    "-"
+NOT_OPERATOR            "!"
+NEGATION_OPERATOR       "~"
 
 %%
 {MULTI_LINE_COMMENT}        { }
