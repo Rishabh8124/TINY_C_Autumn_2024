@@ -3,7 +3,7 @@
     #include <stdlib.h>
     #include "y.tab.h"
     int yylex();
-    void yyerror(char * s);
+    void yyerror(string s);
     extern int yylineno;
 %}
 
@@ -159,8 +159,8 @@ NEGATION_OPERATOR       "~"
 {ELSE}                      { return ELSE; }
 {REGISTER}                  { return REGISTER; }
 
-{IDENTIFIER}                {yylval.lexval = strdup(yytext); return IDENTIFIER;}
-{STRING_LITERAL}            {yylval.lexval = strdup(yytext); return STRING_LITERAL;}
+{IDENTIFIER}                {yylval.val = strdup(yytext); return IDENTIFIER;}
+{STRING_LITERAL}            {yylval.val = strdup(yytext); return STRING_LITERAL;}
 
 {LESS_THAN}                 { return LESS_THAN; }
 {LESS_THAN_EQUAL_TO}        { return LESS_THAN_EQUAL_TO; }
@@ -173,11 +173,12 @@ NEGATION_OPERATOR       "~"
 {LEFT_CURLY_BRACKET}        { return LEFT_CURLY_BRACKET; }
 {RIGHT_CURLY_BRACKET}       { return RIGHT_CURLY_BRACKET; }
 
-{INTEGER_CONSTANT}          {yylval.lexval = strdup(yytext); return CONSTANT;}
-{FLOATING_CONSTANT}         {yylval.lexval = strdup(yytext); return CONSTANT;}
-{CHARACTER_CONSTANT}        {yylval.lexval = strdup(yytext); return CONSTANT;}
-
 {DOT}                       { return DOT; }
+
+{INTEGER_CONSTANT}          {yylval.val = strdup(yytext); return INTEGER_CONSTANT;}
+{FLOATING_CONSTANT}         {yylval.val = strdup(yytext); return FLOATING_CONSTANT;}
+{CHARACTER_CONSTANT}        {yylval.val = strdup(yytext); return CHARACTER_CONSTANT;}
+
 {POINTER_ACCESS}            { return POINTER_ACCESS; }
 {INCREMENT_OPERATOR}        { return INCREMENT_OPERATOR; }
 {DECREMENT_OPERATOR}        { return DECREMENT_OPERATOR; }
@@ -204,7 +205,7 @@ NEGATION_OPERATOR       "~"
 {NEGATION_OPERATOR}         { return NEGATION_OPERATOR; }  
 {EQUAL_OPERATOR}            { return EQUAL_OPERATOR; }
 
-{ASSIGNMENT_OPERATORS}      {yylval.lexval = strdup(yytext); return ASSIGNMENT_OPERATORS;}
+{ASSIGNMENT_OPERATORS}      {yylval.val = strdup(yytext); return ASSIGNMENT_OPERATORS;}
 
 {WHITE_SPACE}               { }
 .                           {yyerror("Invalid character found\n");}

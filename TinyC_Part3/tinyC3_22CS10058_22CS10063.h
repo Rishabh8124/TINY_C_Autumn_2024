@@ -5,10 +5,19 @@
 #include <vector>
 #include <stack>
 #include <map>
+#include <iomanip>
+#include <string>
 
 using namespace std;
 
+#define INT_SIZE 4
+#define FLOAT_SIZE 8
+#define CHAR_SIZE 1
+#define POINTER_SIZE 4
+#define VOID_SIZE 0
+
 class Array;
+class Symbol;
 class SymbolType;
 class SymbolTableEntry;
 class SymbolTable;
@@ -16,48 +25,56 @@ class Quad;
 
 class Array {
     public:
-        int size;
-        int width;
-        SymbolType type;
 
-        Array(int, int, SymbolType);
+        Symbol * symbol;
+        Symbol * temp;
+        SymbolType * elem;
+
+        Array(Symbol * = NULL, Symbol * = NULL, SymbolType * = NULL);
+};
+
+class Expression {
+    public:
+        Symbol * symbol;
+        int type;
+        vector<int> truelist, falselist, nextlist;
+
+        Expression(Symbol * = NULL, int = 0);
 };
 
 class SymbolType {
     public:
-        enum type_name {INT, FLOAT, CHAR, DOUBLE, ARRAY, POINTER, VOID} name;
+        enum type_name {TYPE_INT, TYPE_FLOAT, TYPE_CHAR, TYPE_STRING_LITERAL, TYPE_ARRAY, TYPE_POINTER, TYPE_VOID} name;
         int width;
-        Array * array;
-        SymbolType* type;
+        SymbolType * array_elem_type;
 
-        SymbolType(type_name name, int width, Array * array, SymbolType * type);
+        SymbolType(type_name = TYPE_VOID, int = -1, SymbolType * = NULL);
 };
 
 class Symbol {
     public:
         string name;
-        SymbolType type;
+        SymbolType * type;
         string init_val;
         int size;
         int offset;
         SymbolTable* nested;
 
-        Symbol(string, SymbolType);
-        Symbol::Symbol(string);
+        Symbol(string = "", SymbolType * = NULL);
 };
 
 class SymbolTable {
     public:
         string name;
-        vector<Symbol> symbols;
+        vector<Symbol *> symbols;
         map<string, Symbol *> symbol_instance;
         SymbolTable * parent;
 
-        SymbolTable(string, SymbolTable *);
+        SymbolTable(string = "", SymbolTable * = NULL);
         void update();
         void print();
         Symbol * lookup(string);
-        SymbolTable* gentemp();
+        Symbol * gentemp(SymbolType::type_name, int = 0);
 };
 
 class Quad {
@@ -67,7 +84,7 @@ class Quad {
         string arg2;
         string result;
 
-        Quad(string, string, string, string);
+        Quad(string="", string="", string="", string="");
 };
 
 class QuadArray {
@@ -75,23 +92,15 @@ class QuadArray {
         vector<Quad> quads;
 
         QuadArray();
-        void emit();
+        void emit(Quad);
         void print();
 };
 
-class Expression {
-    public:
-        Symbol * symbol;
-        int type;
-        vector<int> truelist, falselist;
-
-        Expression(Symbol *, int);
-};
-
-int makelist();
-int merge();
-int backpatch();
+vector<int> * makelist(int);
+vector<int> * merge(vector<int> *, vector<int> *);
+void backpatch(vector<int> *, int);
 int typecheck();
-Symbol * gentemp();
+string int_to_string(int x);
+int string_to_int(string s);
 
 #endif

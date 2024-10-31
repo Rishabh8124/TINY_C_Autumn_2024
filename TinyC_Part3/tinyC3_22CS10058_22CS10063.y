@@ -1,12 +1,19 @@
 %{
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <string.h>
+    #include <iostream>
+    #include <vector>
     #include "tinyC3_22CS10058_22CS10063.h"
 
+    using namespace std;
+
     int yylex();
-    void yyerror(char *s);
+    void yyerror(string s);
     extern int yylineno; // Defined and maintained by Flex
     extern char *yytext; // Defined and maintained by Flex
 
-    SymbolTable * global_table = new SymbolTable("global");
+    SymbolTable * global_table = new SymbolTable("global", NULL);
     SymbolTable * current_table = global_table;
     stack<SymbolTable *> symboltables;
 
@@ -14,17 +21,31 @@
     int temporary_count, line_count;
 %}
 
-%union {string lexval; Expression expr;}
+%union {
+    int ln;
+    char * val;
+    char * op;
+    Array * array;
+    SymbolType * declaration_type;
+    Expression * expr;
+    Symbol * current_symbol;
+    vector<string> * params;
+    vector<Symbol *> * symbol_list;
+    vector<int> * nextlist;
+    int param_count;
+}
 
 %nonassoc RIGHT_PARANTHESIS
 %nonassoc ELSE
 
 %start TRANSLATIONAL_UNIT
 
-%token <lexval> IDENTIFIER
-%token <lexval> ASSIGNMENT_OPERATORS
-%token <lexval> STRING_LITERAL
-%token <lexval> CONSTANT
+%token <val> IDENTIFIER
+%token <val> ASSIGNMENT_OPERATORS
+%token <val> STRING_LITERAL
+%token <val> INTEGER_CONSTANT
+%token <val> FLOATING_CONSTANT
+%token <val> CHARACTER_CONSTANT
 
 %token AUTO
 %token RESTRICT
@@ -94,75 +115,87 @@
 %token NEGATION_OPERATOR
 %token EQUAL_OPERATOR
 
+%type <ln> M
+
+%type <array> POSTFIX_EXPRESSION
+%type <array> UNARY_EXPRESSION
+%type <array> CAST_EXPRESSION
+
 %type <expr> PRIMARY_EXPRESSION
-%type ARGUMENT_EXPRESSION_LIST_OPT
-%type EXPRESSION
-%type CONSTANT_EXPRESSION
-%type POSTFIX_EXPRESSION
-%type ARGUMENT_EXPRESSION_LIST
-%type ASSIGNMENT_EXPRESSION
-%type UNARY_EXPRESSION
-%type CAST_EXPRESSION
+%type <expr> ASSIGNMENT_EXPRESSION
+%type <expr> ASSIGNMENT_EXPRESSION_OPT
+%type <expr> CONDITIONAL_EXPRESSION
+%type <expr> LOGICAL_OR_EXPRESSION
+%type <expr> LOGICAL_AND_EXPRESSION
+%type <expr> INCLUSIVE_OR_EXPRESSION
+%type <expr> EXCLUSIVE_OR_EXPRESSION
+%type <expr> AND_EXPRESSION
+%type <expr> EQUALITY_EXPRESSION
+%type <expr> MULTIPLICATIVE_EXPRESSION
+%type <expr> ADDITIVE_EXPRESSION
+%type <expr> SHIFT_EXPRESSION
+%type <expr> RELATIONAL_EXPRESSION
+%type <expr> EXPRESSION
+%type <expr> INITIALIZER
+%type <expr> CONSTANT_EXPRESSION
+
+%type <param_count> ARGUMENT_EXPRESSION_LIST_OPT
+
+%type <params> ARGUMENT_EXPRESSION_LIST
+
+%type <op> UNARY_OPEARATOR
+%type <op> ASSIGNMENT_OPERATOR
+
+%type <symbol_list> INIT_DECLARATOR_LIST
+%type <symbol_list> INIT_DECLARATOR_LIST_OPT
+%type <symbol_list> PARAMETER_LIST
+%type <symbol_list> PARAMETER_TYPE_LIST
+
+%type <declaration_type> DECLARATION_SPECIFIERS
+%type <declaration_type> TYPE_SPECIFIER
+%type <declaration_type> SPECIFIER_QUALIFIER_LIST
+%type <declaration_type> SPECIFIER_QUALIFIER_LIST_OPT
+%type <declaration_type> POINTER
+%type <declaration_type> POINTER_OPT
+
+%type <current_symbol> DECLARATOR
+%type <current_symbol> INIT_DECLARATOR
+%type <current_symbol> DIRECT_DECLARATOR
+%type <current_symbol> PARAMETER_DECLARATION
+
+%type <nextlist> STATEMENT
+%type <nextlist> SELECTION_STATEMENT
+%type <nextlist> N
+%type <nextlist> ITERATION_STATEMENT
+
+%type IDENTIFIER_LIST
+%type IDENTIFIER_LIST_OPT
 %type TYPE_NAME
-%type UNARY_OPEARATOR
-%type MULTIPLICATIVE_EXPRESSION
-%type ADDITIVE_EXPRESSION
-%type SHIFT_EXPRESSION
-%type RELATIONAL_EXPRESSION
-%type EQUALITY_EXPRESSION
-%type AND_EXPRESSION
-%type EXCLUSIVE_OR_EXPRESSION
-%type INCLUSIVE_OR_EXPRESSION
-%type LOGICAL_AND_EXPRESSION
-%type LOGICAL_OR_EXPRESSION
-%type CONDITIONAL_EXPRESSION
-%type ASSIGNMENT_OPERATOR
+%type DECLARATION
 %type TRANSLATIONAL_UNIT
 
-%type DECLARATION
-%type DECLARATION_SPECIFIERS
-%type INIT_DECLARATOR_LIST
-%type INIT_DECLARATOR
 %type STORAGE_CLASS_SPECIFIER
-%type TYPE_SPECIFIER
-%type SPECIFIER_QUALIFIER_LIST
 %type TYPE_QUALIFIER
 %type FUNCTION_SPECIFIER
-%type DECLARATOR
-%type DIRECT_DECLARATOR
-%type POINTER
 %type TYPE_QUALIFIER_LIST
-%type PARAMETER_TYPE_LIST
-%type PARAMETER_LIST
-%type PARAMETER_DECLARATION
-%type IDENTIFIER_LIST
 
-%type INITIALIZER
 %type INITIALIZER_LIST
 %type DESIGNATION
 %type DESIGNATOR_LIST
 %type DESIGNATOR
 
-%type STATEMENT
 %type LABELED_STATEMENT
 %type COMPOUND_STATEMENT
 %type BLOCK_ITEM_LIST
 %type BLOCK_ITEM
 %type EXPRESSION_STATEMENT
-%type SELECTION_STATEMENT
-%type ITERATION_STATEMENT
 %type JUMP_STATEMENT
 %type EXTERNAL_DECLARATION
 %type FUNCTION_DEFINITION
 %type DECLARATION_LIST
 %type DECLARATION_LIST_OPT
-%type INIT_DECLARATOR_LIST_OPT
 %type DECLARATION_SPECIFIERS_OPT
-%type SPECIFIER_QUALIFIER_LIST_OPT
-%type POINTER_OPT
 %type TYPE_QUALIFIER_LIST_OPT
-%type ASSIGNMENT_EXPRESSION_OPT
-%type IDENTIFIER_LIST_OPT
 %type DESIGNATION_OPT
 %type EXPRESSION_OPT
 %type BLOCK_ITEM_LIST_OPT
@@ -171,266 +204,419 @@
 
 // Expressions
 PRIMARY_EXPRESSION              : IDENTIFIER                                    {
-                                                                                    $$.symbol = current_table.lookup($1);
-                                                                                    $$.type = 0;
+                                                                                    $$ = new Expression();
+                                                                                    $$->symbol = current_table->lookup($1);
+                                                                                    $$->type = 0;
                                                                                 }
-                                | CONSTANT                                      { }
-                                | STRING_LITERAL                                { }
+                                | INTEGER_CONSTANT                              { 
+                                                                                    $$ = new Expression();
+                                                                                    $$->symbol = current_table->gentemp(SymbolType::TYPE_INT);
+                                                                                    three_address_code.emit(*(new Quad("=", $1, "", $$->symbol->name)));
+                                                                                }
+                                | FLOATING_CONSTANT                             { 
+                                                                                    $$ = new Expression();
+                                                                                    $$->symbol = current_table->gentemp(SymbolType::TYPE_FLOAT);
+                                                                                    three_address_code.emit(*(new Quad("=", $1, "", $$->symbol->name)));
+                                                                                }
+                                | CHARACTER_CONSTANT                            { 
+                                                                                    $$ = new Expression();
+                                                                                    $$->symbol = current_table->gentemp(SymbolType::TYPE_CHAR);
+                                                                                    three_address_code.emit(*(new Quad("=", $1, "", $$->symbol->name)));
+                                                                                }
+                                | STRING_LITERAL                                { 
+                                                                                    $$ = new Expression();
+                                                                                    $$->symbol = current_table->gentemp(SymbolType::TYPE_STRING_LITERAL, (int) (sizeof($1)+1));
+                                                                                    three_address_code.emit(*(new Quad("=", $1, "", $$->symbol->name)));
+                                                                                }
                                 | LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS { $$ = $2; }
                                 ;
 
-POSTFIX_EXPRESSION              : PRIMARY_EXPRESSION                                                                                            { }
-                                | POSTFIX_EXPRESSION LEFT_SQUARE_BRACKET EXPRESSION RIGHT_SQUARE_BRACKET                                        { }
-                                | POSTFIX_EXPRESSION LEFT_PARANTHESIS ARGUMENT_EXPRESSION_LIST_OPT RIGHT_PARANTHESIS                            { }
-                                | POSTFIX_EXPRESSION DOT IDENTIFIER                                                                             { }
-                                | POSTFIX_EXPRESSION POINTER_ACCESS IDENTIFIER                                                                  { }
-                                | POSTFIX_EXPRESSION INCREMENT_OPERATOR                                                                         { }
-                                | POSTFIX_EXPRESSION DECREMENT_OPERATOR                                                                         { }
-                                | LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS LEFT_CURLY_BRACKET INITIALIZER_LIST RIGHT_CURLY_BRACKET          { }
-                                | LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS LEFT_CURLY_BRACKET INITIALIZER_LIST COMMA RIGHT_CURLY_BRACKET    { }
+POSTFIX_EXPRESSION              : PRIMARY_EXPRESSION                                                                                            {
+                                                                                                                                                    $$ = new Array($1->symbol);
+                                                                                                                                                }
+                                | POSTFIX_EXPRESSION LEFT_SQUARE_BRACKET EXPRESSION RIGHT_SQUARE_BRACKET                                        { 
+                                                                                                                                                    $$ = new Array($1->symbol, current_table->gentemp(SymbolType::TYPE_INT), $1->elem->array_elem_type);
+
+                                                                                                                                                    if ($1->temp == NULL) {
+                                                                                                                                                        three_address_code.emit(*(new Quad("*", $3->symbol->name, int_to_string($1->elem->width), $$->temp->name)));
+                                                                                                                                                    } else {
+                                                                                                                                                        Symbol * temp = current_table->gentemp(SymbolType::TYPE_INT);
+                                                                                                                                                        three_address_code.emit(*(new Quad("*", $3->symbol->name, int_to_string($1->elem->width), temp->name)));
+                                                                                                                                                        three_address_code.emit(*(new Quad("+", $1->temp->name, temp->name, $$->temp->name)));
+                                                                                                                                                    }
+                                                                                                                                                }
+                                | POSTFIX_EXPRESSION LEFT_PARANTHESIS ARGUMENT_EXPRESSION_LIST_OPT RIGHT_PARANTHESIS                            { 
+                                                                                                                                                    $$ = new Array();
+                                                                                                                                                    $$->symbol = current_table->gentemp($1->symbol->type->name);
+                                                                                                                                                    three_address_code.emit(*(new Quad("call", $1->symbol->name, int_to_string($3), $$->symbol->name)));
+                                                                                                                                                }
+                                | POSTFIX_EXPRESSION DOT IDENTIFIER                                                                             { /*IGNORED*/ }
+                                | POSTFIX_EXPRESSION POINTER_ACCESS IDENTIFIER                                                                  { /*IGNORED*/ }
+                                | POSTFIX_EXPRESSION INCREMENT_OPERATOR                                                                         {
+                                                                                                                                                    $$ = new Array(current_table->gentemp($1->symbol->type->name));
+                                                                                                                                                    three_address_code.emit(*(new Quad("=", $1->symbol->name, "", $$->symbol->name)));
+                                                                                                                                                    three_address_code.emit(*(new Quad("+", $1->symbol->name, "1", $1->symbol->name)));
+                                                                                                                                                }
+                                | POSTFIX_EXPRESSION DECREMENT_OPERATOR                                                                         {
+                                                                                                                                                    $$ = new Array(current_table->gentemp($1->symbol->type->name));
+                                                                                                                                                    three_address_code.emit(*(new Quad("=", $1->symbol->name, "", $$->symbol->name)));
+                                                                                                                                                    three_address_code.emit(*(new Quad("-", $1->symbol->name, "1", $1->symbol->name)));
+                                                                                                                                                }
+                                | LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS LEFT_CURLY_BRACKET INITIALIZER_LIST RIGHT_CURLY_BRACKET          { /*IGNORED*/ }
+                                | LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS LEFT_CURLY_BRACKET INITIALIZER_LIST COMMA RIGHT_CURLY_BRACKET    { /*IGNORED*/ }
                                 ;
 
-ARGUMENT_EXPRESSION_LIST        : ASSIGNMENT_EXPRESSION                                 { }
-                                | ARGUMENT_EXPRESSION_LIST COMMA ASSIGNMENT_EXPRESSION  { }
+ARGUMENT_EXPRESSION_LIST        : ASSIGNMENT_EXPRESSION                                 { $$ = new vector<string>; $$->push_back($1->symbol->name); }
+                                | ARGUMENT_EXPRESSION_LIST COMMA ASSIGNMENT_EXPRESSION  { $$ = $1; $$->push_back($3->symbol->name); }
                                 ;
 
-ARGUMENT_EXPRESSION_LIST_OPT    : ARGUMENT_EXPRESSION_LIST  { }
-                                |                           { }
+ARGUMENT_EXPRESSION_LIST_OPT    : ARGUMENT_EXPRESSION_LIST  {
+                                                                $$ = 0;
+                                                                for (auto param_name: *($1)) {
+                                                                    $$++;
+                                                                    three_address_code.emit(*(new Quad("param", param_name, "", "")));
+                                                                }
+                                                            }
+                                |                           { $$ = 0; }
                                 ;
 
-UNARY_EXPRESSION                : POSTFIX_EXPRESSION                                    { }
-                                | INCREMENT_OPERATOR UNARY_EXPRESSION                   { }
-                                | DECREMENT_OPERATOR UNARY_EXPRESSION                   { }
+UNARY_EXPRESSION                : POSTFIX_EXPRESSION                                    { $$ = $1; }
+                                | INCREMENT_OPERATOR UNARY_EXPRESSION                   {
+                                                                                            $$ = new Array(current_table->gentemp($2->symbol->type->name));
+                                                                                            three_address_code.emit(*(new Quad("+", $2->symbol->name, "1", $2->symbol->name)));
+                                                                                            three_address_code.emit(*(new Quad("=", $2->symbol->name, "", $$->symbol->name)));
+                                                                                        }
+                                | DECREMENT_OPERATOR UNARY_EXPRESSION                   {
+                                                                                            $$ = new Array(current_table->gentemp($2->symbol->type->name));
+                                                                                            three_address_code.emit(*(new Quad("-", $2->symbol->name, "1", $2->symbol->name)));
+                                                                                            three_address_code.emit(*(new Quad("=", $2->symbol->name, "", $$->symbol->name)));
+                                                                                        }
                                 | UNARY_OPEARATOR CAST_EXPRESSION                       { }
-                                | SIZEOF UNARY_EXPRESSION                               { }
-                                | SIZEOF LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS   { }
+                                | SIZEOF UNARY_EXPRESSION                               { /*IGNORED*/ }
+                                | SIZEOF LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS   { /*IGNORED*/ }
                                 ;
 
-UNARY_OPEARATOR                 : ADDITION_OPERATOR         { }
-                                | SUBTRACTION_OPERATOR      { }
-                                | MULTIPLICATION_OPERATOR   { }
-                                | BITWISE_AND_OPERATOR      { }
-                                | NEGATION_OPERATOR         { }
-                                | NOT_OPERATOR              { }
+UNARY_OPEARATOR                 : ADDITION_OPERATOR         { $$ = (char *) "+"; }
+                                | SUBTRACTION_OPERATOR      { $$ = (char *) "-"; }
+                                | MULTIPLICATION_OPERATOR   { $$ = (char *) "*"; }
+                                | BITWISE_AND_OPERATOR      { $$ = (char *) "&"; }
+                                | NEGATION_OPERATOR         { $$ = (char *) "~"; }
+                                | NOT_OPERATOR              { $$ = (char *) "!"; }
                                 ;
 
-CAST_EXPRESSION                 : UNARY_EXPRESSION                                              { }
+CAST_EXPRESSION                 : UNARY_EXPRESSION                                              { $$ = $1; }
                                 | LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS CAST_EXPRESSION  { }
                                 ;
 
-MULTIPLICATIVE_EXPRESSION       : CAST_EXPRESSION                                                   { }
-                                | MULTIPLICATIVE_EXPRESSION MULTIPLICATION_OPERATOR CAST_EXPRESSION { }
-                                | MULTIPLICATIVE_EXPRESSION DIVIDE_OPERATOR CAST_EXPRESSION         { }
-                                | MULTIPLICATIVE_EXPRESSION REMAINDER_OPERATOR CAST_EXPRESSION      { }
+MULTIPLICATIVE_EXPRESSION       : CAST_EXPRESSION                                                   {
+                                                                                                        $$ = new Expression($1->symbol);
+                                                                                                    }
+                                | MULTIPLICATIVE_EXPRESSION MULTIPLICATION_OPERATOR CAST_EXPRESSION { 
+                                                                                                        $$ = new Expression(current_table->gentemp($1->symbol->type));
+                                                                                                        three_address_code.emit(*(new Quad("*", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                    }
+                                | MULTIPLICATIVE_EXPRESSION DIVIDE_OPERATOR CAST_EXPRESSION         { 
+                                                                                                        $$ = new Expression(current_table->gentemp($1->symbol->type));
+                                                                                                        three_address_code.emit(*(new Quad("/", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                    }
+                                | MULTIPLICATIVE_EXPRESSION REMAINDER_OPERATOR CAST_EXPRESSION      { 
+                                                                                                        $$ = new Expression(current_table->gentemp($1->symbol->type));
+                                                                                                        three_address_code.emit(*(new Quad("%", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                    }
                                 ;
 
-ADDITIVE_EXPRESSION             : MULTIPLICATIVE_EXPRESSION                                             { }
-                                | ADDITIVE_EXPRESSION ADDITION_OPERATOR MULTIPLICATIVE_EXPRESSION       { }
-                                | ADDITIVE_EXPRESSION SUBTRACTION_OPERATOR MULTIPLICATIVE_EXPRESSION    { }
+ADDITIVE_EXPRESSION             : MULTIPLICATIVE_EXPRESSION                                             { $$ = $1; }
+                                | ADDITIVE_EXPRESSION ADDITION_OPERATOR MULTIPLICATIVE_EXPRESSION       {
+                                                                                                            $$ = new Expression();
+                                                                                                            $$->symbol = current_table->gentemp($1->symbol->type->name);
+                                                                                                            three_address_code.emit(*(new Quad("+", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                        }
+                                | ADDITIVE_EXPRESSION SUBTRACTION_OPERATOR MULTIPLICATIVE_EXPRESSION    {
+                                                                                                            $$ = new Expression();
+                                                                                                            $$->symbol = current_table->gentemp($1->symbol->type->name);
+                                                                                                            three_address_code.emit(*(new Quad("-", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                        }
                                 ;
 
-SHIFT_EXPRESSION                : ADDITIVE_EXPRESSION                                       { }
-                                | SHIFT_EXPRESSION SHIFT_LEFT_OPERATOR ADDITIVE_EXPRESSION  { }
-                                | SHIFT_EXPRESSION SHIFT_RIGHT_OPERATOR ADDITIVE_EXPRESSION { }
+SHIFT_EXPRESSION                : ADDITIVE_EXPRESSION                                       { $$ = $1; }
+                                | SHIFT_EXPRESSION SHIFT_LEFT_OPERATOR ADDITIVE_EXPRESSION  {
+                                                                                                $$ = new Expression();
+                                                                                                $$->symbol = current_table->gentemp($1->symbol->type->name);
+                                                                                                three_address_code.emit(*(new Quad("<<", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                            }
+                                | SHIFT_EXPRESSION SHIFT_RIGHT_OPERATOR ADDITIVE_EXPRESSION {
+                                                                                                $$ = new Expression();
+                                                                                                $$->symbol = current_table->gentemp($1->symbol->type->name);
+                                                                                                three_address_code.emit(*(new Quad(">>", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                            }
                                 ;
 
-RELATIONAL_EXPRESSION           : SHIFT_EXPRESSION                                              { }
-                                | RELATIONAL_EXPRESSION LESS_THAN SHIFT_EXPRESSION              { }
+RELATIONAL_EXPRESSION           : SHIFT_EXPRESSION                                              { $$ = $1; }
+                                | RELATIONAL_EXPRESSION LESS_THAN SHIFT_EXPRESSION              {
+                                                                                                    $$ = new Expression();
+                                                                                                    $$->symbol = current_table->gentemp($1->symbol->type->name);
+                                                                                                    $$->type = 1;
+                                                                                                    // three_address_code.emit(*(new Quad("+", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                }
                                 | RELATIONAL_EXPRESSION GREATER_THAN SHIFT_EXPRESSION           { }
                                 | RELATIONAL_EXPRESSION LESS_THAN_EQUAL_TO SHIFT_EXPRESSION     { }
                                 | RELATIONAL_EXPRESSION GREATER_THAN_EQUAL_TO SHIFT_EXPRESSION  { }
                                 ;
 
-EQUALITY_EXPRESSION             : RELATIONAL_EXPRESSION                                             { }
+EQUALITY_EXPRESSION             : RELATIONAL_EXPRESSION                                             { $$ = $1; }
                                 | EQUALITY_EXPRESSION EQUALITY_OPERATOR RELATIONAL_EXPRESSION       { }
                                 | EQUALITY_EXPRESSION NON_EQUALITY_OPERATOR RELATIONAL_EXPRESSION   { }
                                 ;
 
-AND_EXPRESSION                  : EQUALITY_EXPRESSION                                       { }
-                                | AND_EXPRESSION BITWISE_AND_OPERATOR EQUALITY_EXPRESSION   { }
+AND_EXPRESSION                  : EQUALITY_EXPRESSION                                       { $$ = $1; }
+                                | AND_EXPRESSION BITWISE_AND_OPERATOR EQUALITY_EXPRESSION   { 
+                                                                                                $$ = new Expression(current_table->gentemp($1->symbol->type));
+                                                                                                three_address_code.emit(*(new Quad("&", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                            }
                                 ;
 
-EXCLUSIVE_OR_EXPRESSION         : AND_EXPRESSION                                        { }
-                                | EXCLUSIVE_OR_EXPRESSION XOR_OPERATOR AND_EXPRESSION   { }
+EXCLUSIVE_OR_EXPRESSION         : AND_EXPRESSION                                        { $$ = $1; }
+                                | EXCLUSIVE_OR_EXPRESSION XOR_OPERATOR AND_EXPRESSION   { 
+                                                                                            $$ = new Expression(current_table->gentemp($1->symbol->type));
+                                                                                            three_address_code.emit(*(new Quad("^", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                        }
                                 ;
 
-INCLUSIVE_OR_EXPRESSION         : EXCLUSIVE_OR_EXPRESSION                                               { }
-                                | INCLUSIVE_OR_EXPRESSION BITWISE_OR_OPERATOR EXCLUSIVE_OR_EXPRESSION   { }
+INCLUSIVE_OR_EXPRESSION         : EXCLUSIVE_OR_EXPRESSION                                               { $$ = $1; }
+                                | INCLUSIVE_OR_EXPRESSION BITWISE_OR_OPERATOR EXCLUSIVE_OR_EXPRESSION   { 
+                                                                                                            $$ = new Expression(current_table->gentemp($1->symbol->type));
+                                                                                                            three_address_code.emit(*(new Quad("|", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                        }
                                 ;
 
-LOGICAL_AND_EXPRESSION          : INCLUSIVE_OR_EXPRESSION                                               { }
+LOGICAL_AND_EXPRESSION          : INCLUSIVE_OR_EXPRESSION                                               { $$ = $1; }
                                 | LOGICAL_AND_EXPRESSION LOGICAL_AND_OPERATOR INCLUSIVE_OR_EXPRESSION   { }
                                 ;
 
-LOGICAL_OR_EXPRESSION           : LOGICAL_AND_EXPRESSION                                            { }
+LOGICAL_OR_EXPRESSION           : LOGICAL_AND_EXPRESSION                                            { $$ = $1; }
                                 | LOGICAL_OR_EXPRESSION LOGICAL_OR_OPERATOR LOGICAL_AND_EXPRESSION  { }
                                 ;
 
-CONDITIONAL_EXPRESSION          : LOGICAL_OR_EXPRESSION                                                                         { }
+CONDITIONAL_EXPRESSION          : LOGICAL_OR_EXPRESSION                                                                         { $$ = $1; }
                                 | LOGICAL_OR_EXPRESSION TERNARY_OPERATOR EXPRESSION TERNARY_SEPERATOR CONDITIONAL_EXPRESSION    { }
                                 ;
 
-ASSIGNMENT_EXPRESSION           : CONDITIONAL_EXPRESSION                                        { }
-                                | UNARY_EXPRESSION ASSIGNMENT_OPERATOR ASSIGNMENT_EXPRESSION    { }
+ASSIGNMENT_EXPRESSION           : CONDITIONAL_EXPRESSION                                        { $$ = $1; }
+                                | UNARY_EXPRESSION ASSIGNMENT_OPERATOR ASSIGNMENT_EXPRESSION    {
+                                                                                                    $$ = $1;
+                                                                                                    if ($2 == "=") {
+                                                                                                        three_address_code.emit(*(new Quad("=", $3->symbol->name, "", $1->symbol->name)));
+                                                                                                    } else {
+                                                                                                        three_address_code.emit(*(new Quad($2[0], $3->symbol->name, $1->symbol->name, $1->symbol->name)));
+                                                                                                    }
+                                                                                                }
                                 ;
 
-ASSIGNMENT_OPERATOR             : EQUAL_OPERATOR        { }
-                                | ASSIGNMENT_OPERATORS  { }
+ASSIGNMENT_OPERATOR             : EQUAL_OPERATOR        { $$ = (char *) "="; }
+                                | ASSIGNMENT_OPERATORS  { $$ = $1; }
                                 ;
 
-EXPRESSION                      : ASSIGNMENT_EXPRESSION                     { }
-                                | EXPRESSION COMMA ASSIGNMENT_EXPRESSION    { }
+EXPRESSION                      : ASSIGNMENT_EXPRESSION                     { $$ = $1; }
+                                | EXPRESSION COMMA ASSIGNMENT_EXPRESSION    { $$ = $3; }
                                 ;
 
-CONSTANT_EXPRESSION             : CONDITIONAL_EXPRESSION    { }
+CONSTANT_EXPRESSION             : CONDITIONAL_EXPRESSION    { $$ = $1; }
                                 ;
 
 /*Declarations*/
 
-DECLARATION                     : DECLARATION_SPECIFIERS INIT_DECLARATOR_LIST_OPT SEMI_COLON 
+DECLARATION                     : DECLARATION_SPECIFIERS INIT_DECLARATOR_LIST_OPT SEMI_COLON    {
+                                                                                                    SymbolType * temp;
+                                                                                                    for (auto symbol: *($2)) {
+                                                                                                        current_table->symbols.push_back(symbol);
+                                                                                                        current_table->symbol_instance[symbol->name] = symbol;
+                                                                                                        temp = symbol->type;
+                                                                                                        if (temp == NULL) symbol->type = $1;
+                                                                                                        else {
+                                                                                                            while(temp->array_elem_type != NULL) temp = temp->array_elem_type;
+                                                                                                            temp->array_elem_type = $1;
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
                                 ;
 
-INIT_DECLARATOR_LIST_OPT        : INIT_DECLARATOR_LIST { } 
-                                |                       { } 
+INIT_DECLARATOR_LIST_OPT        : INIT_DECLARATOR_LIST { $$ = $1; } 
+                                |                      { /*No semantics*/ } 
                                 ;
 
-DECLARATION_SPECIFIERS          :   STORAGE_CLASS_SPECIFIER DECLARATION_SPECIFIERS_OPT 
-                                |   TYPE_SPECIFIER DECLARATION_SPECIFIERS_OPT           
-                                |   TYPE_QUALIFIER DECLARATION_SPECIFIERS_OPT           
-                                |   FUNCTION_SPECIFIER DECLARATION_SPECIFIERS_OPT       
+DECLARATION_SPECIFIERS          :   STORAGE_CLASS_SPECIFIER DECLARATION_SPECIFIERS_OPT  { /*IGNORED*/ }
+                                |   TYPE_SPECIFIER DECLARATION_SPECIFIERS_OPT           { $$ = $1; }
+                                |   TYPE_QUALIFIER DECLARATION_SPECIFIERS_OPT           { /*IGNORED*/ }
+                                |   FUNCTION_SPECIFIER DECLARATION_SPECIFIERS_OPT       { /*IGNORED*/ }
                                 ;
 
-DECLARATION_SPECIFIERS_OPT      :   DECLARATION_SPECIFIERS  { } 
-                                |                           { } 
+DECLARATION_SPECIFIERS_OPT      :   DECLARATION_SPECIFIERS  { /*IGNORED*/ } 
+                                |                           { /*IGNORED*/ } 
                                 ;                            
 
-INIT_DECLARATOR_LIST            :   INIT_DECLARATOR { } 
-                                |   INIT_DECLARATOR_LIST COMMA INIT_DECLARATOR { } 
+INIT_DECLARATOR_LIST            :   INIT_DECLARATOR { $$ = new vector<Symbol *>; $$->push_back($1); } 
+                                |   INIT_DECLARATOR_LIST COMMA INIT_DECLARATOR { $$ = $1; $$->push_back($3); } 
                                 ;
 
-INIT_DECLARATOR                 :   DECLARATOR { } 
-                                |   DECLARATOR EQUAL_OPERATOR INITIALIZER { } 
+INIT_DECLARATOR                 :   DECLARATOR { $$ = $1; } 
+                                |   DECLARATOR EQUAL_OPERATOR INITIALIZER   {
+                                                                                $$ = $1;
+                                                                            } 
                                 ;
 
-STORAGE_CLASS_SPECIFIER         :   EXTERN { } 
-                                |   STATIC { } 
-                                |   AUTO { } 
-                                |   REGISTER { } 
+STORAGE_CLASS_SPECIFIER         :   EXTERN      { /*IGNORED*/ } 
+                                |   STATIC      { /*IGNORED*/ } 
+                                |   AUTO        { /*IGNORED*/ } 
+                                |   REGISTER    { /*IGNORED*/ } 
                                 ;
 
-TYPE_SPECIFIER                  :   VOID { } 
-                                |   CHAR { } 
-                                |   SHORT { } 
-                                |   INT { } 
-                                |   LONG { } 
-                                |   FLOAT { } 
-                                |   DOUBLE { } 
-                                |   SIGNED { } 
-                                |   UNSIGNED { } 
-                                |   BOOL { } 
-                                |   COMPLEX { } 
-                                |   IMAGINARY { } 
+TYPE_SPECIFIER                  :   VOID        { $$ = new SymbolType(SymbolType::TYPE_VOID); } 
+                                |   CHAR        { $$ = new SymbolType(SymbolType::TYPE_CHAR); } 
+                                |   SHORT       { /*IGNORED*/ } 
+                                |   INT         { $$ = new SymbolType(SymbolType::TYPE_INT); } 
+                                |   LONG        { /*IGNORED*/ } 
+                                |   FLOAT       { $$ = new SymbolType(SymbolType::TYPE_FLOAT); } 
+                                |   DOUBLE      { /*IGNORED*/ } 
+                                |   SIGNED      { /*IGNORED*/ } 
+                                |   UNSIGNED    { /*IGNORED*/ } 
+                                |   BOOL        { /*IGNORED*/ } 
+                                |   COMPLEX     { /*IGNORED*/ } 
+                                |   IMAGINARY   { /*IGNORED*/ } 
                                 ;
 
-SPECIFIER_QUALIFIER_LIST        :   TYPE_SPECIFIER SPECIFIER_QUALIFIER_LIST_OPT { } 
-                                |   TYPE_QUALIFIER SPECIFIER_QUALIFIER_LIST_OPT { } 
+SPECIFIER_QUALIFIER_LIST        :   TYPE_SPECIFIER SPECIFIER_QUALIFIER_LIST_OPT { $$ = $1; } 
+                                |   TYPE_QUALIFIER SPECIFIER_QUALIFIER_LIST_OPT { /*IGNORED*/ } 
                                 ;
 
-SPECIFIER_QUALIFIER_LIST_OPT    :   SPECIFIER_QUALIFIER_LIST { } 
-                                |                               { } 
+SPECIFIER_QUALIFIER_LIST_OPT    :   SPECIFIER_QUALIFIER_LIST { $$ = $1; } 
+                                |                            { $$ = NULL; } 
                                 ;
 
-TYPE_QUALIFIER                  :   CONST { } 
-                                |   RESTRICT { } 
-                                |   VOLATILE { } 
+TYPE_QUALIFIER                  :   CONST       { /*IGNORED*/ } 
+                                |   RESTRICT    { /*IGNORED*/ } 
+                                |   VOLATILE    { /*IGNORED*/ } 
                                 ;
 
-FUNCTION_SPECIFIER              :   INLINE { } 
+FUNCTION_SPECIFIER              :   INLINE      { /*IGNORED*/ } 
                                 ;
 
-DECLARATOR                      :   POINTER_OPT DIRECT_DECLARATOR { } 
+DECLARATOR                      :   POINTER_OPT DIRECT_DECLARATOR   {
+                                                                        $$ = $2;
+                                                                        if ($1 != NULL) {
+                                                                            SymbolType * temp = $1;
+                                                                            while(temp->array_elem_type != NULL) temp = temp->array_elem_type;
+                                                                            temp->array_elem_type = $2->type;
+                                                                            $2->type = temp;
+                                                                        }
+                                                                    } 
                                 ;
 
-POINTER_OPT                     :   POINTER { } 
-                                |           { } 
+POINTER_OPT                     :   POINTER { $$ = $1; } 
+                                |           { $$ = NULL; } 
                                 ;
 
-DIRECT_DECLARATOR               :   IDENTIFIER { } 
-                                |   LEFT_PARANTHESIS DECLARATOR RIGHT_PARANTHESIS { } 
-                                |   DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION_OPT RIGHT_SQUARE_BRACKET { } 
-                                |   DIRECT_DECLARATOR LEFT_SQUARE_BRACKET STATIC TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION RIGHT_SQUARE_BRACKET { } 
-                                |   DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST STATIC ASSIGNMENT_EXPRESSION RIGHT_SQUARE_BRACKET { } 
-                                |   DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST_OPT MULTIPLICATION_OPERATOR RIGHT_SQUARE_BRACKET { } 
-                                |   DIRECT_DECLARATOR LEFT_PARANTHESIS PARAMETER_TYPE_LIST RIGHT_PARANTHESIS { } 
-                                |   DIRECT_DECLARATOR LEFT_PARANTHESIS IDENTIFIER_LIST_OPT RIGHT_PARANTHESIS { } 
+DIRECT_DECLARATOR               :   IDENTIFIER { $$ = new Symbol($1); } 
+                                |   LEFT_PARANTHESIS DECLARATOR RIGHT_PARANTHESIS { $$ = $2; } 
+                                |   DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION_OPT RIGHT_SQUARE_BRACKET    { 
+                                                                                                                                                        SymbolType * temp = new SymbolType(SymbolType::TYPE_ARRAY, string_to_int($4->symbol->init_val));
+                                                                                                                                                        $$ = $1;
+                                                                                                                                                        if ($$->type == NULL) $$->type = temp;
+                                                                                                                                                        else {
+                                                                                                                                                            SymbolType * t = $$->type;
+                                                                                                                                                            while(t->array_elem_type != NULL) t = t->array_elem_type;
+                                                                                                                                                            t->array_elem_type = temp;
+                                                                                                                                                        }
+                                                                                                                                                    } 
+                                |   DIRECT_DECLARATOR LEFT_SQUARE_BRACKET STATIC TYPE_QUALIFIER_LIST_OPT ASSIGNMENT_EXPRESSION RIGHT_SQUARE_BRACKET { /*IGNORED*/ } 
+                                |   DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST STATIC ASSIGNMENT_EXPRESSION RIGHT_SQUARE_BRACKET { /*IGNORED*/ } 
+                                |   DIRECT_DECLARATOR LEFT_SQUARE_BRACKET TYPE_QUALIFIER_LIST_OPT MULTIPLICATION_OPERATOR RIGHT_SQUARE_BRACKET { /*IGNORED*/ } 
+                                |   DIRECT_DECLARATOR LEFT_PARANTHESIS PARAMETER_TYPE_LIST RIGHT_PARANTHESIS    { 
+                                                                                                                    $$ = $1;
+                                                                                                                    SymbolTable * func_table = new SymbolTable($1->name, current_table);
+                                                                                                                    $$->nested = func_table;
+
+                                                                                                                    for(auto symbol: *($3)) {
+                                                                                                                        func_table->symbols.push_back(symbol);
+                                                                                                                        func_table->symbol_instance[symbol->name] = symbol;
+                                                                                                                    }
+                                                                                                                } 
+                                |   DIRECT_DECLARATOR LEFT_PARANTHESIS IDENTIFIER_LIST_OPT RIGHT_PARANTHESIS { /*IGNORED*/ } 
                                 ;
 
-ASSIGNMENT_EXPRESSION_OPT       :   ASSIGNMENT_EXPRESSION { } 
-                                |                           { } 
+ASSIGNMENT_EXPRESSION_OPT       :   ASSIGNMENT_EXPRESSION { $$ = $1; } 
+                                |   { $$ = NULL; } 
                                 ;
 
-POINTER                         :   MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT { } 
-                                |   MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT POINTER { } 
+POINTER                         :   MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT { $$ = new SymbolType(SymbolType::TYPE_POINTER); } 
+                                |   MULTIPLICATION_OPERATOR TYPE_QUALIFIER_LIST_OPT POINTER { $$ = new SymbolType(SymbolType::TYPE_POINTER, POINTER_SIZE, $3); } 
                                 ;
 
-TYPE_QUALIFIER_LIST             :   TYPE_QUALIFIER { } 
-                                |   TYPE_QUALIFIER_LIST TYPE_QUALIFIER { } 
+TYPE_QUALIFIER_LIST             :   TYPE_QUALIFIER { /*IGNORED*/ } 
+                                |   TYPE_QUALIFIER_LIST TYPE_QUALIFIER { /*IGNORED*/ } 
                                 ;
 
-TYPE_QUALIFIER_LIST_OPT         :   TYPE_QUALIFIER_LIST { } 
-                                |                                               { } 
+TYPE_QUALIFIER_LIST_OPT         :   TYPE_QUALIFIER_LIST { /*IGNORED*/ } 
+                                |   { /*IGNORED*/ } 
                                 ;
 
-PARAMETER_TYPE_LIST             :   PARAMETER_LIST { }                  
-                                |   PARAMETER_LIST COMMA TRIPLE_DOT { } 
+PARAMETER_TYPE_LIST             :   PARAMETER_LIST { $$ = $1; }                  
+                                |   PARAMETER_LIST COMMA TRIPLE_DOT { /*IGNORED*/ } 
                                 ;
 
-PARAMETER_LIST                  :   PARAMETER_DECLARATION { }                       
-                                |   PARAMETER_LIST COMMA PARAMETER_DECLARATION { } 
+PARAMETER_LIST                  :   PARAMETER_DECLARATION { $$ = new vector<Symbol *>; $$->push_back($1); }                       
+                                |   PARAMETER_LIST COMMA PARAMETER_DECLARATION { $$=$1; $$->push_back($3); } 
                                 ;
 
-PARAMETER_DECLARATION           :   DECLARATION_SPECIFIERS DECLARATOR { }           
-                                |   DECLARATION_SPECIFIERS { } 
+PARAMETER_DECLARATION           :   DECLARATION_SPECIFIERS DECLARATOR   { 
+                                                                            $$ = $2;
+                                                                            if ($$->type == NULL) $$->type = $1;
+                                                                            else {
+                                                                                SymbolType * temp = $$->type;
+                                                                                while(temp->array_elem_type != NULL)  temp = temp->array_elem_type;
+                                                                                temp->array_elem_type = $1;
+                                                                            }
+                                                                        }           
+                                |   DECLARATION_SPECIFIERS { /*IGNORED*/ } 
                                 ;
 
-IDENTIFIER_LIST                 :   IDENTIFIER { }                                  
-                                |   IDENTIFIER_LIST COMMA IDENTIFIER { } 
+IDENTIFIER_LIST                 :   IDENTIFIER { /*IGNORED*/ }                                  
+                                |   IDENTIFIER_LIST COMMA IDENTIFIER { /*IGNORED*/ } 
                                 ;
 
-IDENTIFIER_LIST_OPT             :   IDENTIFIER_LIST { }     
-                                |                                               { } 
+IDENTIFIER_LIST_OPT             :   IDENTIFIER_LIST { /*IGNORED*/ }     
+                                |   { /*IGNORED*/ } 
                                 ;
 
-TYPE_NAME                       :   SPECIFIER_QUALIFIER_LIST { }                    
+TYPE_NAME                       :   SPECIFIER_QUALIFIER_LIST { /*IGNORED*/ }                    
                                 ;
 
-INITIALIZER                     :   ASSIGNMENT_EXPRESSION { }                       
-                                |   LEFT_CURLY_BRACKET INITIALIZER_LIST RIGHT_CURLY_BRACKET { } 
-                                |   LEFT_CURLY_BRACKET INITIALIZER_LIST COMMA RIGHT_CURLY_BRACKET { } 
+INITIALIZER                     :   ASSIGNMENT_EXPRESSION { $$ = $1; }                       
+                                |   LEFT_CURLY_BRACKET INITIALIZER_LIST RIGHT_CURLY_BRACKET { /*IGNORED*/ } 
+                                |   LEFT_CURLY_BRACKET INITIALIZER_LIST COMMA RIGHT_CURLY_BRACKET { /*IGNORED*/ } 
                                 ;
 
-INITIALIZER_LIST                :   DESIGNATION_OPT INITIALIZER { }    
-                                |   INITIALIZER_LIST COMMA DESIGNATION_OPT INITIALIZER { } 
+INITIALIZER_LIST                :   DESIGNATION_OPT INITIALIZER { /*IGNORED*/ }    
+                                |   INITIALIZER_LIST COMMA DESIGNATION_OPT INITIALIZER { /*IGNORED*/ } 
                                 ;
 
-DESIGNATION                     :   DESIGNATOR_LIST EQUAL_OPERATOR { }  
+DESIGNATION                     :   DESIGNATOR_LIST EQUAL_OPERATOR { /*IGNORED*/ }  
                                 ;
 
-DESIGNATION_OPT                 :   DESIGNATION { }  
-                                |                                               { } 
+DESIGNATION_OPT                 :   DESIGNATION { /*IGNORED*/ }  
+                                |   { /*IGNORED*/ } 
                                 ;
 
-DESIGNATOR_LIST                 :   DESIGNATOR { }                                  
-                                |   DESIGNATOR_LIST DESIGNATOR { } 
+DESIGNATOR_LIST                 :   DESIGNATOR { /*IGNORED*/ }                                  
+                                |   DESIGNATOR_LIST DESIGNATOR { /*IGNORED*/ } 
                                 ;
 
-DESIGNATOR                      :   LEFT_SQUARE_BRACKET CONSTANT_EXPRESSION RIGHT_SQUARE_BRACKET { }  
-                                |   DOT IDENTIFIER { }      
+DESIGNATOR                      :   LEFT_SQUARE_BRACKET CONSTANT_EXPRESSION RIGHT_SQUARE_BRACKET { /*IGNORED*/ }  
+                                |   DOT IDENTIFIER { /*IGNORED*/ }      
                                 ;
 
               
 // statements
-STATEMENT                       : LABELED_STATEMENT    { } 
+STATEMENT                       : LABELED_STATEMENT    { /*IGNORED*/ } 
                                 | COMPOUND_STATEMENT   { } 
                                 | EXPRESSION_STATEMENT { } 
                                 | SELECTION_STATEMENT  { } 
@@ -438,9 +624,9 @@ STATEMENT                       : LABELED_STATEMENT    { }
                                 | JUMP_STATEMENT       { } 
                                 ;
 
-LABELED_STATEMENT               : IDENTIFIER TERNARY_SEPERATOR STATEMENT  { } 
-                                | CASE CONSTANT_EXPRESSION TERNARY_SEPERATOR STATEMENT { } 
-                                | DEFAULT TERNARY_SEPERATOR STATEMENT { } 
+LABELED_STATEMENT               : IDENTIFIER TERNARY_SEPERATOR STATEMENT  { /*IGNORED*/ } 
+                                | CASE CONSTANT_EXPRESSION TERNARY_SEPERATOR STATEMENT { /*IGNORED*/ } 
+                                | DEFAULT TERNARY_SEPERATOR STATEMENT { /*IGNORED*/ } 
                                 ;
 
 COMPOUND_STATEMENT              : LEFT_CURLY_BRACKET BLOCK_ITEM_LIST_OPT RIGHT_CURLY_BRACKET { } 
@@ -457,21 +643,41 @@ BLOCK_ITEM                      : DECLARATION { }
 EXPRESSION_STATEMENT            : EXPRESSION_OPT SEMI_COLON { } 
                                 ;
 
-SELECTION_STATEMENT             : IF LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT { } 
-                                | IF LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT ELSE STATEMENT { } 
-                                | SWITCH LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT { } 
+SELECTION_STATEMENT             : IF LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS M STATEMENT  {
+                                                                                                    backpatch($3->truelist, $5);
+                                                                                                    $$ = mergelist($3->falselist, $6);
+                                                                                                } 
+                                | IF LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS M STATEMENT N ELSE M STATEMENT   { 
+                                                                                                                        backpatch($3->truelist, $5);
+                                                                                                                        backpatch($3->falselist, $9);
+                                                                                                                        $$ = mergelist(mergelist($6, $7), $10);
+                                                                                                                    } 
+                                | SWITCH LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT { /*IGNORED*/ }
                                 ;
 
-ITERATION_STATEMENT             : WHILE LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS STATEMENT { } 
-                                | DO STATEMENT WHILE LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS SEMI_COLON { } 
+ITERATION_STATEMENT             : WHILE LEFT_PARANTHESIS M EXPRESSION RIGHT_PARANTHESIS M STATEMENT   {
+                                                                                                        $$ = $4->falselist;
+                                                                                                        backpatch($7, $3);
+                                                                                                        backpatch($4->truelist, $6);
+                                                                                                        three_address_code.emit(*(Quad("goto", "", "", int_to_string($3))));
+                                                                                                    } 
+                                | DO M STATEMENT WHILE LEFT_PARANTHESIS M EXPRESSION RIGHT_PARANTHESIS SEMI_COLON   {
+                                                                                                                        
+                                                                                                                    } 
                                 | FOR LEFT_PARANTHESIS EXPRESSION_OPT SEMI_COLON EXPRESSION_OPT SEMI_COLON EXPRESSION_OPT RIGHT_PARANTHESIS STATEMENT { } 
-                                | FOR LEFT_PARANTHESIS DECLARATION EXPRESSION_OPT SEMI_COLON EXPRESSION_OPT RIGHT_PARANTHESIS STATEMENT { } 
+                                | FOR LEFT_PARANTHESIS DECLARATION EXPRESSION_OPT SEMI_COLON EXPRESSION_OPT RIGHT_PARANTHESIS STATEMENT { /*IGNORED*/ } 
                                 ;
 
-JUMP_STATEMENT                  : GOTO IDENTIFIER SEMI_COLON { } 
-                                | CONTINUE SEMI_COLON        { } 
-                                | BREAK SEMI_COLON            { } 
+JUMP_STATEMENT                  : GOTO IDENTIFIER SEMI_COLON { /*IGNORED*/ } 
+                                | CONTINUE SEMI_COLON        { /*IGNORED*/ } 
+                                | BREAK SEMI_COLON            { /*IGNORED*/ } 
                                 | RETURN EXPRESSION_OPT SEMI_COLON { } 
+                                ;
+
+M                               : { $$ = getlineno(); }
+                                ;
+
+N                               : { $$ = makeilst(getlineno()); three_address_code.emit(*(new Quad("goto"))); }
                                 ;
 
 // Optional non-terminals
@@ -485,12 +691,12 @@ EXPRESSION_OPT                  : EXPRESSION  { }
 
 /* External definitions */
 
-TRANSLATIONAL_UNIT              : EXTERNAL_DECLARATION                                                      { }
-                                | TRANSLATIONAL_UNIT EXTERNAL_DECLARATION                                   { }
+TRANSLATIONAL_UNIT              : EXTERNAL_DECLARATION                                                      { /*NO SEMANTICS*/ }
+                                | TRANSLATIONAL_UNIT EXTERNAL_DECLARATION                                   { /*NO SEMANTICS*/ }
                                 ;
 
-EXTERNAL_DECLARATION            : FUNCTION_DEFINITION                                                       { }
-                                | DECLARATION                                                               { }
+EXTERNAL_DECLARATION            : FUNCTION_DEFINITION                                                       { /*NO SEMANTICS*/ }
+                                | DECLARATION                                                               { /*NO SEMANTICS*/ }
                                 ;
 
 FUNCTION_DEFINITION             : DECLARATION_SPECIFIERS DECLARATOR DECLARATION_LIST_OPT COMPOUND_STATEMENT { }
@@ -505,7 +711,6 @@ DECLARATION_LIST_OPT            : DECLARATION_LIST                              
                                 ;                        
 %%
 
-
-void yyerror(char *s) {
-    fprintf(stderr, "Error: %s at line %d, near '%s'\n", s, yylineno, yytext);
+void yyerror(string s) {
+    cout << s << endl;
 }
