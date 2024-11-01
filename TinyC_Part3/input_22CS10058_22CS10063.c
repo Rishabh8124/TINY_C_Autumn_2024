@@ -1,10 +1,22 @@
 int a;
-char b;
+char bb;
+
+int dd(int bb, int bc)
+{
+    int v;
+    // v = bb+bc;
+    return 0;
+}
 
 int d(int b, int c);
 
 int d(int b, int c) {
-    if (a&&b) a = b;
-
+    int e[3][4];
+    int f,g;
+    if ( a > b ) a = b;
+    f=g;
+    f=b;
+    f = c+b;
+    // int  gg = dd(f,g);
     return 0;
 }

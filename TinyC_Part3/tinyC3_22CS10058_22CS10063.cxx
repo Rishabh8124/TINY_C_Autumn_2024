@@ -115,10 +115,12 @@ void SymbolType::print() {
 }
 
 void SymbolTable::print() {
-    cout << "NAME: " << this->name << endl;;
-    if (this->parent == NULL) cout << "PARENT: NONE"<< endl;
-    else cout << "PARENT: " << this->parent->name << endl << endl;
-
+    cout << "============================================================================================================================================\n";
+    cout << "Table Name: " << this->name << endl;;
+    if (this->parent == NULL) cout << "Parent: None"<< endl;
+    else cout << "Parent: " << this->parent->name << endl;
+    cout << "============================================================================================================================================\n";
+    // cout << "Name                Type                                    Initial Value       Offset              Size                Child               ";
     vector<SymbolTable *> nested_tables;
 
     for (auto x: this->symbols) {
@@ -128,6 +130,7 @@ void SymbolTable::print() {
         if (x->nested != NULL) {nested_tables.push_back(x->nested);}
     }
 
+    cout << "--------------------------------------------------------------------------------------------------------------------------------------------\n";
     for (auto x: nested_tables) {cout << endl; x->print();}
 }
 
@@ -135,7 +138,82 @@ void QuadArray::print() {
     int i = 0;
     for (auto x: quads) {
         i++;
-        cout << i << " : " << x.op << " " << x.arg1 << " " << x.arg2 << " " << x.result << endl;
+        // cout << i << " : " << x.op << " " << x.arg1 << " " << x.arg2 << " " << x.result << endl;
+        cout << i << " : ";
+        if(x.op == "=")
+        {
+            cout << "\t" << x.result << " = " << x.arg1 << endl;
+        }
+        else if(x.op == "goto")
+        {
+            cout << "\tgoto " << x.result << endl;
+        }
+        else if( x.op == "return")
+        {
+            cout << "\treturn " << x.result << endl;
+        }
+        else if( x.op == "call")
+        {
+            cout << "\t" << x.result << " = call " << x.arg1 << ", " << x.arg2 << endl;
+        }
+        else if(x.op == "param")
+        {
+            cout << "\t" << "param " << x.result << endl;
+        }
+        else if(x.op == "label")
+        {
+            cout << x.result << ':' << endl;
+        }
+        else if(x.op == "=[]")
+        {
+            cout << "\t" << x.result << " = " << x.arg1 << "[" << x.arg2 << "]" << endl;
+        }
+        else if (x.op == "[]=")
+        {
+            cout << "\t" << x.result << "[" << x.arg1 << "] = " << x.arg2 << endl;
+        }
+
+        else if (x.op == "+" || x.op == "-" || x.op == "*" || x.op == "/" || x.op == "%" || x.op == "|" || x.op == "^" || x.op == "&" || x.op == "<<" || x.op == ">>")
+        {
+            // binary_print();
+            cout << "\t" << x.result << " = " << x.arg1 << " " << x.op << " " << x.arg2 << endl;
+        }
+        else if (x.op == "==" || x.op == "!=" || x.op == "<" || x.op == ">" || x.op == "<=" || x.op == ">=")
+        {
+            // relation_print();
+            // cout << "what is going on = " << x.op << "  ";
+            cout << "\tif " << x.arg1 << " " << x.op << " " << x.arg2 << " goto " << x.result << endl;
+        }
+        else if (x.op == "=&" || x.op == "=*")
+        {
+            // shift_print();
+            cout << "\t" << x.result << " " << x.op[0] << " " << x.op[1] << x.arg1 << endl;
+        }
+        else if(x.op == "*=")
+        {
+            cout << "\t" << "*" << x.result << " = " << x.arg1 << endl;
+        }
+        else if (x.op == "=-")
+        {
+            // shift_print_("= -");
+            cout << "\t" << x.result << " " << x.op[0] << " " << x.op[1] << x.arg1 << endl;
+        }
+        else if (x.op == "~")
+        {
+            // shift_print_("= ~");
+            cout << "\t" << x.result << " " << x.op[0] << " " << x.op[1] << x.arg1 << endl;
+        }
+        else if (x.op == "!")
+        {
+            // shift_print_("= !");
+            cout << "\t" << x.result << " " << x.op[0] << " " << x.op[1] << x.arg1 << endl;
+        }
+        else
+        {
+            // if none of the above operators
+            cout << x.op << "ll---" << x.arg1 << x.arg2 << "k" << x.result << endl;
+            cout << "INVALID OPERATOR\n";
+        }
     }
 }
 

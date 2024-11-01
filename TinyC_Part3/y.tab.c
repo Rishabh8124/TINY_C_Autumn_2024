@@ -306,7 +306,7 @@ union YYSTYPE
     SymbolType * declaration_type;
     Expression * expr;
     Symbol * current_symbol;
-    vector<string> params;
+    vector<string> * params;
     vector<Symbol *> * symbol_list;
     vector<int> * nextlist;
     int param_count;
@@ -2276,7 +2276,7 @@ yyreduce:
                                                                                                         (yyval.expr)->type = 1;
                                                                                                         (yyval.expr)->truelist = makelist(getlineno());
                                                                                                         backpatch((yyvsp[-2].expr)->truelist, getlineno());
-                                                                                                        three_address_code.emit(*(new Quad(">=", (yyvsp[-2].expr)->symbol->name, (yyvsp[0].expr)->symbol->name, "")));
+                                                                                                        three_address_code.emit(*(new Quad("==", (yyvsp[-2].expr)->symbol->name, (yyvsp[0].expr)->symbol->name, "")));
                                                                                                         (yyval.expr)->falselist = merge((yyvsp[-2].expr)->falselist, makelist(getlineno()));
                                                                                                         three_address_code.emit(*(new Quad("goto")));
                                                                                                     }
@@ -2291,7 +2291,7 @@ yyreduce:
                                                                                                         (yyval.expr)->type = 1;
                                                                                                         (yyval.expr)->truelist = makelist(getlineno());
                                                                                                         backpatch((yyvsp[-2].expr)->truelist, getlineno());
-                                                                                                        three_address_code.emit(*(new Quad(">=", (yyvsp[-2].expr)->symbol->name, (yyvsp[0].expr)->symbol->name, "")));
+                                                                                                        three_address_code.emit(*(new Quad("!=", (yyvsp[-2].expr)->symbol->name, (yyvsp[0].expr)->symbol->name, "")));
                                                                                                         (yyval.expr)->falselist = merge((yyvsp[-2].expr)->falselist, makelist(getlineno()));
                                                                                                         three_address_code.emit(*(new Quad("goto")));
                                                                                                     }
@@ -3244,7 +3244,7 @@ yyreduce:
                                                                                                 } else {
                                                                                                     current_table = current_table->symbol_instance[(yyvsp[-1].current_symbol)->name]->nested; 
                                                                                                 }
-                                                                                                three_address_code.emit(*(new Quad(current_table->name+":")));
+                                                                                                three_address_code.emit(*(new Quad("label","","",current_table->name)));
                                                                                             }
 #line 3250 "y.tab.c"
     break;

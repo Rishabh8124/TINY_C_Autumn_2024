@@ -413,7 +413,7 @@ EQUALITY_EXPRESSION             : RELATIONAL_EXPRESSION                         
                                                                                                         $$->type = 1;
                                                                                                         $$->truelist = makelist(getlineno());
                                                                                                         backpatch($1->truelist, getlineno());
-                                                                                                        three_address_code.emit(*(new Quad(">=", $1->symbol->name, $3->symbol->name, "")));
+                                                                                                        three_address_code.emit(*(new Quad("==", $1->symbol->name, $3->symbol->name, "")));
                                                                                                         $$->falselist = merge($1->falselist, makelist(getlineno()));
                                                                                                         three_address_code.emit(*(new Quad("goto")));
                                                                                                     }
@@ -423,7 +423,7 @@ EQUALITY_EXPRESSION             : RELATIONAL_EXPRESSION                         
                                                                                                         $$->type = 1;
                                                                                                         $$->truelist = makelist(getlineno());
                                                                                                         backpatch($1->truelist, getlineno());
-                                                                                                        three_address_code.emit(*(new Quad(">=", $1->symbol->name, $3->symbol->name, "")));
+                                                                                                        three_address_code.emit(*(new Quad("!=", $1->symbol->name, $3->symbol->name, "")));
                                                                                                         $$->falselist = merge($1->falselist, makelist(getlineno()));
                                                                                                         three_address_code.emit(*(new Quad("goto")));
                                                                                                     }
@@ -816,7 +816,7 @@ FUNCTION_DEFINITION             : DECLARATION_SPECIFIERS DECLARATOR DECLARATION_
                                                                                                 } else {
                                                                                                     current_table = current_table->symbol_instance[$2->name]->nested; 
                                                                                                 }
-                                                                                                three_address_code.emit(*(new Quad(current_table->name+":")));
+                                                                                                three_address_code.emit(*(new Quad("label","","",current_table->name)));
                                                                                             } 
                                                                                             
                                                                                             COMPOUND_STATEMENT { current_table = current_table->parent; }
