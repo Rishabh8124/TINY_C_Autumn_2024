@@ -6,7 +6,7 @@ int main(int b, int c) {
 
     **v = b+c;
 
-    if (b && c) b = c;
+    if (b || c) b = c;
 
     return 0;
 }
