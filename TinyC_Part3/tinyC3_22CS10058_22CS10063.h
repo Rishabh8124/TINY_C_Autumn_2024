@@ -39,6 +39,9 @@ class Expression {
         int type;
         vector<int> * truelist, * falselist;
 
+        void convert_to_bool();
+        void convert_to_int();
+
         Expression(Symbol * = NULL, int = 0);
 };
 

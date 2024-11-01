@@ -210,21 +210,25 @@ PRIMARY_EXPRESSION              : IDENTIFIER                                    
                                                                                     $$ = new Expression();
                                                                                     $$->symbol = current_table->gentemp(SymbolType::TYPE_INT);
                                                                                     $$->symbol->init_val = $1;
+                                                                                    $$->type = 0;
                                                                                     three_address_code.emit(*(new Quad("=", $1, "", $$->symbol->name)));
                                                                                 }
                                 | FLOATING_CONSTANT                             { 
                                                                                     $$ = new Expression();
                                                                                     $$->symbol = current_table->gentemp(SymbolType::TYPE_FLOAT);
+                                                                                    $$->type = 0;
                                                                                     three_address_code.emit(*(new Quad("=", $1, "", $$->symbol->name)));
                                                                                 }
                                 | CHARACTER_CONSTANT                            { 
                                                                                     $$ = new Expression();
                                                                                     $$->symbol = current_table->gentemp(SymbolType::TYPE_CHAR);
+                                                                                    $$->type = 0;
                                                                                     three_address_code.emit(*(new Quad("=", $1, "", $$->symbol->name)));
                                                                                 }
                                 | STRING_LITERAL                                { 
                                                                                     $$ = new Expression();
                                                                                     $$->symbol = current_table->gentemp(SymbolType::TYPE_STRING_LITERAL, (int) (sizeof($1)+1));
+                                                                                    $$->type = 0;
                                                                                     three_address_code.emit(*(new Quad("=", $1, "", $$->symbol->name)));
                                                                                 }
                                 | LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS { $$ = $2; }
@@ -290,7 +294,28 @@ UNARY_EXPRESSION                : POSTFIX_EXPRESSION                            
                                                                                             three_address_code.emit(*(new Quad("-", $2->symbol->name, "1", $2->symbol->name)));
                                                                                             three_address_code.emit(*(new Quad("=", $2->symbol->name, "", $$->symbol->name)));
                                                                                         }
-                                | UNARY_OPEARATOR CAST_EXPRESSION                       { }
+                                | UNARY_OPEARATOR CAST_EXPRESSION                       {
+                                                                                            if ($1 == "&") {
+                                                                                                $$ = new Array(current_table->gentemp(SymbolType::TYPE_POINTER));
+                                                                                                $$->elem = $$->symbol->type;
+                                                                                                $$->elem->array_elem_type = $2->elem;
+                                                                                                three_address_code.emit(*(new Quad("&", $2->symbol->name, "", $$->symbol->name)));
+                                                                                            } else if ($1 == "+") {
+                                                                                                $$ = $2;
+                                                                                            } else if ($1 == "*") {
+                                                                                                if ($2->elem->array_elem_type->name == SymbolType::TYPE_POINTER) {
+                                                                                                    $$ = new Array(current_table->gentemp($2->elem->array_elem_type->name));
+                                                                                                    $$->symbol->type = $2->elem->array_elem_type;
+                                                                                                    $$->elem = $$->symbol->type;
+                                                                                                    three_address_code.emit(*(new Quad("=*", $2->symbol->name, "", $$->symbol->name)));
+                                                                                                } else {
+                                                                                                    $$ = $2;
+                                                                                                }
+                                                                                            } else {
+                                                                                                $$ = new Array(current_table->gentemp($2->symbol->type->name));
+                                                                                                three_address_code.emit(*(new Quad($1, $2->symbol->name, "", $$->symbol->name)));
+                                                                                            }
+                                                                                        }
                                 | SIZEOF UNARY_EXPRESSION                               { /*IGNORED*/ }
                                 | SIZEOF LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS   { /*IGNORED*/ }
                                 ;
@@ -309,6 +334,7 @@ CAST_EXPRESSION                 : UNARY_EXPRESSION                              
 
 MULTIPLICATIVE_EXPRESSION       : CAST_EXPRESSION                                                   {
                                                                                                         $$ = new Expression($1->symbol);
+                                                                                                        $$->type = 0;
                                                                                                         if ($1->symbol->type->name == SymbolType::TYPE_ARRAY) {
                                                                                                             SymbolType * base = $1->elem;
                                                                                                             while(base->array_elem_type != NULL) base = base->array_elem_type;
@@ -325,14 +351,17 @@ MULTIPLICATIVE_EXPRESSION       : CAST_EXPRESSION                               
                                                                                                     }
                                 | MULTIPLICATIVE_EXPRESSION MULTIPLICATION_OPERATOR CAST_EXPRESSION { 
                                                                                                         $$ = new Expression(current_table->gentemp($1->symbol->type->name));
+                                                                                                        $$->type = 0;
                                                                                                         three_address_code.emit(*(new Quad("*", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
                                                                                                     }
                                 | MULTIPLICATIVE_EXPRESSION DIVIDE_OPERATOR CAST_EXPRESSION         { 
                                                                                                         $$ = new Expression(current_table->gentemp($1->symbol->type->name));
+                                                                                                        $$->type = 0;
                                                                                                         three_address_code.emit(*(new Quad("/", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
                                                                                                     }
                                 | MULTIPLICATIVE_EXPRESSION REMAINDER_OPERATOR CAST_EXPRESSION      { 
                                                                                                         $$ = new Expression(current_table->gentemp($1->symbol->type->name));
+                                                                                                        $$->type = 0;
                                                                                                         three_address_code.emit(*(new Quad("%", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
                                                                                                     }
                                 ;
@@ -341,10 +370,12 @@ ADDITIVE_EXPRESSION             : MULTIPLICATIVE_EXPRESSION                     
                                 | ADDITIVE_EXPRESSION ADDITION_OPERATOR MULTIPLICATIVE_EXPRESSION       {
                                                                                                             $$ = new Expression();
                                                                                                             $$->symbol = current_table->gentemp($1->symbol->type->name);
+                                                                                                            $$->type = 0;
                                                                                                             three_address_code.emit(*(new Quad("+", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
                                                                                                         }
                                 | ADDITIVE_EXPRESSION SUBTRACTION_OPERATOR MULTIPLICATIVE_EXPRESSION    {
                                                                                                             $$ = new Expression();
+                                                                                                            $$->type = 0;
                                                                                                             $$->symbol = current_table->gentemp($1->symbol->type->name);
                                                                                                             three_address_code.emit(*(new Quad("-", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
                                                                                                         }
@@ -353,11 +384,13 @@ ADDITIVE_EXPRESSION             : MULTIPLICATIVE_EXPRESSION                     
 SHIFT_EXPRESSION                : ADDITIVE_EXPRESSION                                       { $$ = $1; }
                                 | SHIFT_EXPRESSION SHIFT_LEFT_OPERATOR ADDITIVE_EXPRESSION  {
                                                                                                 $$ = new Expression();
+                                                                                                $$->type = 0;
                                                                                                 $$->symbol = current_table->gentemp($1->symbol->type->name);
                                                                                                 three_address_code.emit(*(new Quad("<<", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
                                                                                             }
                                 | SHIFT_EXPRESSION SHIFT_RIGHT_OPERATOR ADDITIVE_EXPRESSION {
                                                                                                 $$ = new Expression();
+                                                                                                $$->type = 0;
                                                                                                 $$->symbol = current_table->gentemp($1->symbol->type->name);
                                                                                                 three_address_code.emit(*(new Quad(">>", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
                                                                                             }
@@ -368,8 +401,8 @@ RELATIONAL_EXPRESSION           : SHIFT_EXPRESSION                              
                                                                                                     $$ = new Expression();
                                                                                                     $$->symbol = NULL;
                                                                                                     $$->type = 1;
+
                                                                                                     $$->truelist = makelist(getlineno());
-                                                                                                    backpatch($1->truelist, getlineno());
                                                                                                     three_address_code.emit(*(new Quad("<", $1->symbol->name, $3->symbol->name, "")));
                                                                                                     $$->falselist = merge($1->falselist, makelist(getlineno()));
                                                                                                     three_address_code.emit(*(new Quad("goto")));
@@ -378,8 +411,8 @@ RELATIONAL_EXPRESSION           : SHIFT_EXPRESSION                              
                                                                                                     $$ = new Expression();
                                                                                                     $$->symbol = NULL;
                                                                                                     $$->type = 1;
+
                                                                                                     $$->truelist = makelist(getlineno());
-                                                                                                    backpatch($1->truelist, getlineno());
                                                                                                     three_address_code.emit(*(new Quad(">", $1->symbol->name, $3->symbol->name, "")));
                                                                                                     $$->falselist = merge($1->falselist, makelist(getlineno()));
                                                                                                     three_address_code.emit(*(new Quad("goto")));
@@ -388,8 +421,8 @@ RELATIONAL_EXPRESSION           : SHIFT_EXPRESSION                              
                                                                                                     $$ = new Expression();
                                                                                                     $$->symbol = NULL;
                                                                                                     $$->type = 1;
+
                                                                                                     $$->truelist = makelist(getlineno());
-                                                                                                    backpatch($1->truelist, getlineno());
                                                                                                     three_address_code.emit(*(new Quad("<=", $1->symbol->name, $3->symbol->name, "")));
                                                                                                     $$->falselist = merge($1->falselist, makelist(getlineno()));
                                                                                                     three_address_code.emit(*(new Quad("goto")));
@@ -398,8 +431,8 @@ RELATIONAL_EXPRESSION           : SHIFT_EXPRESSION                              
                                                                                                     $$ = new Expression();
                                                                                                     $$->symbol = NULL;
                                                                                                     $$->type = 1;
+
                                                                                                     $$->truelist = makelist(getlineno());
-                                                                                                    backpatch($1->truelist, getlineno());
                                                                                                     three_address_code.emit(*(new Quad(">=", $1->symbol->name, $3->symbol->name, "")));
                                                                                                     $$->falselist = merge($1->falselist, makelist(getlineno()));
                                                                                                     three_address_code.emit(*(new Quad("goto")));
@@ -411,8 +444,8 @@ EQUALITY_EXPRESSION             : RELATIONAL_EXPRESSION                         
                                                                                                         $$ = new Expression();
                                                                                                         $$->symbol = NULL;
                                                                                                         $$->type = 1;
+
                                                                                                         $$->truelist = makelist(getlineno());
-                                                                                                        backpatch($1->truelist, getlineno());
                                                                                                         three_address_code.emit(*(new Quad(">=", $1->symbol->name, $3->symbol->name, "")));
                                                                                                         $$->falselist = merge($1->falselist, makelist(getlineno()));
                                                                                                         three_address_code.emit(*(new Quad("goto")));
@@ -421,8 +454,8 @@ EQUALITY_EXPRESSION             : RELATIONAL_EXPRESSION                         
                                                                                                         $$ = new Expression();
                                                                                                         $$->symbol = NULL;
                                                                                                         $$->type = 1;
+
                                                                                                         $$->truelist = makelist(getlineno());
-                                                                                                        backpatch($1->truelist, getlineno());
                                                                                                         three_address_code.emit(*(new Quad(">=", $1->symbol->name, $3->symbol->name, "")));
                                                                                                         $$->falselist = merge($1->falselist, makelist(getlineno()));
                                                                                                         three_address_code.emit(*(new Quad("goto")));
@@ -431,55 +464,65 @@ EQUALITY_EXPRESSION             : RELATIONAL_EXPRESSION                         
 
 AND_EXPRESSION                  : EQUALITY_EXPRESSION                                       { $$ = $1; }
                                 | AND_EXPRESSION BITWISE_AND_OPERATOR EQUALITY_EXPRESSION   { 
-                                                                                                $$ = new Expression(current_table->gentemp($1->symbol->type->name));
+                                                                                                $$ = new Expression(current_table->gentemp($1->symbol->type->name), 0);
+                                                                                                $1->convert_to_int();
+                                                                                                $3->convert_to_int();
                                                                                                 three_address_code.emit(*(new Quad("&", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
                                                                                             }
                                 ;
 
 EXCLUSIVE_OR_EXPRESSION         : AND_EXPRESSION                                        { $$ = $1; }
                                 | EXCLUSIVE_OR_EXPRESSION XOR_OPERATOR AND_EXPRESSION   { 
-                                                                                            $$ = new Expression(current_table->gentemp($1->symbol->type->name));
+                                                                                            $$ = new Expression(current_table->gentemp($1->symbol->type->name, 0));
+                                                                                            $1->convert_to_int();
+                                                                                            $3->convert_to_int();
                                                                                             three_address_code.emit(*(new Quad("^", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
                                                                                         }
                                 ;
 
 INCLUSIVE_OR_EXPRESSION         : EXCLUSIVE_OR_EXPRESSION                                               { $$ = $1; }
                                 | INCLUSIVE_OR_EXPRESSION BITWISE_OR_OPERATOR EXCLUSIVE_OR_EXPRESSION   { 
-                                                                                                            $$ = new Expression(current_table->gentemp($1->symbol->type->name));
+                                                                                                            $$ = new Expression(current_table->gentemp($1->symbol->type->name, 0));
+                                                                                                            $1->convert_to_int();
+                                                                                                            $3->convert_to_int();
                                                                                                             three_address_code.emit(*(new Quad("|", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
                                                                                                         }
                                 ;
 
 LOGICAL_AND_EXPRESSION          : INCLUSIVE_OR_EXPRESSION                                               { $$ = $1; }
-                                | LOGICAL_AND_EXPRESSION LOGICAL_AND_OPERATOR INCLUSIVE_OR_EXPRESSION   {
+                                | LOGICAL_AND_EXPRESSION LOGICAL_AND_OPERATOR M INCLUSIVE_OR_EXPRESSION {
                                                                                                             $$ = new Expression();
+                                                                                                            $1->convert_to_bool();
+                                                                                                            $4->convert_to_bool();
+
                                                                                                             $$->symbol = NULL;
                                                                                                             $$->type = 1;
-                                                                                                            $$->truelist = makelist(getlineno());
-                                                                                                            backpatch($1->truelist, getlineno());
-                                                                                                            cout << "Hello" << endl;
-                                                                                                            three_address_code.emit(*(new Quad("&&", $1->symbol->name, $3->symbol->name, "")));
-                                                                                                            $$->falselist = merge($1->falselist, makelist(getlineno()));
-                                                                                                            three_address_code.emit(*(new Quad("goto")));
+
+                                                                                                            $$->truelist = $4->truelist;
+                                                                                                            backpatch($1->truelist, $3);
+                                                                                                            $$->falselist = merge($1->falselist, $4->falselist);
                                                                                                         }
                                 ;
 
 LOGICAL_OR_EXPRESSION           : LOGICAL_AND_EXPRESSION                                            { $$ = $1; }
-                                | LOGICAL_OR_EXPRESSION LOGICAL_OR_OPERATOR LOGICAL_AND_EXPRESSION  {
-                                                                                                        $$ = new Expression();
-                                                                                                        $$->symbol = NULL;
-                                                                                                        $$->type = 1;
-                                                                                                        $$->falselist = makelist(getlineno());
-                                                                                                        backpatch($1->falselist, getlineno());
-                                                                                                        three_address_code.emit(*(new Quad("||", $1->symbol->name, $3->symbol->name, "")));
-                                                                                                        $$->truelist = merge($1->truelist, makelist(getlineno()));
-                                                                                                        three_address_code.emit(*(new Quad("goto")));
-                                                                                                    }
+                                | LOGICAL_OR_EXPRESSION LOGICAL_OR_OPERATOR M LOGICAL_AND_EXPRESSION    {
+                                                                                                            $$ = new Expression();
+                                                                                                            $1->convert_to_bool();
+                                                                                                            $4->convert_to_bool();
+
+                                                                                                            $$->symbol = NULL;
+                                                                                                            $$->type = 1;
+
+                                                                                                            $$->falselist = $4->falselist;
+                                                                                                            backpatch($1->falselist, $3);
+                                                                                                            $$->truelist = merge($1->truelist, $4->truelist);
+                                                                                                        }
                                 ;
 
 CONDITIONAL_EXPRESSION          : LOGICAL_OR_EXPRESSION                                                                                 { $$ = $1; }
                                 | LOGICAL_OR_EXPRESSION TERNARY_OPERATOR M EXPRESSION N TERNARY_SEPERATOR M CONDITIONAL_EXPRESSION      {
                                                                                                                                             $$ = new Expression();
+                                                                                                                                            $1->convert_to_bool();
                                                                                                                                             $$->symbol = current_table->gentemp($1->symbol->type->name);
                                                                                                                                             backpatch($1->truelist, $3);
                                                                                                                                             backpatch($1->falselist, $7);
@@ -494,14 +537,23 @@ CONDITIONAL_EXPRESSION          : LOGICAL_OR_EXPRESSION                         
 ASSIGNMENT_EXPRESSION           : CONDITIONAL_EXPRESSION                                        { $$ = $1; }
                                 | UNARY_EXPRESSION ASSIGNMENT_OPERATOR ASSIGNMENT_EXPRESSION    {
                                                                                                     $$ = new Expression($1->symbol);
+                                                                                                    Symbol * temp;
+                                                                                                    if ($3->symbol->type->name == SymbolType::TYPE_POINTER) {
+                                                                                                        Symbol * temp = current_table->gentemp($3->symbol->type->array_elem_type->name);
+                                                                                                        three_address_code.emit(*(new Quad("=*", $3->symbol->name, "", temp->name)));
+                                                                                                    } else {
+                                                                                                        temp = $3->symbol;
+                                                                                                    }
+
                                                                                                     if ($2 == "=") {
-                                                                                                        if ($1->symbol->type->name == SymbolType::TYPE_ARRAY) three_address_code.emit(*(new Quad("[]", $3->symbol->name, $1->temp->name, $1->symbol->name)));
-                                                                                                        else three_address_code.emit(*(new Quad("=", $3->symbol->name, "", $1->symbol->name)));
+                                                                                                        if ($1->symbol->type->name == SymbolType::TYPE_ARRAY) three_address_code.emit(*(new Quad("[]=", temp->name, $1->temp->name, $1->symbol->name)));
+                                                                                                        else if ($1->symbol->type->name == SymbolType::TYPE_POINTER) three_address_code.emit(*(new Quad("*=", temp->name, "", $1->symbol->name)));
+                                                                                                        else three_address_code.emit(*(new Quad("=", temp->name, "", $1->symbol->name)));
                                                                                                     } else {
                                                                                                         char sym = $2[0];
                                                                                                         string oper = " ";
                                                                                                         oper[0] = sym;
-                                                                                                        three_address_code.emit(*(new Quad(oper, $3->symbol->name, $1->symbol->name, $1->symbol->name)));
+                                                                                                        three_address_code.emit(*(new Quad(oper, temp->name, $1->symbol->name, $1->symbol->name)));
                                                                                                     }
                                                                                                 }
                                 ;
@@ -602,7 +654,7 @@ DECLARATOR                      :   POINTER_OPT DIRECT_DECLARATOR   {
                                                                             SymbolType * temp = $1;
                                                                             while(temp->array_elem_type != NULL) temp = temp->array_elem_type;
                                                                             temp->array_elem_type = $2->type;
-                                                                            $2->type = temp;
+                                                                            $2->type = $1;
                                                                         }
                                                                     } 
                                 ;
@@ -807,16 +859,13 @@ EXTERNAL_DECLARATION            : FUNCTION_DEFINITION                           
                                 ;
 
 FUNCTION_DEFINITION             : DECLARATION_SPECIFIERS DECLARATOR DECLARATION_LIST_OPT    {   
-                                                                                                if (current_table->symbol_instance[$2->name] == NULL) {
-                                                                                                    current_table->symbols.push_back($2);
-                                                                                                    $2->type = $1;
-                                                                                                    current_table->symbol_instance[$2->name] = $2;
-                                                                                                    $2->nested = new SymbolTable($2->name, current_table);
-                                                                                                    current_table = $2->nested; 
-                                                                                                } else {
-                                                                                                    current_table = current_table->symbol_instance[$2->name]->nested; 
-                                                                                                }
-                                                                                                three_address_code.emit(*(new Quad(current_table->name+":")));
+
+                                                                                                current_table->symbols.push_back($2);
+                                                                                                $2->type = $1;
+                                                                                                current_table->symbol_instance[$2->name] = $2;
+                                                                                                current_table = $2->nested; 
+                                                                                                
+                                                                                                three_address_code.emit(*(new Quad("label", "", "", current_table->name)));
                                                                                             } 
                                                                                             
                                                                                             COMPOUND_STATEMENT { current_table = current_table->parent; }

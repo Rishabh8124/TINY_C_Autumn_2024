@@ -111,7 +111,30 @@ void SymbolType::print() {
         case TYPE_ARRAY: cout << "array("<< this->width << ", "; this->array_elem_type->print(); cout << ")"; break;
         case TYPE_VOID: cout << "void"; break;
     }
+}
 
+void Expression::convert_to_bool() {
+    if (this->type == 0) {
+        this->type = 1;
+        this->truelist = makelist(getlineno());
+        three_address_code.emit(*(new Quad("==", this->symbol->name, "0", "")));
+        this->falselist = makelist(getlineno());
+        three_address_code.emit(*(new Quad("goto")));
+    }
+}
+
+void Expression::convert_to_int() {
+    if (this->type == 1) {
+        this->type = 0;
+
+        this->symbol = current_table->gentemp(SymbolType::TYPE_INT);
+        backpatch(this->truelist, getlineno());
+        three_address_code.emit(*(new Quad("=", "1", "", this->symbol->name)));
+        three_address_code.emit(*(new Quad("goto", "", "", int_to_string(getlineno()+3))));
+        backpatch(this->falselist, getlineno());
+        three_address_code.emit(*(new Quad("=", "0", "", this->symbol->name)));
+        three_address_code.emit(*(new Quad("goto", "", "", int_to_string(getlineno()+1))));
+    }
 }
 
 void SymbolTable::print() {

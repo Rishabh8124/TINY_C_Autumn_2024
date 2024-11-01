@@ -1,10 +1,12 @@
 int a;
 char b;
 
-int d(int b, int c);
+int main(int b, int c) {
+    int ** v;
 
-int d(int b, int c) {
-    if (a&&b) a = b;
+    **v = b+c;
+
+    if (b && c) b = c;
 
     return 0;
 }
