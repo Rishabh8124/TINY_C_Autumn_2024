@@ -24,7 +24,7 @@
     int ln;
     char * val;
     char * op;
-    Array * array;
+    Array * array; 
     SymbolType * declaration_type;
     Expression * expr;
     Symbol * current_symbol;
@@ -38,7 +38,10 @@
 
 %start TRANSLATIONAL_UNIT
 
-%token <val> IDENTIFIER
+/*
+    val is a char* type attribute which is basically string
+*/
+%token <val> IDENTIFIER   
 %token <val> ASSIGNMENT_OPERATORS
 %token <val> STRING_LITERAL
 %token <val> INTEGER_CONSTANT
@@ -114,11 +117,21 @@
 %token NEGATION_OPERATOR
 %token EQUAL_OPERATOR
 
+/*
+    ln is a int type attribute
+*/
 %type <ln> M
 
+/*
+The Array constructor initializes an Array object with three parameters: symbol, temp, and elem, which are pointers to Symbol and SymbolType objects. 
+The member initialization list : symbol(symbol), temp(temp), elem(elem) sets the class's member variables symbol, temp,
+ and elem to the values passed as arguments, establishing the internal state of the Array object. 
+This setup is typically used to represent arrays with associated symbolic and type information.
+*/
 %type <array> POSTFIX_EXPRESSION
 %type <array> UNARY_EXPRESSION
 %type <array> CAST_EXPRESSION
+
 
 %type <expr> PRIMARY_EXPRESSION
 %type <expr> ASSIGNMENT_EXPRESSION
