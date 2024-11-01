@@ -10,7 +10,7 @@ all:
 	g++ ${C_FILE}
 
 run:
-	./a.exe < ${INPUT_FILE} > ${OUTPUT_FILE}
+	./a.out < ${INPUT_FILE} > ${OUTPUT_FILE}
 
 clean:
 	rm -f lex.yy.c y.tab.c y.tab.h a.out a.exe ${OUTPUT_FILE}

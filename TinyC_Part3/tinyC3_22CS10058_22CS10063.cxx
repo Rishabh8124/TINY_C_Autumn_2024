@@ -118,9 +118,9 @@ void SymbolTable::update() {
     int last_var = this->symbols.size();
 
     for(int i=0; i<last_var; i++) {
-        this->symbols[i]->size = this->symbols[i]->getsize();
-        if (i) this->symbols[i]->offset = this->symbols[i-1]->offset + this->symbols[i]->size;
-        else this->symbols[i]->offset = this->symbols[i]->size;
+        this->symbols[i]->size = (this->symbols[i]->nested == NULL)*this->symbols[i]->getsize();
+        if (i) this->symbols[i]->offset = this->symbols[i-1]->offset + this->symbols[i-1]->size;
+        else this->symbols[i]->offset = 0;
     }
 }
 
@@ -149,7 +149,7 @@ void Expression::convert_to_int() {
 }
 
 int SymbolType::getsize() {
-    if (this->array_elem_type == NULL) return width;
+    if (this->name != SymbolType::TYPE_ARRAY) return width;
     else return width*(this->array_elem_type->getsize());
 }
 
@@ -176,7 +176,6 @@ void SymbolTable::print() {
         cout << endl;
         if (x->nested != NULL) {nested_tables.push_back(x->nested);}
     }
-
     cout << "--------------------------------------------------------------------------------------------------------------------------------------------\n\n";
     for (auto x: nested_tables) {cout << endl; x->print();}
 }
@@ -248,12 +247,12 @@ void QuadArray::print() {
         else if (x.op == "~")
         {
             // shift_print_("= ~");
-            cout << "\t" << x.result << " " << x.op[0] << " " << x.op[1] << x.arg1 << endl;
+            cout << "\t" << x.result << " = ~" << x.arg1 << endl;
         }
         else if (x.op == "!")
         {
             // shift_print_("= !");
-            cout << "\t" << x.result << " " << x.op[0] << " " << x.op[1] << x.arg1 << endl;
+            cout << "\t" << x.result << " = !" << x.arg1 << endl;
         }
         else
         {
@@ -271,9 +270,8 @@ vector<int> * makelist(int line) {
 }
 
 vector<int> * merge(vector<int> * list1, vector<int> * list2) {
-    vector<int> * temp;
-    if (list1 == NULL && list2 == NULL) temp = NULL;
-    else temp = new vector<int>;
+    if (list1 == NULL && list2 == NULL) return NULL;
+    vector<int> * temp = new vector<int>;
     if (list1 != NULL) for (auto x: *(list1)) temp->push_back(x);
     if (list2 != NULL) for (auto x: *(list2)) temp->push_back(x);
 
@@ -289,6 +287,7 @@ void backpatch(vector<int> * list1, int line) {
 }
 
 int main() {
+    three_address_code.emit(*(new Quad("label", "", "", "global")));
     yyparse();
     global_table->print();
     cout << endl;
