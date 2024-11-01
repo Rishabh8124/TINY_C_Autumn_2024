@@ -1,0 +1,12 @@
+0
+a global
+1
+b global
+1
+a d
+2
+e d
+NAME: global
+PARENT: NONE
+a 0
+b 2

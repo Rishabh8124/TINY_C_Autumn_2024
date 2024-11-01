@@ -35,7 +35,7 @@ int getlineno() {
     return three_address_code.quads.size();
 }
 
-Expression::Expression(Symbol * symbol, int type): symbol(symbol), type(type) { this->falselist.resize(0); this->truelist.resize(0); }
+Expression::Expression(Symbol * symbol, int type): symbol(symbol), type(type), truelist(new vector<int>), falselist(new vector<int>) { }
 
 Symbol * SymbolTable::lookup(string id) {
     for (auto symbol: symbols) {
@@ -54,13 +54,35 @@ Symbol * SymbolTable::lookup(string id) {
 }
 
 string int_to_string(int x) {
-    string a = "", temp = "0";
+    string a = "", temp1 = "0";
+    int t = x<0;
+    if (t) { x *= -1; a = "-";}
 
-    return a;
+    if (x == 0) return temp1;
+    else {
+        while(x) {
+            string temp = " ";
+            temp[0] = x%10+'0';
+            a = temp + a;
+            x /= 10;
+        }
+
+        return a;
+    }
 }
 
 int string_to_int(string s) {
-    return 0;
+    int t = 0;
+    if (s[0] == '-') {
+        t = 1;
+        s = s.substr(1, s.size()-1);
+    }
+
+    int ans = 0;
+    for(auto i: s) ans = ans*10+(i-'0');
+    if (t) ans *= -1;
+    
+    return ans;
 }
 
 void QuadArray::emit(Quad quad) {
@@ -79,6 +101,19 @@ Symbol * SymbolTable::gentemp(SymbolType::type_name type, int size) {
     return temp;
 }
 
+void SymbolType::print() {
+    switch (name) {
+        case TYPE_INT: cout << "int"; break;
+        case TYPE_FLOAT: cout << "float"; break;
+        case TYPE_CHAR: cout << "char"; break;
+        case TYPE_STRING_LITERAL: cout << "string"; break;
+        case TYPE_POINTER: cout << "pointer("; this->array_elem_type->print(); cout << ")"; break;
+        case TYPE_ARRAY: cout << "array("<< this->width << ", "; this->array_elem_type->print(); cout << ")"; break;
+        case TYPE_VOID: cout << "void"; break;
+    }
+
+}
+
 void SymbolTable::print() {
     cout << "NAME: " << this->name << endl;;
     if (this->parent == NULL) cout << "PARENT: NONE"<< endl;
@@ -87,11 +122,21 @@ void SymbolTable::print() {
     vector<SymbolTable *> nested_tables;
 
     for (auto x: this->symbols) {
-        cout << x->name << " " << x->type->name << endl;
-        if (x->nested != NULL) nested_tables.push_back(x->nested);
+        cout << x->name << " ";
+        x->type->print();
+        cout << endl;
+        if (x->nested != NULL) {nested_tables.push_back(x->nested);}
     }
 
     for (auto x: nested_tables) {cout << endl; x->print();}
+}
+
+void QuadArray::print() {
+    int i = 0;
+    for (auto x: quads) {
+        i++;
+        cout << i << " : " << x.op << " " << x.arg1 << " " << x.arg2 << " " << x.result << endl;
+    }
 }
 
 vector<int> * makelist(int line) {
@@ -101,15 +146,19 @@ vector<int> * makelist(int line) {
 }
 
 vector<int> * merge(vector<int> * list1, vector<int> * list2) {
-    vector<int> * temp = new vector<int>;
-    for (auto x: *(list1)) temp->push_back(x);
-    for (auto x: *(list2)) temp->push_back(x);
+    vector<int> * temp;
+    if (list1 == NULL && list2 == NULL) temp = NULL;
+    else temp = new vector<int>;
+    if (list1 != NULL) for (auto x: *(list1)) temp->push_back(x);
+    if (list2 != NULL) for (auto x: *(list2)) temp->push_back(x);
+
     return temp;
 }
 
 void backpatch(vector<int> * list1, int line) {
+    if (list1 == NULL) return;
     for(auto x: *list1) {
-        three_address_code.quads[x].result = int_to_string(line);
+        three_address_code.quads[x].result = int_to_string(line+1);
     }
     return;
 }
@@ -117,5 +166,7 @@ void backpatch(vector<int> * list1, int line) {
 int main() {
     yyparse();
     global_table->print();
+    cout << endl;
+    three_address_code.print();
     return 0;
 }

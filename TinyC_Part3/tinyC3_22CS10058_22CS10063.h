@@ -37,7 +37,7 @@ class Expression {
     public:
         Symbol * symbol;
         int type;
-        vector<int> truelist, falselist, nextlist;
+        vector<int> * truelist, * falselist;
 
         Expression(Symbol * = NULL, int = 0);
 };
@@ -49,6 +49,7 @@ class SymbolType {
         SymbolType * array_elem_type;
 
         SymbolType(type_name = TYPE_VOID, int = -1, SymbolType * = NULL);
+        void print();
 };
 
 class Symbol {
@@ -99,6 +100,7 @@ class QuadArray {
 vector<int> * makelist(int);
 vector<int> * merge(vector<int> *, vector<int> *);
 void backpatch(vector<int> *, int);
+int getlineno();
 int typecheck();
 string int_to_string(int x);
 int string_to_int(string s);
