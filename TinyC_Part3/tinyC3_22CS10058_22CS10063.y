@@ -492,14 +492,16 @@ INCLUSIVE_OR_EXPRESSION         : EXCLUSIVE_OR_EXPRESSION                       
 LOGICAL_AND_EXPRESSION          : INCLUSIVE_OR_EXPRESSION                                               { $$ = $1; }
                                 | LOGICAL_AND_EXPRESSION LOGICAL_AND_OPERATOR M INCLUSIVE_OR_EXPRESSION {
                                                                                                             $$ = new Expression();
-                                                                                                            $1->convert_to_bool();
+                                                                                                            int y = $3+2*($1->type==0);
+
+                                                                                                            $1->convert_to_bool();                                                                                                            
                                                                                                             $4->convert_to_bool();
 
                                                                                                             $$->symbol = NULL;
                                                                                                             $$->type = 1;
 
+                                                                                                            backpatch($1->truelist, y);
                                                                                                             $$->truelist = $4->truelist;
-                                                                                                            backpatch($1->truelist, $3);
                                                                                                             $$->falselist = merge($1->falselist, $4->falselist);
                                                                                                         }
                                 ;
@@ -507,14 +509,16 @@ LOGICAL_AND_EXPRESSION          : INCLUSIVE_OR_EXPRESSION                       
 LOGICAL_OR_EXPRESSION           : LOGICAL_AND_EXPRESSION                                            { $$ = $1; }
                                 | LOGICAL_OR_EXPRESSION LOGICAL_OR_OPERATOR M LOGICAL_AND_EXPRESSION    {
                                                                                                             $$ = new Expression();
+                                                                                                            int y = $3+2*($1->type==0);
+
                                                                                                             $1->convert_to_bool();
                                                                                                             $4->convert_to_bool();
 
                                                                                                             $$->symbol = NULL;
                                                                                                             $$->type = 1;
 
+                                                                                                            backpatch($1->falselist, y);
                                                                                                             $$->falselist = $4->falselist;
-                                                                                                            backpatch($1->falselist, $3);
                                                                                                             $$->truelist = merge($1->truelist, $4->truelist);
                                                                                                         }
                                 ;

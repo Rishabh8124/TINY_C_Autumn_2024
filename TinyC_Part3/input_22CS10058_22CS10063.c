@@ -10,14 +10,10 @@ int dd(int bb, int bc)
 
 int main(int b, int c) {
     int ** v;
-}
-int d(int b, int c) {
-    int e[3][4];
-    int f,g;
-    if ( a > b ) a = b;
-    f=g;
-    f=b;
-    f = c+b;
-    // int  gg = dd(f,g);
+
+    **v = b+c;
+
+    if (b || c) b = c;
+
     return 0;
 }
