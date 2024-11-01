@@ -80,7 +80,7 @@ class SymbolTable {
         void update();
         void print();
         Symbol * lookup(string);
-        Symbol * gentemp(SymbolType::type_name, int = 0);
+        Symbol * gentemp(SymbolType::type_name, int = -1);
 };
 
 class Quad {

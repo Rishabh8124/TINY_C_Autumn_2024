@@ -170,6 +170,7 @@ This setup is typically used to represent arrays with associated symbolic and ty
 %type <declaration_type> SPECIFIER_QUALIFIER_LIST_OPT
 %type <declaration_type> POINTER
 %type <declaration_type> POINTER_OPT
+%type <declaration_type> TYPE_NAME
 
 %type <current_symbol> DECLARATOR
 %type <current_symbol> INIT_DECLARATOR
@@ -187,7 +188,6 @@ This setup is typically used to represent arrays with associated symbolic and ty
 
 %type IDENTIFIER_LIST
 %type IDENTIFIER_LIST_OPT
-%type TYPE_NAME
 %type DECLARATION
 %type TRANSLATIONAL_UNIT
 
@@ -231,6 +231,7 @@ PRIMARY_EXPRESSION              : IDENTIFIER                                    
                                 | FLOATING_CONSTANT                             { 
                                                                                     $$ = new Expression();
                                                                                     $$->symbol = current_table->gentemp(SymbolType::TYPE_FLOAT);
+                                                                                    $$->symbol->init_val = $1;
                                                                                     $$->type = 0;
                                                                                     three_address_code.emit(*(new Quad("=", $1, "", $$->symbol->name)));
                                                                                     current_table->update();
@@ -238,6 +239,7 @@ PRIMARY_EXPRESSION              : IDENTIFIER                                    
                                 | CHARACTER_CONSTANT                            { 
                                                                                     $$ = new Expression();
                                                                                     $$->symbol = current_table->gentemp(SymbolType::TYPE_CHAR);
+                                                                                    $$->symbol->init_val = $1;
                                                                                     $$->type = 0;
                                                                                     three_address_code.emit(*(new Quad("=", $1, "", $$->symbol->name)));
                                                                                     current_table->update();
@@ -245,6 +247,7 @@ PRIMARY_EXPRESSION              : IDENTIFIER                                    
                                 | STRING_LITERAL                                { 
                                                                                     $$ = new Expression();
                                                                                     $$->symbol = current_table->gentemp(SymbolType::TYPE_STRING_LITERAL, (int) (sizeof($1)+1));
+                                                                                    $$->symbol->init_val = $1;
                                                                                     $$->type = 0;
                                                                                     three_address_code.emit(*(new Quad("=", $1, "", $$->symbol->name)));
                                                                                     current_table->update();
@@ -300,7 +303,7 @@ ARGUMENT_EXPRESSION_LIST_OPT    : ARGUMENT_EXPRESSION_LIST  {
                                                                 $$ = 0;
                                                                 for (auto param_name: *($1)) {
                                                                     $$++;
-                                                                    three_address_code.emit(*(new Quad("param", param_name, "", "")));
+                                                                    three_address_code.emit(*(new Quad("param", "", "", param_name)));
                                                                 }
                                                             }
                                 |                           { $$ = 0; }
@@ -320,15 +323,15 @@ UNARY_EXPRESSION                : POSTFIX_EXPRESSION                            
                                                                                             current_table->update();
                                                                                         }
                                 | UNARY_OPEARATOR CAST_EXPRESSION                       {
-                                                                                            if ($1 == "&") {
+                                                                                            if ($1 == "=&") {
                                                                                                 $$ = new Array(current_table->gentemp(SymbolType::TYPE_POINTER));
                                                                                                 $$->elem = $$->symbol->type;
                                                                                                 $$->elem->array_elem_type = $2->elem;
                                                                                                 three_address_code.emit(*(new Quad("&", $2->symbol->name, "", $$->symbol->name)));
                                                                                                 current_table->update();
-                                                                                            } else if ($1 == "+") {
+                                                                                            } else if ($1 == "=+") {
                                                                                                 $$ = $2;
-                                                                                            } else if ($1 == "*") {
+                                                                                            } else if ($1 == "=*") {
                                                                                                 if ($2->elem->array_elem_type->name == SymbolType::TYPE_POINTER) {
                                                                                                     $$ = new Array(current_table->gentemp($2->elem->array_elem_type->name));
                                                                                                     $$->symbol->type = $2->elem->array_elem_type;
@@ -348,16 +351,31 @@ UNARY_EXPRESSION                : POSTFIX_EXPRESSION                            
                                 | SIZEOF LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS   { /*IGNORED*/ }
                                 ;
 
-UNARY_OPEARATOR                 : ADDITION_OPERATOR         { $$ = (char *) "+"; }
-                                | SUBTRACTION_OPERATOR      { $$ = (char *) "-"; }
-                                | MULTIPLICATION_OPERATOR   { $$ = (char *) "*"; }
-                                | BITWISE_AND_OPERATOR      { $$ = (char *) "&"; }
+UNARY_OPEARATOR                 : ADDITION_OPERATOR         { $$ = (char *) "=+"; }
+                                | SUBTRACTION_OPERATOR      { $$ = (char *) "=-"; }
+                                | MULTIPLICATION_OPERATOR   { $$ = (char *) "=*"; }
+                                | BITWISE_AND_OPERATOR      { $$ = (char *) "=&"; }
                                 | NEGATION_OPERATOR         { $$ = (char *) "~"; }
                                 | NOT_OPERATOR              { $$ = (char *) "!"; }
                                 ;
 
 CAST_EXPRESSION                 : UNARY_EXPRESSION                                              { $$ = $1; }
-                                | LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS CAST_EXPRESSION  { }
+                                | LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS CAST_EXPRESSION  {
+                                                                                                    if ($4->elem->name == $2->name) $$ = $4;
+                                                                                                    else {
+                                                                                                        $$ = new Array(current_table->gentemp($2->name), NULL, $2);
+                                                                                                        if ($4->elem->name == SymbolType::TYPE_INT) {
+                                                                                                            if ($2->name == SymbolType::TYPE_FLOAT) three_address_code.emit(*(new Quad("=", "INT_TO_FLOAT("+$4->symbol->name+")", "", $$->symbol->name)));
+                                                                                                            else if ($2->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "INT_TO_CHAR("+$4->symbol->name+")", "", $$->symbol->name)));
+                                                                                                        } else if ($4->elem->name == SymbolType::TYPE_FLOAT) {
+                                                                                                            if ($2->name == SymbolType::TYPE_INT) three_address_code.emit(*(new Quad("=", "FLOAT_TO_INT("+$4->symbol->name+")", "", $$->symbol->name)));
+                                                                                                            else if ($2->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "FLOAT_TO_CHAR("+$4->symbol->name+")", "", $$->symbol->name)));
+                                                                                                        } else if ($4->elem->name == SymbolType::TYPE_CHAR) {
+                                                                                                            if ($2->name == SymbolType::TYPE_INT) three_address_code.emit(*(new Quad("=", "CHAR_TO_INT("+$4->symbol->name+")", "", $$->symbol->name)));
+                                                                                                            else if ($2->name == SymbolType::TYPE_FLOAT) three_address_code.emit(*(new Quad("=", "CHAR_TO_FLOAT("+$4->symbol->name+")", "", $$->symbol->name)));
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
                                 ;
 
 MULTIPLICATIVE_EXPRESSION       : CAST_EXPRESSION                                                   {
@@ -374,44 +392,162 @@ MULTIPLICATIVE_EXPRESSION       : CAST_EXPRESSION                               
                                                                                                             while(base->array_elem_type != NULL) base = base->array_elem_type;
                                                                                                             Symbol * temp = current_table->gentemp(base->name);
                                                                                                             $$->symbol = temp;
-                                                                                                            three_address_code.emit(*(new Quad("=*", $1->symbol->name, $1->temp->name, $$->symbol->name)));
+                                                                                                            three_address_code.emit(*(new Quad("=*", $1->symbol->name, "", $$->symbol->name)));
                                                                                                         }
 
                                                                                                         current_table->update();
                                                                                                     }
                                 | MULTIPLICATIVE_EXPRESSION MULTIPLICATION_OPERATOR CAST_EXPRESSION { 
+                                                                                                        Symbol * temp1, *temp2;
+                                                                                                        if ($1->symbol->type->name == $3->symbol->type->name) {
+                                                                                                            temp1 = $1->symbol;
+                                                                                                            temp2 = $3->symbol;
+                                                                                                        } else if ($1->symbol->type->name == SymbolType::TYPE_FLOAT) {
+                                                                                                            temp1 = $1->symbol;
+                                                                                                            temp2 = current_table->gentemp($1->symbol->type->name);
+                                                                                                            if ($3->symbol->type->name == SymbolType::TYPE_INT) three_address_code.emit(*(new Quad("=", "INT_TO_FLOAT("+$3->symbol->name+")", "", temp2->name)));
+                                                                                                            else if ($3->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_FLOAT("+$3->symbol->name+")", "", temp2->name)));
+                                                                                                        } else if ($3->symbol->type->name == SymbolType::TYPE_FLOAT) {
+                                                                                                            temp2 = $3->symbol;
+                                                                                                            temp1 = current_table->gentemp($3->symbol->type->name);
+                                                                                                            if ($1->symbol->type->name == SymbolType::TYPE_INT) three_address_code.emit(*(new Quad("=", "INT_TO_FLOAT("+$1->symbol->name+")", "", temp1->name)));
+                                                                                                            else if ($1->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_FLOAT("+$1->symbol->name+")", "", temp1->name)));
+                                                                                                        } else if ($1->symbol->type->name == SymbolType::TYPE_INT) {
+                                                                                                            temp1 = $1->symbol;
+                                                                                                            temp2 = current_table->gentemp($1->symbol->type->name);
+                                                                                                            if ($3->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_INT("+$3->symbol->name+")", "", temp2->name)));
+                                                                                                        } else if ($3->symbol->type->name == SymbolType::TYPE_INT) {
+                                                                                                            temp2 = $3->symbol;
+                                                                                                            temp1 = current_table->gentemp($3->symbol->type->name);
+                                                                                                            if ($1->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_INT("+$1->symbol->name+")", "", temp1->name)));
+                                                                                                        } 
+
                                                                                                         $$ = new Expression(current_table->gentemp($1->symbol->type->name));
                                                                                                         $$->type = 0;
-                                                                                                        three_address_code.emit(*(new Quad("*", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                        three_address_code.emit(*(new Quad("*", temp1->name, temp2->name, $$->symbol->name)));
                                                                                                         current_table->update();
                                                                                                     }
                                 | MULTIPLICATIVE_EXPRESSION DIVIDE_OPERATOR CAST_EXPRESSION         { 
+                                                                                                        Symbol * temp1, *temp2;
+                                                                                                        if ($1->symbol->type->name == $3->symbol->type->name) {
+                                                                                                            temp1 = $1->symbol;
+                                                                                                            temp2 = $3->symbol;
+                                                                                                        } else if ($1->symbol->type->name == SymbolType::TYPE_FLOAT) {
+                                                                                                            temp1 = $1->symbol;
+                                                                                                            temp2 = current_table->gentemp($1->symbol->type->name);
+                                                                                                            if ($3->symbol->type->name == SymbolType::TYPE_INT) three_address_code.emit(*(new Quad("=", "INT_TO_FLOAT("+$3->symbol->name+")", "", temp2->name)));
+                                                                                                            else if ($3->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_FLOAT("+$3->symbol->name+")", "", temp2->name)));
+                                                                                                        } else if ($3->symbol->type->name == SymbolType::TYPE_FLOAT) {
+                                                                                                            temp2 = $3->symbol;
+                                                                                                            temp1 = current_table->gentemp($3->symbol->type->name);
+                                                                                                            if ($1->symbol->type->name == SymbolType::TYPE_INT) three_address_code.emit(*(new Quad("=", "INT_TO_FLOAT("+$1->symbol->name+")", "", temp1->name)));
+                                                                                                            else if ($1->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_FLOAT("+$1->symbol->name+")", "", temp1->name)));
+                                                                                                        } else if ($1->symbol->type->name == SymbolType::TYPE_INT) {
+                                                                                                            temp1 = $1->symbol;
+                                                                                                            temp2 = current_table->gentemp($1->symbol->type->name);
+                                                                                                            if ($3->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_INT("+$3->symbol->name+")", "", temp2->name)));
+                                                                                                        } else if ($3->symbol->type->name == SymbolType::TYPE_INT) {
+                                                                                                            temp2 = $3->symbol;
+                                                                                                            temp1 = current_table->gentemp($3->symbol->type->name);
+                                                                                                            if ($1->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_INT("+$1->symbol->name+")", "", temp1->name)));
+                                                                                                        } 
+
                                                                                                         $$ = new Expression(current_table->gentemp($1->symbol->type->name));
                                                                                                         $$->type = 0;
-                                                                                                        three_address_code.emit(*(new Quad("/", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                        three_address_code.emit(*(new Quad("/", temp1->name, temp2->name, $$->symbol->name)));
                                                                                                         current_table->update();
                                                                                                     }
                                 | MULTIPLICATIVE_EXPRESSION REMAINDER_OPERATOR CAST_EXPRESSION      { 
+                                                                                                        Symbol * temp1, *temp2;
+                                                                                                        if ($1->symbol->type->name == $3->symbol->type->name) {
+                                                                                                            temp1 = $1->symbol;
+                                                                                                            temp2 = $3->symbol;
+                                                                                                        } else if ($1->symbol->type->name == SymbolType::TYPE_FLOAT) {
+                                                                                                            temp1 = $1->symbol;
+                                                                                                            temp2 = current_table->gentemp($1->symbol->type->name);
+                                                                                                            if ($3->symbol->type->name == SymbolType::TYPE_INT) three_address_code.emit(*(new Quad("=", "INT_TO_FLOAT("+$3->symbol->name+")", "", temp2->name)));
+                                                                                                            else if ($3->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_FLOAT("+$3->symbol->name+")", "", temp2->name)));
+                                                                                                        } else if ($3->symbol->type->name == SymbolType::TYPE_FLOAT) {
+                                                                                                            temp2 = $3->symbol;
+                                                                                                            temp1 = current_table->gentemp($3->symbol->type->name);
+                                                                                                            if ($1->symbol->type->name == SymbolType::TYPE_INT) three_address_code.emit(*(new Quad("=", "INT_TO_FLOAT("+$1->symbol->name+")", "", temp1->name)));
+                                                                                                            else if ($1->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_FLOAT("+$1->symbol->name+")", "", temp1->name)));
+                                                                                                        } else if ($1->symbol->type->name == SymbolType::TYPE_INT) {
+                                                                                                            temp1 = $1->symbol;
+                                                                                                            temp2 = current_table->gentemp($1->symbol->type->name);
+                                                                                                            if ($3->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_INT("+$3->symbol->name+")", "", temp2->name)));
+                                                                                                        } else if ($3->symbol->type->name == SymbolType::TYPE_INT) {
+                                                                                                            temp2 = $3->symbol;
+                                                                                                            temp1 = current_table->gentemp($3->symbol->type->name);
+                                                                                                            if ($1->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_INT("+$1->symbol->name+")", "", temp1->name)));
+                                                                                                        } 
+
                                                                                                         $$ = new Expression(current_table->gentemp($1->symbol->type->name));
                                                                                                         $$->type = 0;
-                                                                                                        three_address_code.emit(*(new Quad("%", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                        three_address_code.emit(*(new Quad("%", temp1->name, temp2->name, $$->symbol->name)));
                                                                                                         current_table->update();
                                                                                                     }
                                 ;
 
 ADDITIVE_EXPRESSION             : MULTIPLICATIVE_EXPRESSION                                             { $$ = $1; }
-                                | ADDITIVE_EXPRESSION ADDITION_OPERATOR MULTIPLICATIVE_EXPRESSION       {
-                                                                                                            $$ = new Expression();
-                                                                                                            $$->symbol = current_table->gentemp($1->symbol->type->name);
+                                | ADDITIVE_EXPRESSION ADDITION_OPERATOR MULTIPLICATIVE_EXPRESSION       { 
+                                                                                                            Symbol * temp1, *temp2;
+                                                                                                            if ($1->symbol->type->name == $3->symbol->type->name) {
+                                                                                                                temp1 = $1->symbol;
+                                                                                                                temp2 = $3->symbol;
+                                                                                                            } else if ($1->symbol->type->name == SymbolType::TYPE_FLOAT) {
+                                                                                                                temp1 = $1->symbol;
+                                                                                                                temp2 = current_table->gentemp($1->symbol->type->name);
+                                                                                                                if ($3->symbol->type->name == SymbolType::TYPE_INT) three_address_code.emit(*(new Quad("=", "INT_TO_FLOAT("+$3->symbol->name+")", "", temp2->name)));
+                                                                                                                else if ($3->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_FLOAT("+$3->symbol->name+")", "", temp2->name)));
+                                                                                                            } else if ($3->symbol->type->name == SymbolType::TYPE_FLOAT) {
+                                                                                                                temp2 = $3->symbol;
+                                                                                                                temp1 = current_table->gentemp($3->symbol->type->name);
+                                                                                                                if ($1->symbol->type->name == SymbolType::TYPE_INT) three_address_code.emit(*(new Quad("=", "INT_TO_FLOAT("+$1->symbol->name+")", "", temp1->name)));
+                                                                                                                else if ($1->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_FLOAT("+$1->symbol->name+")", "", temp1->name)));
+                                                                                                            } else if ($1->symbol->type->name == SymbolType::TYPE_INT) {
+                                                                                                                temp1 = $1->symbol;
+                                                                                                                temp2 = current_table->gentemp($1->symbol->type->name);
+                                                                                                                if ($3->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_INT("+$3->symbol->name+")", "", temp2->name)));
+                                                                                                            } else if ($3->symbol->type->name == SymbolType::TYPE_INT) {
+                                                                                                                temp2 = $3->symbol;
+                                                                                                                temp1 = current_table->gentemp($3->symbol->type->name);
+                                                                                                                if ($1->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_INT("+$1->symbol->name+")", "", temp1->name)));
+                                                                                                            } 
+
+                                                                                                            $$ = new Expression(current_table->gentemp($1->symbol->type->name));
                                                                                                             $$->type = 0;
-                                                                                                            three_address_code.emit(*(new Quad("+", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                            three_address_code.emit(*(new Quad("+", temp1->name, temp2->name, $$->symbol->name)));
                                                                                                             current_table->update();
                                                                                                         }
-                                | ADDITIVE_EXPRESSION SUBTRACTION_OPERATOR MULTIPLICATIVE_EXPRESSION    {
-                                                                                                            $$ = new Expression();
+                                | ADDITIVE_EXPRESSION SUBTRACTION_OPERATOR MULTIPLICATIVE_EXPRESSION    { 
+                                                                                                            Symbol * temp1, *temp2;
+                                                                                                            if ($1->symbol->type->name == $3->symbol->type->name) {
+                                                                                                                temp1 = $1->symbol;
+                                                                                                                temp2 = $3->symbol;
+                                                                                                            } else if ($1->symbol->type->name == SymbolType::TYPE_FLOAT) {
+                                                                                                                temp1 = $1->symbol;
+                                                                                                                temp2 = current_table->gentemp($1->symbol->type->name);
+                                                                                                                if ($3->symbol->type->name == SymbolType::TYPE_INT) three_address_code.emit(*(new Quad("=", "INT_TO_FLOAT("+$3->symbol->name+")", "", temp2->name)));
+                                                                                                                else if ($3->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_FLOAT("+$3->symbol->name+")", "", temp2->name)));
+                                                                                                            } else if ($3->symbol->type->name == SymbolType::TYPE_FLOAT) {
+                                                                                                                temp2 = $3->symbol;
+                                                                                                                temp1 = current_table->gentemp($3->symbol->type->name);
+                                                                                                                if ($1->symbol->type->name == SymbolType::TYPE_INT) three_address_code.emit(*(new Quad("=", "INT_TO_FLOAT("+$1->symbol->name+")", "", temp1->name)));
+                                                                                                                else if ($1->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_FLOAT("+$1->symbol->name+")", "", temp1->name)));
+                                                                                                            } else if ($1->symbol->type->name == SymbolType::TYPE_INT) {
+                                                                                                                temp1 = $1->symbol;
+                                                                                                                temp2 = current_table->gentemp($1->symbol->type->name);
+                                                                                                                if ($3->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_INT("+$3->symbol->name+")", "", temp2->name)));
+                                                                                                            } else if ($3->symbol->type->name == SymbolType::TYPE_INT) {
+                                                                                                                temp2 = $3->symbol;
+                                                                                                                temp1 = current_table->gentemp($3->symbol->type->name);
+                                                                                                                if ($1->symbol->type->name == SymbolType::TYPE_CHAR) three_address_code.emit(*(new Quad("=", "CHAR_TO_INT("+$1->symbol->name+")", "", temp1->name)));
+                                                                                                            } 
+
+                                                                                                            $$ = new Expression(current_table->gentemp($1->symbol->type->name));
                                                                                                             $$->type = 0;
-                                                                                                            $$->symbol = current_table->gentemp($1->symbol->type->name);
-                                                                                                            three_address_code.emit(*(new Quad("-", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                            three_address_code.emit(*(new Quad("-", temp1->name, temp2->name, $$->symbol->name)));
                                                                                                             current_table->update();
                                                                                                         }
                                 ;
@@ -663,6 +799,7 @@ INIT_DECLARATOR                 :   DECLARATOR { $$ = $1; }
                                 |   DECLARATOR EQUAL_OPERATOR INITIALIZER   {
                                                                                 $$ = $1;
                                                                                 $1->init_val = $3->symbol->init_val;
+                                                                                three_address_code.emit(*(new Quad("=", $3->symbol->name, "", $1->name)));
                                                                             } 
                                 ;
 
@@ -744,7 +881,13 @@ DIRECT_DECLARATOR               :   IDENTIFIER { $$ = new Symbol($1); }
 
                                                                                                                     func_table->update();
                                                                                                                 } 
-                                |   DIRECT_DECLARATOR LEFT_PARANTHESIS IDENTIFIER_LIST_OPT RIGHT_PARANTHESIS { /*IGNORED*/ } 
+                                |   DIRECT_DECLARATOR LEFT_PARANTHESIS IDENTIFIER_LIST_OPT RIGHT_PARANTHESIS    { 
+                                                                                                                    $$ = $1;
+                                                                                                                    SymbolTable * func_table = new SymbolTable($1->name, current_table);
+                                                                                                                    $1->nested = func_table;
+
+                                                                                                                    func_table->update();
+                                                                                                                }
                                 ;
 
 ASSIGNMENT_EXPRESSION_OPT       :   ASSIGNMENT_EXPRESSION { $$ = $1; } 
@@ -791,7 +934,7 @@ IDENTIFIER_LIST_OPT             :   IDENTIFIER_LIST { /*IGNORED*/ }
                                 |   { /*IGNORED*/ } 
                                 ;
 
-TYPE_NAME                       :   SPECIFIER_QUALIFIER_LIST { /*IGNORED*/ }                    
+TYPE_NAME                       :   SPECIFIER_QUALIFIER_LIST { $$ = $1; }                    
                                 ;
 
 INITIALIZER                     :   ASSIGNMENT_EXPRESSION { $$ = $1; }                       
@@ -823,12 +966,21 @@ DESIGNATOR                      :   LEFT_SQUARE_BRACKET CONSTANT_EXPRESSION RIGH
 STATEMENT                       : LABELED_STATEMENT    { /*IGNORED*/ } 
                                 |   { 
                                         current_table = new SymbolTable(current_table->name+int_to_string(table_count++), current_table); 
-                                        three_address_code.emit(*(new Quad(current_table->name+":")));
-                                    } COMPOUND_STATEMENT   { current_table->update(); current_table = current_table->parent; } 
+                                        three_address_code.emit(*(new Quad("label", "", "", current_table->name)));
+                                        
+                                    } COMPOUND_STATEMENT   { 
+                                        current_table->update(); 
+                                        Symbol * temp = new Symbol(current_table->name, new SymbolType(SymbolType::TYPE_VOID));
+                                        temp->nested = current_table;
+                                        current_table->parent->symbols.push_back(temp);
+                                        current_table = current_table->parent; 
+                                        current_table->update();
+                                        $$ = $2; 
+                                    } 
                                 | EXPRESSION_STATEMENT { $$ = NULL; } 
                                 | SELECTION_STATEMENT  { $$ = $1; } 
                                 | ITERATION_STATEMENT  { $$ = $1; } 
-                                | JUMP_STATEMENT       { } 
+                                | JUMP_STATEMENT       { $$ = NULL; } 
                                 ;
 
 LABELED_STATEMENT               : IDENTIFIER TERNARY_SEPERATOR STATEMENT  { /*IGNORED*/ } 
@@ -852,7 +1004,8 @@ EXPRESSION_STATEMENT            : EXPRESSION_OPT SEMI_COLON { /*NO SEMANTICS*/ }
 
 SELECTION_STATEMENT             : IF LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS M STATEMENT N %prec THEN {
                                                                                                                 backpatch($3->truelist, $5);
-                                                                                                                $$ = merge($3->falselist, merge($6, $7));
+                                                                                                                $$ = merge($6, $7);
+                                                                                                                $$ = merge($3->falselist, $$);
                                                                                                             } 
                                 | IF LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS M STATEMENT N ELSE M STATEMENT   { 
                                                                                                                         backpatch($3->truelist, $5);
@@ -885,7 +1038,10 @@ ITERATION_STATEMENT             : WHILE LEFT_PARANTHESIS M EXPRESSION RIGHT_PARA
 JUMP_STATEMENT                  : GOTO IDENTIFIER SEMI_COLON { /*IGNORED*/ } 
                                 | CONTINUE SEMI_COLON        { /*IGNORED*/ } 
                                 | BREAK SEMI_COLON            { /*IGNORED*/ } 
-                                | RETURN EXPRESSION_OPT SEMI_COLON { } 
+                                | RETURN EXPRESSION_OPT SEMI_COLON  {
+                                                                        if ($2 == NULL) three_address_code.emit(*(new Quad("return", "", "", "")));
+                                                                        else three_address_code.emit(*(new Quad("return", "", "", $2->symbol->name)));
+                                                                    }   
                                 ;
 
 M                               : { $$ = getlineno(); }
@@ -918,8 +1074,8 @@ FUNCTION_DEFINITION             : DECLARATION_SPECIFIERS DECLARATOR DECLARATION_
                                                                                                 current_table->symbols.push_back($2);
                                                                                                 $2->type = $1;
                                                                                                 current_table->symbol_instance[$2->name] = $2;
-                                                                                                current_table = $2->nested;
                                                                                                 current_table->update();
+                                                                                                current_table = $2->nested;
                                                                                                 
                                                                                                 three_address_code.emit(*(new Quad("label", "", "", current_table->name)));
                                                                                             } 
