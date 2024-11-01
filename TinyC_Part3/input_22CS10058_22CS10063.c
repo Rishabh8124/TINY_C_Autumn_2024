@@ -8,8 +8,9 @@ int dd(int bb, int bc)
     return 0;
 }
 
-int d(int b, int c);
-
+int main(int b, int c) {
+    int ** v;
+}
 int d(int b, int c) {
     int e[3][4];
     int f,g;
