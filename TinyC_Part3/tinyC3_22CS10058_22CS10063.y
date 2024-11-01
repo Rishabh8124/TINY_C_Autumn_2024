@@ -213,24 +213,28 @@ PRIMARY_EXPRESSION              : IDENTIFIER                                    
                                                                                     $$->symbol->init_val = $1;
                                                                                     $$->type = 0;
                                                                                     three_address_code.emit(*(new Quad("=", $1, "", $$->symbol->name)));
+                                                                                    current_table->update();
                                                                                 }
                                 | FLOATING_CONSTANT                             { 
                                                                                     $$ = new Expression();
                                                                                     $$->symbol = current_table->gentemp(SymbolType::TYPE_FLOAT);
                                                                                     $$->type = 0;
                                                                                     three_address_code.emit(*(new Quad("=", $1, "", $$->symbol->name)));
+                                                                                    current_table->update();
                                                                                 }
                                 | CHARACTER_CONSTANT                            { 
                                                                                     $$ = new Expression();
                                                                                     $$->symbol = current_table->gentemp(SymbolType::TYPE_CHAR);
                                                                                     $$->type = 0;
                                                                                     three_address_code.emit(*(new Quad("=", $1, "", $$->symbol->name)));
+                                                                                    current_table->update();
                                                                                 }
                                 | STRING_LITERAL                                { 
                                                                                     $$ = new Expression();
                                                                                     $$->symbol = current_table->gentemp(SymbolType::TYPE_STRING_LITERAL, (int) (sizeof($1)+1));
                                                                                     $$->type = 0;
                                                                                     three_address_code.emit(*(new Quad("=", $1, "", $$->symbol->name)));
+                                                                                    current_table->update();
                                                                                 }
                                 | LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS { $$ = $2; }
                                 ;
@@ -242,17 +246,20 @@ POSTFIX_EXPRESSION              : PRIMARY_EXPRESSION                            
                                                                                                                                                     if ($1->temp == NULL) {
                                                                                                                                                         $$ = new Array($1->symbol, current_table->gentemp(SymbolType::TYPE_INT), $1->elem->array_elem_type);
                                                                                                                                                         three_address_code.emit(*(new Quad("*", $3->symbol->name, int_to_string($1->elem->array_elem_type->width), $$->temp->name)));
+                                                                                                                                                        current_table->update();
                                                                                                                                                     } else {
                                                                                                                                                         Symbol * temp = current_table->gentemp(SymbolType::TYPE_INT);
                                                                                                                                                         three_address_code.emit(*(new Quad("*", $3->symbol->name, int_to_string($1->elem->array_elem_type->width), temp->name)));
                                                                                                                                                         $$ = new Array($1->symbol, current_table->gentemp(SymbolType::TYPE_INT), $1->elem->array_elem_type);
                                                                                                                                                         three_address_code.emit(*(new Quad("+", $1->temp->name, temp->name, $$->temp->name)));
+                                                                                                                                                        current_table->update();
                                                                                                                                                     }
                                                                                                                                                 }
                                 | POSTFIX_EXPRESSION LEFT_PARANTHESIS ARGUMENT_EXPRESSION_LIST_OPT RIGHT_PARANTHESIS                            { 
                                                                                                                                                     $$ = new Array();
                                                                                                                                                     $$->symbol = current_table->gentemp($1->symbol->type->name);
                                                                                                                                                     three_address_code.emit(*(new Quad("call", $1->symbol->name, int_to_string($3), $$->symbol->name)));
+                                                                                                                                                    current_table->update();
                                                                                                                                                 }
                                 | POSTFIX_EXPRESSION DOT IDENTIFIER                                                                             { /*IGNORED*/ }
                                 | POSTFIX_EXPRESSION POINTER_ACCESS IDENTIFIER                                                                  { /*IGNORED*/ }
@@ -260,11 +267,13 @@ POSTFIX_EXPRESSION              : PRIMARY_EXPRESSION                            
                                                                                                                                                     $$ = new Array(current_table->gentemp($1->symbol->type->name));
                                                                                                                                                     three_address_code.emit(*(new Quad("=", $1->symbol->name, "", $$->symbol->name)));
                                                                                                                                                     three_address_code.emit(*(new Quad("+", $1->symbol->name, "1", $1->symbol->name)));
+                                                                                                                                                    current_table->update();
                                                                                                                                                 }
                                 | POSTFIX_EXPRESSION DECREMENT_OPERATOR                                                                         {
                                                                                                                                                     $$ = new Array(current_table->gentemp($1->symbol->type->name));
                                                                                                                                                     three_address_code.emit(*(new Quad("=", $1->symbol->name, "", $$->symbol->name)));
                                                                                                                                                     three_address_code.emit(*(new Quad("-", $1->symbol->name, "1", $1->symbol->name)));
+                                                                                                                                                    current_table->update();
                                                                                                                                                 }
                                 | LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS LEFT_CURLY_BRACKET INITIALIZER_LIST RIGHT_CURLY_BRACKET          { /*IGNORED*/ }
                                 | LEFT_PARANTHESIS TYPE_NAME RIGHT_PARANTHESIS LEFT_CURLY_BRACKET INITIALIZER_LIST COMMA RIGHT_CURLY_BRACKET    { /*IGNORED*/ }
@@ -289,11 +298,13 @@ UNARY_EXPRESSION                : POSTFIX_EXPRESSION                            
                                                                                             $$ = new Array(current_table->gentemp($2->symbol->type->name));
                                                                                             three_address_code.emit(*(new Quad("+", $2->symbol->name, "1", $2->symbol->name)));
                                                                                             three_address_code.emit(*(new Quad("=", $2->symbol->name, "", $$->symbol->name)));
+                                                                                            current_table->update();
                                                                                         }
                                 | DECREMENT_OPERATOR UNARY_EXPRESSION                   {
                                                                                             $$ = new Array(current_table->gentemp($2->symbol->type->name));
                                                                                             three_address_code.emit(*(new Quad("-", $2->symbol->name, "1", $2->symbol->name)));
                                                                                             three_address_code.emit(*(new Quad("=", $2->symbol->name, "", $$->symbol->name)));
+                                                                                            current_table->update();
                                                                                         }
                                 | UNARY_OPEARATOR CAST_EXPRESSION                       {
                                                                                             if ($1 == "&") {
@@ -301,6 +312,7 @@ UNARY_EXPRESSION                : POSTFIX_EXPRESSION                            
                                                                                                 $$->elem = $$->symbol->type;
                                                                                                 $$->elem->array_elem_type = $2->elem;
                                                                                                 three_address_code.emit(*(new Quad("&", $2->symbol->name, "", $$->symbol->name)));
+                                                                                                current_table->update();
                                                                                             } else if ($1 == "+") {
                                                                                                 $$ = $2;
                                                                                             } else if ($1 == "*") {
@@ -309,12 +321,14 @@ UNARY_EXPRESSION                : POSTFIX_EXPRESSION                            
                                                                                                     $$->symbol->type = $2->elem->array_elem_type;
                                                                                                     $$->elem = $$->symbol->type;
                                                                                                     three_address_code.emit(*(new Quad("=*", $2->symbol->name, "", $$->symbol->name)));
+                                                                                                    current_table->update();
                                                                                                 } else {
                                                                                                     $$ = $2;
                                                                                                 }
                                                                                             } else {
                                                                                                 $$ = new Array(current_table->gentemp($2->symbol->type->name));
                                                                                                 three_address_code.emit(*(new Quad($1, $2->symbol->name, "", $$->symbol->name)));
+                                                                                                current_table->update();
                                                                                             }
                                                                                         }
                                 | SIZEOF UNARY_EXPRESSION                               { /*IGNORED*/ }
@@ -349,21 +363,26 @@ MULTIPLICATIVE_EXPRESSION       : CAST_EXPRESSION                               
                                                                                                             $$->symbol = temp;
                                                                                                             three_address_code.emit(*(new Quad("=*", $1->symbol->name, $1->temp->name, $$->symbol->name)));
                                                                                                         }
+
+                                                                                                        current_table->update();
                                                                                                     }
                                 | MULTIPLICATIVE_EXPRESSION MULTIPLICATION_OPERATOR CAST_EXPRESSION { 
                                                                                                         $$ = new Expression(current_table->gentemp($1->symbol->type->name));
                                                                                                         $$->type = 0;
                                                                                                         three_address_code.emit(*(new Quad("*", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                        current_table->update();
                                                                                                     }
                                 | MULTIPLICATIVE_EXPRESSION DIVIDE_OPERATOR CAST_EXPRESSION         { 
                                                                                                         $$ = new Expression(current_table->gentemp($1->symbol->type->name));
                                                                                                         $$->type = 0;
                                                                                                         three_address_code.emit(*(new Quad("/", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                        current_table->update();
                                                                                                     }
                                 | MULTIPLICATIVE_EXPRESSION REMAINDER_OPERATOR CAST_EXPRESSION      { 
                                                                                                         $$ = new Expression(current_table->gentemp($1->symbol->type->name));
                                                                                                         $$->type = 0;
                                                                                                         three_address_code.emit(*(new Quad("%", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                        current_table->update();
                                                                                                     }
                                 ;
 
@@ -373,12 +392,14 @@ ADDITIVE_EXPRESSION             : MULTIPLICATIVE_EXPRESSION                     
                                                                                                             $$->symbol = current_table->gentemp($1->symbol->type->name);
                                                                                                             $$->type = 0;
                                                                                                             three_address_code.emit(*(new Quad("+", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                            current_table->update();
                                                                                                         }
                                 | ADDITIVE_EXPRESSION SUBTRACTION_OPERATOR MULTIPLICATIVE_EXPRESSION    {
                                                                                                             $$ = new Expression();
                                                                                                             $$->type = 0;
                                                                                                             $$->symbol = current_table->gentemp($1->symbol->type->name);
                                                                                                             three_address_code.emit(*(new Quad("-", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                            current_table->update();
                                                                                                         }
                                 ;
 
@@ -388,12 +409,14 @@ SHIFT_EXPRESSION                : ADDITIVE_EXPRESSION                           
                                                                                                 $$->type = 0;
                                                                                                 $$->symbol = current_table->gentemp($1->symbol->type->name);
                                                                                                 three_address_code.emit(*(new Quad("<<", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                current_table->update();
                                                                                             }
                                 | SHIFT_EXPRESSION SHIFT_RIGHT_OPERATOR ADDITIVE_EXPRESSION {
                                                                                                 $$ = new Expression();
                                                                                                 $$->type = 0;
                                                                                                 $$->symbol = current_table->gentemp($1->symbol->type->name);
                                                                                                 three_address_code.emit(*(new Quad(">>", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                current_table->update();
                                                                                             }
                                 ;
 
@@ -407,6 +430,7 @@ RELATIONAL_EXPRESSION           : SHIFT_EXPRESSION                              
                                                                                                     three_address_code.emit(*(new Quad("<", $1->symbol->name, $3->symbol->name, "")));
                                                                                                     $$->falselist = merge($1->falselist, makelist(getlineno()));
                                                                                                     three_address_code.emit(*(new Quad("goto")));
+                                                                                                    current_table->update();
                                                                                                 }
                                 | RELATIONAL_EXPRESSION GREATER_THAN SHIFT_EXPRESSION           {
                                                                                                     $$ = new Expression();
@@ -417,6 +441,7 @@ RELATIONAL_EXPRESSION           : SHIFT_EXPRESSION                              
                                                                                                     three_address_code.emit(*(new Quad(">", $1->symbol->name, $3->symbol->name, "")));
                                                                                                     $$->falselist = merge($1->falselist, makelist(getlineno()));
                                                                                                     three_address_code.emit(*(new Quad("goto")));
+                                                                                                    current_table->update();
                                                                                                 }
                                 | RELATIONAL_EXPRESSION LESS_THAN_EQUAL_TO SHIFT_EXPRESSION     {
                                                                                                     $$ = new Expression();
@@ -427,6 +452,7 @@ RELATIONAL_EXPRESSION           : SHIFT_EXPRESSION                              
                                                                                                     three_address_code.emit(*(new Quad("<=", $1->symbol->name, $3->symbol->name, "")));
                                                                                                     $$->falselist = merge($1->falselist, makelist(getlineno()));
                                                                                                     three_address_code.emit(*(new Quad("goto")));
+                                                                                                    current_table->update();
                                                                                                 }
                                 | RELATIONAL_EXPRESSION GREATER_THAN_EQUAL_TO SHIFT_EXPRESSION  {
                                                                                                     $$ = new Expression();
@@ -437,6 +463,7 @@ RELATIONAL_EXPRESSION           : SHIFT_EXPRESSION                              
                                                                                                     three_address_code.emit(*(new Quad(">=", $1->symbol->name, $3->symbol->name, "")));
                                                                                                     $$->falselist = merge($1->falselist, makelist(getlineno()));
                                                                                                     three_address_code.emit(*(new Quad("goto")));
+                                                                                                    current_table->update();
                                                                                                 }
                                 ;
 
@@ -450,6 +477,7 @@ EQUALITY_EXPRESSION             : RELATIONAL_EXPRESSION                         
                                                                                                         three_address_code.emit(*(new Quad(">=", $1->symbol->name, $3->symbol->name, "")));
                                                                                                         $$->falselist = merge($1->falselist, makelist(getlineno()));
                                                                                                         three_address_code.emit(*(new Quad("goto")));
+                                                                                                        current_table->update();
                                                                                                     }
                                 | EQUALITY_EXPRESSION NON_EQUALITY_OPERATOR RELATIONAL_EXPRESSION   {
                                                                                                         $$ = new Expression();
@@ -460,6 +488,7 @@ EQUALITY_EXPRESSION             : RELATIONAL_EXPRESSION                         
                                                                                                         three_address_code.emit(*(new Quad(">=", $1->symbol->name, $3->symbol->name, "")));
                                                                                                         $$->falselist = merge($1->falselist, makelist(getlineno()));
                                                                                                         three_address_code.emit(*(new Quad("goto")));
+                                                                                                        current_table->update();
                                                                                                     }
                                 ;
 
@@ -469,6 +498,7 @@ AND_EXPRESSION                  : EQUALITY_EXPRESSION                           
                                                                                                 $1->convert_to_int();
                                                                                                 $3->convert_to_int();
                                                                                                 three_address_code.emit(*(new Quad("&", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                current_table->update();
                                                                                             }
                                 ;
 
@@ -478,6 +508,7 @@ EXCLUSIVE_OR_EXPRESSION         : AND_EXPRESSION                                
                                                                                             $1->convert_to_int();
                                                                                             $3->convert_to_int();
                                                                                             three_address_code.emit(*(new Quad("^", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                            current_table->update();
                                                                                         }
                                 ;
 
@@ -487,6 +518,7 @@ INCLUSIVE_OR_EXPRESSION         : EXCLUSIVE_OR_EXPRESSION                       
                                                                                                             $1->convert_to_int();
                                                                                                             $3->convert_to_int();
                                                                                                             three_address_code.emit(*(new Quad("|", $1->symbol->name, $3->symbol->name, $$->symbol->name)));
+                                                                                                            current_table->update();
                                                                                                         }
                                 ;
 
@@ -504,6 +536,7 @@ LOGICAL_AND_EXPRESSION          : INCLUSIVE_OR_EXPRESSION                       
                                                                                                             backpatch($1->truelist, y);
                                                                                                             $$->truelist = $4->truelist;
                                                                                                             $$->falselist = merge($1->falselist, $4->falselist);
+                                                                                                            current_table->update();
                                                                                                         }
                                 ;
 
@@ -521,6 +554,7 @@ LOGICAL_OR_EXPRESSION           : LOGICAL_AND_EXPRESSION                        
                                                                                                             backpatch($1->falselist, y);
                                                                                                             $$->falselist = $4->falselist;
                                                                                                             $$->truelist = merge($1->truelist, $4->truelist);
+                                                                                                            current_table->update();
                                                                                                         }
                                 ;
 
@@ -536,6 +570,7 @@ CONDITIONAL_EXPRESSION          : LOGICAL_OR_EXPRESSION                         
                                                                                                                                             backpatch($5, getlineno());
                                                                                                                                             three_address_code.emit(*(new Quad("=", $4->symbol->name, "", $$->symbol->name)));
                                                                                                                                             three_address_code.emit(*(new Quad("goto", "", "", int_to_string(getlineno()+1))));
+                                                                                                                                            current_table->update();
                                                                                                                                         }
                                 ;
 
@@ -560,6 +595,7 @@ ASSIGNMENT_EXPRESSION           : CONDITIONAL_EXPRESSION                        
                                                                                                         oper[0] = sym;
                                                                                                         three_address_code.emit(*(new Quad(oper, temp->name, $1->symbol->name, $1->symbol->name)));
                                                                                                     }
+                                                                                                    current_table->update();
                                                                                                 }
                                 ;
 
@@ -579,8 +615,6 @@ CONSTANT_EXPRESSION             : CONDITIONAL_EXPRESSION    { $$ = $1; }
 DECLARATION                     : DECLARATION_SPECIFIERS INIT_DECLARATOR_LIST_OPT SEMI_COLON    {
                                                                                                     SymbolType * temp;
                                                                                                     for (auto symbol: *($2)) {
-                                                                                                        // cout << current_table->symbols.size() << endl;
-                                                                                                        // cout << symbol->name << " " << current_table->name << endl;
                                                                                                         current_table->symbols.push_back(symbol);
                                                                                                         current_table->symbol_instance[symbol->name] = symbol;
                                                                                                         temp = symbol->type;
@@ -590,6 +624,7 @@ DECLARATION                     : DECLARATION_SPECIFIERS INIT_DECLARATOR_LIST_OP
                                                                                                             temp->array_elem_type = $1;
                                                                                                         }
                                                                                                     }
+                                                                                                    current_table->update();
                                                                                                 }
                                 ;
 
@@ -614,6 +649,7 @@ INIT_DECLARATOR_LIST            :   INIT_DECLARATOR { $$ = new vector<Symbol *>;
 INIT_DECLARATOR                 :   DECLARATOR { $$ = $1; } 
                                 |   DECLARATOR EQUAL_OPERATOR INITIALIZER   {
                                                                                 $$ = $1;
+                                                                                $1->init_val = $3->symbol->init_val;
                                                                             } 
                                 ;
 
@@ -692,6 +728,8 @@ DIRECT_DECLARATOR               :   IDENTIFIER { $$ = new Symbol($1); }
                                                                                                                         func_table->symbols.push_back(symbol);
                                                                                                                         func_table->symbol_instance[symbol->name] = symbol;
                                                                                                                     }
+
+                                                                                                                    func_table->update();
                                                                                                                 } 
                                 |   DIRECT_DECLARATOR LEFT_PARANTHESIS IDENTIFIER_LIST_OPT RIGHT_PARANTHESIS { /*IGNORED*/ } 
                                 ;
@@ -773,7 +811,7 @@ STATEMENT                       : LABELED_STATEMENT    { /*IGNORED*/ }
                                 |   { 
                                         current_table = new SymbolTable(current_table->name+int_to_string(table_count++), current_table); 
                                         three_address_code.emit(*(new Quad(current_table->name+":")));
-                                    } COMPOUND_STATEMENT   { current_table = current_table->parent; } 
+                                    } COMPOUND_STATEMENT   { current_table->update(); current_table = current_table->parent; } 
                                 | EXPRESSION_STATEMENT { $$ = NULL; } 
                                 | SELECTION_STATEMENT  { $$ = $1; } 
                                 | ITERATION_STATEMENT  { $$ = $1; } 
@@ -800,7 +838,6 @@ EXPRESSION_STATEMENT            : EXPRESSION_OPT SEMI_COLON { /*NO SEMANTICS*/ }
                                 ;
 
 SELECTION_STATEMENT             : IF LEFT_PARANTHESIS EXPRESSION RIGHT_PARANTHESIS M STATEMENT N %prec THEN {
-                                                                                                                cout << "Hello" << endl;
                                                                                                                 backpatch($3->truelist, $5);
                                                                                                                 $$ = merge($3->falselist, merge($6, $7));
                                                                                                             } 
@@ -868,12 +905,13 @@ FUNCTION_DEFINITION             : DECLARATION_SPECIFIERS DECLARATOR DECLARATION_
                                                                                                 current_table->symbols.push_back($2);
                                                                                                 $2->type = $1;
                                                                                                 current_table->symbol_instance[$2->name] = $2;
-                                                                                                current_table = $2->nested; 
+                                                                                                current_table = $2->nested;
+                                                                                                current_table->update();
                                                                                                 
                                                                                                 three_address_code.emit(*(new Quad("label", "", "", current_table->name)));
                                                                                             } 
                                                                                             
-                                                                                            COMPOUND_STATEMENT { current_table = current_table->parent; }
+                                                                                            COMPOUND_STATEMENT { current_table->update(); current_table = current_table->parent; }
                                 ;
 
 DECLARATION_LIST                : DECLARATION                                                               { }                                             
