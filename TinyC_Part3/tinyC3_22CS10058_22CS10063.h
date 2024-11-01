@@ -52,7 +52,7 @@ class SymbolType {
         SymbolType * array_elem_type;
 
         SymbolType(type_name = TYPE_VOID, int = -1, SymbolType * = NULL);
-        void print();
+        string print();
 };
 
 class Symbol {

@@ -101,16 +101,17 @@ Symbol * SymbolTable::gentemp(SymbolType::type_name type, int size) {
     return temp;
 }
 
-void SymbolType::print() {
+string SymbolType::print() {
     switch (name) {
-        case TYPE_INT: cout << "int"; break;
-        case TYPE_FLOAT: cout << "float"; break;
-        case TYPE_CHAR: cout << "char"; break;
-        case TYPE_STRING_LITERAL: cout << "string"; break;
-        case TYPE_POINTER: cout << "pointer("; this->array_elem_type->print(); cout << ")"; break;
-        case TYPE_ARRAY: cout << "array("<< this->width << ", "; this->array_elem_type->print(); cout << ")"; break;
-        case TYPE_VOID: cout << "void"; break;
+        case TYPE_INT: return "int";
+        case TYPE_FLOAT: return "float";
+        case TYPE_CHAR: return "char";
+        case TYPE_STRING_LITERAL: return "string";
+        case TYPE_POINTER: return ("pointer(" + this->array_elem_type->print() + ")");
+        case TYPE_ARRAY: return ("array(" + to_string(this->width) + ", " + this->array_elem_type->print() + ")" );
+        case TYPE_VOID: return"void";
     }
+    return "";
 }
 
 void Expression::convert_to_bool() {
@@ -143,17 +144,21 @@ void SymbolTable::print() {
     if (this->parent == NULL) cout << "Parent: None"<< endl;
     else cout << "Parent: " << this->parent->name << endl;
     cout << "============================================================================================================================================\n";
-    // cout << "Name                Type                                    Initial Value       Offset              Size                Child               ";
+    cout << "Name                Type                                    Initial Value       Offset              Size                Child               \n";
     vector<SymbolTable *> nested_tables;
 
     for (auto x: this->symbols) {
-        cout << x->name << " ";
-        x->type->print();
+        cout << std::left << setw(20) << x->name;
+        cout << std::left << setw(40) << x->type->print();
+        cout << std::left << setw(20) << x->init_val;
+        cout << std::left << setw(20) << x->offset;
+        cout << std::left << setw(20) << x->size;
+        if(x->nested != NULL) cout << std::left << setw(20) << x->nested->name;
         cout << endl;
         if (x->nested != NULL) {nested_tables.push_back(x->nested);}
     }
 
-    cout << "--------------------------------------------------------------------------------------------------------------------------------------------\n";
+    cout << "--------------------------------------------------------------------------------------------------------------------------------------------\n\n";
     for (auto x: nested_tables) {cout << endl; x->print();}
 }
 

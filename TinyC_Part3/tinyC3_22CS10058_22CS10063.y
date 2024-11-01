@@ -4,6 +4,7 @@
     #include <string.h>
     #include <iostream>
     #include <vector>
+    #include <iomanip>
     #include "tinyC3_22CS10058_22CS10063.h"
 
     using namespace std;
