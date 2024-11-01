@@ -113,6 +113,16 @@ void SymbolType::print() {
     }
 }
 
+void SymbolTable::update() {
+    int last_var = this->symbols.size();
+
+    for(int i=0; i<last_var; i++) {
+        this->symbols[i]->size = this->symbols[i]->getsize();
+        if (i) this->symbols[i]->offset = this->symbols[i-1]->offset + this->symbols[i]->size;
+        else this->symbols[i]->offset = this->symbols[i]->size;
+    }
+}
+
 void Expression::convert_to_bool() {
     if (this->type == 0) {
         this->type = 1;
@@ -135,6 +145,15 @@ void Expression::convert_to_int() {
         three_address_code.emit(*(new Quad("=", "0", "", this->symbol->name)));
         three_address_code.emit(*(new Quad("goto", "", "", int_to_string(getlineno()+1))));
     }
+}
+
+int SymbolType::getsize() {
+    if (this->array_elem_type == NULL) return width;
+    else return width*(this->array_elem_type->getsize());
+}
+
+int Symbol::getsize() {
+    return this->type->getsize();
 }
 
 void SymbolTable::print() {

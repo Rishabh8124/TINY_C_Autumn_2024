@@ -52,6 +52,7 @@ class SymbolType {
         SymbolType * array_elem_type;
 
         SymbolType(type_name = TYPE_VOID, int = -1, SymbolType * = NULL);
+        int getsize();
         void print();
 };
 
@@ -64,6 +65,7 @@ class Symbol {
         int offset;
         SymbolTable* nested;
 
+        int getsize();
         Symbol(string = "", SymbolType * = NULL);
 };
 

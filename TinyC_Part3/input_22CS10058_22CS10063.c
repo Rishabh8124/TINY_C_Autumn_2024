@@ -4,7 +4,7 @@ char bb;
 int dd(int bb, int bc)
 {
     int v;
-    // v = bb+bc;
+    v = bb+bc;
     return 0;
 }
 
