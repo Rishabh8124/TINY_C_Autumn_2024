@@ -306,7 +306,7 @@ union YYSTYPE
     SymbolType * declaration_type;
     Expression * expr;
     Symbol * current_symbol;
-    vector<string> * params;
+    vector<string> params;
     vector<Symbol *> * symbol_list;
     vector<int> * nextlist;
     int param_count;
